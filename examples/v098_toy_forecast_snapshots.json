@@ -1,0 +1,17 @@
+{
+  "source": "Fully synthetic forecast snapshots, not produced by statistical forecast model",
+  "forecasts_eur_per_mwh": [
+    [
+      100,
+      0,
+      0
+    ],
+    [
+      0,
+      100
+    ],
+    [
+      100
+    ]
+  ]
+}
