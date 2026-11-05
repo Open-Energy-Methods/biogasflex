@@ -50,8 +50,8 @@ def toy_intervals(p0,p1):
 
 class AuditContract(unittest.TestCase):
     def test_v09_runtime_and_package_metadata_agree(self):
-        self.assertEqual(__version__,'0.9.1')
-        self.assertIn('version = "0.9.1"',(ROOT/'pyproject.toml').read_text())
+        self.assertEqual(__version__,'0.9.2')
+        self.assertIn('version = "0.9.2"',(ROOT/'pyproject.toml').read_text())
     def test_218_plus_3_scientific_gate(self):
         s=audit.audit(ROOT,verbose=False)
         self.assertEqual((s['market_cases_independently_recalculated'],s['emergency_cases_verified']),(216,5))
