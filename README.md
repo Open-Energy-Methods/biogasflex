@@ -1,6 +1,8 @@
 # BiogasFlex v0.9.1 — Release engineering and checkout reproducibility
 
-**Status:** locally audited development release candidate. **Scientific results are unchanged from v0.9.** This increment repairs the tracked-file/manifest contract, tests distribution installation, hardens integrity checks, and makes CI reproduction more explicit. It is **not** a published GitHub release, DOI, plant validation or independent human review.
+**Status:** locally and GitHub-hosted tested development release candidate. **Scientific results are unchanged from v0.9.** This increment repairs the tracked-file/manifest contract, tests distribution installation, hardens integrity checks, and makes CI reproduction more explicit. It is **not** a published GitHub release, DOI, plant validation or independent human review.
+
+**Hosted verification (2026-11-05):** All nine GitHub Actions research-reproduction jobs passed on Ubuntu, Windows and macOS using Python 3.11, 3.12 and 3.13; a separate Ubuntu/Python 3.13 installed-wheel smoke test passed. [Inspect the successful 10-job PR workflow](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/42029027186). Windows installs include the `tzdata` package, and `.gitattributes` preserves byte-identical LF research inputs in Windows checkouts. This is **software reproduction**, not external human peer review or CHP plant validation. For the observed environment-by-environment ledger, see [the reproducibility matrix](docs/V091_REPRODUCIBILITY_MATRIX.md).
 
 ## Quick start — full research reproduction
 
