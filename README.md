@@ -1,7 +1,6 @@
 # BiogasFlex v0.9.3 — Analytical oracle and synthetic stress (development candidate)
 
-**Status:** Internal scientific software stabilization, not a public
-GitHub Release, DOI, field calibration, or human peer-reviewed result.
+**Status:** hosted **10/10 CI jobs passed** ([v0.9.3 verified run](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/42038354589)). Still a development candidate, not a public GitHub Release, DOI, field calibration, or human peer-reviewed result.
 
 This increment adds a **solver-free exact two-interval oracle** and a
 **96-case seeded synthetic stress suite**, checking cost/price
@@ -32,7 +31,7 @@ verification. Installing dependencies may need internet access;
 the research reproduction itself is offline.
 
 See [verification protocol](docs/V093_VERIFICATION_PROTOCOL.md),
-[internal audit](reports/V093_INTERNAL_AUDIT.md) and
+[internal audit](reports/V093_INTERNAL_AUDIT.md),\n[observed host matrix](docs/V093_REPRODUCIBILITY_MATRIX.md) and
 [change register](docs/V093_CHANGE_EVIDENCE.csv).
 Synthetic stress does not prove real CHP economics, general 24-hour
 solver independence, representative annual results, storage vessel

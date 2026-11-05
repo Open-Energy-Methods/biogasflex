@@ -80,7 +80,7 @@ The CI matrix checks Ubuntu, Windows and macOS on Python 3.11–3.13
 plus a separate wheel-install smoke test. The new stress tests do not
 overwrite source observations or frozen results.
 
-No verified site heat telemetry, realistic start/ramp constraints,
+For actual host/runtime evidence, see [v0.9.3 reproducibility matrix](V093_REPRODUCIBILITY_MATRIX.md).\n\nNo verified site heat telemetry, realistic start/ramp constraints,
 vessel dynamics or actual installed costs/NPV, island/black-start
 capability, annual representativeness or external human scientific
 review is supplied here. **No GitHub Release or DOI is authorized.**

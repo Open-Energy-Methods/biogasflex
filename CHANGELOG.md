@@ -4,8 +4,7 @@
   enumeration; no SciPy/HiGHS, original solver import or new measured data.
 - New 96-case deterministic synthetic test across prices, heat and
   storage; metamorphic invariants for price/cost shifts and buffer size.
-- Eleven new unit/adversarial tests; retain all 216 dual bounds and 286
-  pinned scientific-file hashes.
+- **Observed hosted CI:** all 10 Linux/macOS/Windows × Python 3.11–3.13 and wheel jobs passed; 174 tests, 96 synthetic comparisons, 216 dual bounds and 286 pinned scientific files verified. Details: [v0.9.3 reproducibility matrix](docs/V093_REPRODUCIBILITY_MATRIX.md).\n- Eleven new unit/adversarial tests; retain all 216 dual bounds and 286\n  pinned scientific-file hashes.
 - Update current package/CFF, cross-platform Bash/PowerShell CI and
   installed-wheel smoke; preserve old scripts and frozen 216+5 results.
 - No human review, real-plant validation, representative annual sampling,
