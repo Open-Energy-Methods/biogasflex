@@ -1,3 +1,29 @@
+# v0.9.6 — 2026-11-05 — Experimental on/off CHP commitment and independent toy oracle
+
+- Added opt-in binary on/off/startup/shutdown MILP with synthetic
+  startup/shutdown event costs and strict finite-horizon min up/down
+  interval counts.
+- Enforced zero electrical generation when off and nonzero minimum
+  electrical output when on, plus midpoint ramps across ON/ON
+  transitions only (switching transients are unmodelled).
+- Included full gas/heat/temperature-independent dispatch
+  conservation ledger and economic objective reconstruction.
+- Explicit fixed reference feasibility: only report an increment
+  for a genuinely feasible on/off baseline; preserve the original
+  heat LP as a mathematical upper bound on net committed value.
+- **Observed hosted verification:** 10/10 jobs green on Ubuntu, macOS, Windows Python 3.11–3.13 and a wheel smoke; all 208 regression tests, 216 original dual cases, 96 v0.9.3 solver-free cases, 286 original research hashes and 402-file pre-final manifest passed. See [v0.9.6 matrix](docs/V096_REPRODUCIBILITY_MATRIX.md).\n- Synthetic 24-hour commitment audit checked two-interval min up/down periods with zero gas/steady-on ramp residuals.\n- Added 13 operating MILP and 3 CLI tests and a pure-Python
+  exhaustive 3h toy oracle (€55/€35/€15 for minimum up-time
+  1/2/3), plus read-only verification script and mock data.
+- Added versioned Python environment MILP smoke, Bash/PowerShell
+  reproduction scripts and 10-host CI matrix, strict manifest
+  and new research documentation; preserved all 286 original
+  scientific pins, 216 old market + five emergency outputs,
+  original dual certificates and 96 solver-free toy checks.
+- No observed plant performance, equipment-calibrated on/off
+  behavior, external human peer review, GitHub Release or DOI.
+
+---
+
 # v0.9.5 — 2026-11-05 — experimental CHP power envelopes and forecast regret
 
 - Added a separate opt-in **continuous always-on** heat-aware CHP LP:

@@ -6,9 +6,10 @@ from .baseline import run as baseline_run
 from .dispatch import run_dispatch, run_sweep
 from .heat_dispatch import run_heat_dispatch, load_heat_case
 from .experimental_v095 import optimize_operating_surrogate, evaluate_fixed_forecast_schedule
+from .experimental_v096 import optimize_commitment_milp
 from .svk import fetch_local_day
 
-parser = argparse.ArgumentParser(description='BiogasFlex 0.9.5: audited baseline, heat-aware dispatch and conditional service security')
+parser = argparse.ArgumentParser(description='BiogasFlex 0.9.6: audited baseline, heat-aware dispatch and conditional service security')
 sub = parser.add_subparsers(dest='command', required=True)
 p = sub.add_parser('fetch-svk', help='Retrieve a licensed day of historical SE3 prices')
 p.add_argument('--output', type=Path, default=Path('data/external/svk_se3_20200101.csv'))
@@ -41,6 +42,10 @@ p.add_argument('--config',type=Path,default=Path('examples/v095_toy_config.json'
 p.add_argument('--forecast-prices',type=Path,default=Path('examples/v095_toy_forecast_prices.csv'))
 p.add_argument('--realized-prices',type=Path,default=Path('examples/v095_toy_realized_prices.csv'))
 p.add_argument('--output',type=Path,default=None)
+p=sub.add_parser('unit-commitment',help='v0.9.6 EXPERIMENTAL binary CHP on/off/start/stop MILP (not equipment-calibrated)')
+p.add_argument('--config',type=Path,default=Path('examples/v096_commitment_toy.json'))
+p.add_argument('--prices',type=Path,default=Path('examples/v096_commitment_toy_prices.csv'))
+p.add_argument('--output',type=Path,default=None,help='Opt-in output of full JSON report; no file written by default')
 args=parser.parse_args()
 if args.command == 'fetch-svk':
     result=fetch_local_day(local_date='2020-01-01',bidding_zone='SE3',output=args.output)
@@ -66,17 +71,27 @@ elif args.command == 'forecast-regret':
     if args.output is not None:
         args.output.parent.mkdir(parents=True,exist_ok=True)
         args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n',encoding='utf-8')
+elif args.command == 'unit-commitment':
+    cfg, intervals=load_heat_case(args.config,args.prices)
+    result=optimize_commitment_milp(cfg,intervals)
+    if args.output is not None:
+        args.output.parent.mkdir(parents=True,exist_ok=True)
+        args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n',encoding='utf-8')
 elif args.command == 'dispatch':
     result=run_dispatch(args.config,args.prices,args.output,capacity_mwh_lhv=args.capacity_mwh_lhv)
 else:
     result=run_sweep(args.config,args.prices,args.output)
-if args.command in ('operating-surrogate','forecast-regret'):
+if args.command in ('operating-surrogate','forecast-regret','unit-commitment'):
     print(json.dumps({
         'status':'EXPERIMENTAL_NOT_PLANT_VALIDATED',
         'model_type':result['model_type'],
         'case_id':result.get('case_id',cfg['case_id']),
         'output_path':str(args.output) if args.output is not None else None,
         'incremental_contribution_eur':result.get('incremental_contribution_eur'),
+        'net_contribution_eur':result.get('net_contribution_eur'),
+        'start_count':result.get('start_count'),
+        'stop_count':result.get('stop_count'),
+        'fixed_reference_feasible':result.get('fixed_reference_feasible'),
         'perfect_foresight_regret_eur':result.get('perfect_foresight_regret_eur'),
         'realized_increment_over_fixed_eur':result.get('realized_increment_over_fixed_eur')
     },indent=2))
