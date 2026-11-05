@@ -1,3 +1,48 @@
+# BiogasFlex v0.9.6 — Experimental binary CHP commitment (development candidate)
+
+**Scope:** Software verification of an explicitly synthetic on/off
+gas-buffered CHP MILP. No actual plant calibration, formal independent
+scientific review, published GitHub Release or DOI is claimed.
+
+v0.9.6 adds a new **opt-in** mathematical model with binary
+**on/off, startup and shutdown**, positive minimum-on electrical
+power, start/stop cost assumptions, direction-specific steady-on
+midpoint ramps, and minimum up/down periods. The original v0.9.5
+always-on ramp LP and the entire frozen historical research study
+are **not replaced**.
+
+The three-hour toy case has invented gas and price data; an
+independent Python exhaustive enumeration checks €55/€35/€15
+modeled contributions for 1/2/3 minimum-up intervals. Switching
+transients are **not** physically modeled; steady-on ramp limits
+are deliberately exempted across on/off transitions.
+
+From a clean Python 3.10+ checkout:
+
+```bash
+python -m pip install -e .
+bash scripts/reproduce_v096.sh
+python -m biogasflex unit-commitment
+```
+
+Windows PowerShell: `./scripts/reproduce_v096.ps1`.
+The new command does **not** write output unless `--output report.json`
+is provided. Historical commands retain their original behavior.
+
+The verification gate retains the original **286 pinned scientific
+files**, **216 historical market dual certificates**, **216 + five
+original scenario reproductions**, the inherited **96 solver-free
+synthetic comparisons** and v0.9.5 operating-envelope tests.
+See [exact modeling protocol](docs/V096_COMMITMENT_PROTOCOL.md),
+[change register](docs/V096_CHANGE_EVIDENCE.csv) and
+[internal audit](reports/V096_INTERNAL_AUDIT.md).
+
+**Do not treat synthetic CHP commitment value as real revenue,
+annual profit, equipment availability, guaranteed islanding,
+or a validated operating procedure.**
+
+---
+
 # BiogasFlex v0.9.5 — Experimental ramp and synthetic forecast sensitivity
 
 **Status:** **10/10 GitHub Actions verification jobs passed** ([v0.9.5 hosted run](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/42042375641)); still a research development candidate, not a published GitHub
