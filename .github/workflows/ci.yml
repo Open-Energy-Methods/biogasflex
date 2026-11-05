@@ -1,4 +1,4 @@
-name: biogasflex-v096-commitment-milp
+name: biogasflex-v097-hour-based-commitment
 on:
   push:
   pull_request:
@@ -25,15 +25,15 @@ jobs:
         run: |
           python -m pip install -e .
           python -m pip check
-          python scripts/verify_v096_environment.py --require-installed
+          python scripts/verify_v097_environment.py --require-installed
       - name: Linux or macOS offline research gates
         if: runner.os != 'Windows'
         shell: bash
-        run: bash scripts/reproduce_v096.sh
+        run: bash scripts/reproduce_v097.sh
       - name: Windows PowerShell offline research gates
         if: runner.os == 'Windows'
         shell: pwsh
-        run: ./scripts/reproduce_v096.ps1
+        run: ./scripts/reproduce_v097.ps1
   wheel-install-smoke:
     name: Built wheel installation / Python 3.13 / Ubuntu
     runs-on: ubuntu-latest
@@ -48,11 +48,11 @@ jobs:
         run: |
           python -m pip wheel --no-deps --wheel-dir dist .
           python -m venv .venv
-          .venv/bin/python -m pip install dist/biogasflex-0.9.6-py3-none-any.whl
+          .venv/bin/python -m pip install dist/biogasflex-0.9.7-py3-none-any.whl
           .venv/bin/python -m pip check
       - name: Smoke test installed wheel outside checkout
         shell: bash
         run: |
           cd /tmp
           "$GITHUB_WORKSPACE/.venv/bin/python" -m biogasflex --help
-          "$GITHUB_WORKSPACE/.venv/bin/python" "$GITHUB_WORKSPACE/scripts/verify_v096_environment.py" --require-installed
+          "$GITHUB_WORKSPACE/.venv/bin/python" "$GITHUB_WORKSPACE/scripts/verify_v097_environment.py" --require-installed
