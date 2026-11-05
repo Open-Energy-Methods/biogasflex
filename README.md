@@ -13,7 +13,7 @@ are **not replaced**.
 
 The three-hour toy case has invented gas and price data; an
 independent Python exhaustive enumeration checks €55/€35/€15
-modeled contributions for 1/2/3 minimum-up intervals. Switching
+modeled contributions for 1/2/3 minimum-up intervals. A further\n24-hour mock case checks minimum up/down periods, gas and heat\nconservation, and steady-on ramp constraints. Switching
 transients are **not** physically modeled; steady-on ramp limits
 are deliberately exempted across on/off transitions.
 

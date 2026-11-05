@@ -109,7 +109,7 @@ small fixture without calling the MILP solver. The constructed
 geometry has its extreme points on that grid. The enumeration
 does **not** independently prove all general LP/MILP cases.
 
-Further adversarial cases test shutdown/restart costs, minimum
+In addition, the read-only audit generates a 24-interval **fully synthetic**\ncommitment horizon with two-interval minimum up/down dwell and\n0.2 MW_e/h assumed steady-on ramps. This checks conservation,\nfinite-horizon operation and ledger residuals, without introducing\nnew original research scenarios or field measurements.\n\nFurther adversarial cases test shutdown/restart costs, minimum
 downtime-induced infeasibility, positive CHP heat conversion,
 invalid initial state, impossible late starts, nonphysical numeric
 inputs, and avoidance of false comparisons to a physically

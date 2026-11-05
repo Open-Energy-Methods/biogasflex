@@ -36,8 +36,7 @@ and an explicit synthetic demonstration only.
 
 1. 13 MILP numerical/adversarial tests and three CLI tests,
    bringing the total expected suite from 192 to **208 tests**.
-2. Independent synthetic 3-period enumeration, positivity and
-   validation of ledger, mixed-integer transitions and constraints.
+2. Independent synthetic 3-period enumeration, positivity and\n   validation of ledger, mixed-integer transitions and constraints.\n   Separate 24-hour synthetic MILP checks with two-interval minimum\n   up/down obligations and finite-horizon gas/heat/ramp audits.
 3. All original 216-case primal-dual checks, 216+5 original case
    reproductions, 286 inherited file checksums, 96 two-interval
    solver-free comparisons, and v0.9.5 24h experimental audit.
