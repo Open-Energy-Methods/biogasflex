@@ -1,3 +1,53 @@
+# BiogasFlex v0.9.7 — Clock-hour CHP commitment and carried initial obligations
+
+**Status:** development candidate under software verification; not
+a public GitHub Release, Zenodo DOI, measured CHP control model or
+independently human-reviewed research result.
+
+The v0.9.6 **experimental** mixed-integer CHP scheduler
+used minimum up/down **numbers of intervals**. v0.9.7 adds a
+**separate opt-in** scheduling model enforcing minimum
+ON/OFF times in **elapsed hours**, with explicit operating
+obligations carried in from *before* the modeled horizon.
+This matters when a 15-minute market interval and a 60-minute
+interval coexist. A prior obligation may continue beyond
+the horizon, but a new startup/shutdown must satisfy its
+declared full commitment **within** the horizon.
+
+```bash
+python -m pip install -e .
+bash scripts/reproduce_v097.sh
+python -m biogasflex hourly-commitment
+```
+
+Windows PowerShell: `./scripts/reproduce_v097.ps1`.
+The new CLI uses **entirely fictional** example prices/CHP
+inputs, prints a summary and writes no file unless
+`--output report.json` is supplied.
+
+Verification includes an exact **solver-free two-period
+binary + gas stock** oracle: for 0.25h followed by 1h, the
+invented test yields €45 with minimum on-time 1h,
+€40 with minimum on-time 1.01h, and is infeasible at
+1.26h. A separate 24h **mixed-resolution 36-slot**
+scenario checks elapsed-time and mass/heat/ramp constraints.
+
+The v0.9.5 always-on LP, v0.9.6 binary interval-count MILP,
+original 216 market scenarios and five hypothetical
+emergencies remain unchanged. All original **286 research
+files are SHA-256 pinned**; inherited dual/solver-free
+verification and cross-platform CI remain mandatory.
+
+See the [hour-based scientific protocol](docs/V097_HOURLY_COMMITMENT_PROTOCOL.md),
+[internal audit](reports/V097_INTERNAL_AUDIT.md) and
+[verification change register](docs/V097_CHANGE_EVIDENCE.csv).
+
+**This is not evidence of calibrated CHP startup physics,
+actual electricity revenues, plant economics, or
+operational islanding capability.**
+
+---
+
 # BiogasFlex v0.9.6 — Experimental binary CHP commitment (development candidate)
 
 **Status:** **10/10 hosted CI jobs passed** ([v0.9.6 verified development workflow](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/42046779132)).\n\n**Scope:** Software verification of an explicitly synthetic on/off

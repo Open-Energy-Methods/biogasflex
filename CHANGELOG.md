@@ -1,3 +1,29 @@
+# v0.9.7 — 2026-11-05 — Elapsed-hour CHP commitment with carried prior obligations
+
+- Introduced separate opt-in continuous-time-unit **hour-based**
+  minimum up/down limits on discrete interval-boundary commitments.
+  Prior v0.9.6 interval-count model retained unchanged.
+- Added `initial_remaining_dwell_hours` with enforced carried ON/OFF
+  operating state, complete-horizon rule for all **new** events,
+  and remaining carry-in obligation reported after the horizon.
+- New exact standard-library, **solver-free** two-interval
+  binary-stock oracle checks €45 at 1h, €40 at 1.01h, and
+  infeasibility at 1.26h. Additional negative/reversed
+  price and boundary cases check numerical feasibility.
+- Added synthetic **24h / 36 slots**, alternating 15-minute
+  and one-hour resolution, with gas, heat, steady-ramp and
+  min-hour constraints; no observed data.
+- Added 13 unit tests, 3 CLI tests, opt-in `hourly-commitment`
+  endpoint, versioned Bash/PowerShell full reproduction,
+  package/CFF metadata and 10-job OS/Python/wheel CI.
+- Retained original 286 frozen research hashes, original
+  216+5 results, 216 primal-dual checks, 96 prior
+  solver-free comparisons, v0.9.5 and v0.9.6 model audits.
+- No public GitHub Release/DOI, equipment commissioning,
+  real field calibration or independent human peer review.
+
+---
+
 # v0.9.6 — 2026-11-05 — Experimental on/off CHP commitment and independent toy oracle
 
 - Added opt-in binary on/off/startup/shutdown MILP with synthetic
