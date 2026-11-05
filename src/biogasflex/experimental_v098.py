@@ -420,7 +420,23 @@ def evaluate_rolling_prices(config: dict,
         spent=duration[t]
         prior_stock=current_stock
         previous_on=current_on
-        current_stock=chosen["stock_end_mwh_lhv"]
+        raw_stock=chosen["stock_end_mwh_lhv"]
+        capacity=inp.gas.storage_capacity_mwh_lhv
+        if raw_stock < -1e-8 or raw_stock > capacity+1e-8:
+            raise DispatchError("Executed CHP inventory exceeds physical gas capacity")
+        # HiGHS may yield 0.5000000000000001 for a tightly binding
+        # 0.5-MWh vessel constraint. Correct ONLY floating-point edge
+        # roundoff, then independently audit the entire actual ledger.
+        # This does not relax, add or ignore gas energy constraints.
+        if -1e-8 <= raw_stock <= 0:
+            current_stock=0.0
+        elif capacity <= raw_stock <= capacity+1e-8:
+            current_stock=capacity
+        else:
+            current_stock=raw_stock
+        chosen={**chosen,
+                "raw_solver_stock_end_mwh_lhv":raw_stock,
+                "stock_end_mwh_lhv":current_stock}
         current_on=bool(chosen["on"])
         current_power=chosen["power_mw_e"] if current_on else 0.0
         if chosen["startup"] or chosen["shutdown"]:
