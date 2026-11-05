@@ -1,3 +1,61 @@
+# BiogasFlex v0.9.8 — Synthetic rolling-price CHP commitment experiment
+
+**Status:** development candidate; no public GitHub Release,
+Zenodo DOI, real plant controller, measured forecast skill or
+independent human-reviewed scientific finding.
+
+The new **opt-in rolling-horizon experiment** evaluates price
+forecast revisions against synthetic realized electricity
+prices. At each interval the optimizer solves a full
+remaining-horizon CHP ON/OFF commitment MILP using the
+current forecast, executes **only one interval**, then
+carries forward exact gas stock, ON/OFF state, output
+observation time and remaining minimum operating dwell.
+
+**Scientific correctness correction:** An intermediate
+replan has a different initial gas stock but must keep
+the ORIGINAL final gas-stock target. The new module
+enforces that target explicitly, audits the true
+end-to-end energy balance, and recomputes an LP upper
+bound using exactly the same terminal boundary.
+An infeasible fixed comparator does **not** get
+assigned an invented incremental economic gain.
+
+```bash
+python -m pip install -e .
+bash scripts/reproduce_v098.sh
+python -m biogasflex rolling-forecast
+```
+
+For Windows: `./scripts/reproduce_v098.ps1`.
+The CLI uses fabricated example data and forecast snapshots,
+prints a concise summary and **writes no output by default**;
+use `--output report.json` to save full step-by-step
+optimization and realization results.
+
+In the fully synthetic three-hour test, corrected forecasts
+produce €70 of modeled ex-post contribution, stale
+forecasts €60, and perfect hindsight €80. This does
+**not** establish a real benefit from forecasting.
+A separate synthetic two-hour adversarial case reports
+€20 regret, independently derived from gas conservation.
+
+The original 286 frozen scientific file hashes,
+216 historic market cases and five hypothetical
+emergency cases remain immutable; all inherited
+dual checks, solver-free oracles, and experimental
+v0.9.5–v0.9.7 audits remain in release gates.
+
+Read the [v0.9.8 mathematical protocol](docs/V098_ROLLING_PROTOCOL.md),
+[change register](docs/V098_CHANGE_EVIDENCE.csv) and
+[internal numerical audit](reports/V098_INTERNAL_AUDIT.md).
+
+**No observed equipment startup/stop transients, real
+forecast uncertainty, site profit, heat-load disturbance,
+gas vessel pressure dynamics or grid islanding are modeled.**
+
+---
+
 # BiogasFlex v0.9.7 — Clock-hour CHP commitment and carried initial obligations
 
 **Status:** **10/10 hosted CI gates passed twice** ([final reviewed code push](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/42052149427) and [matching PR workflow](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/42052216953)); software development candidate, not
