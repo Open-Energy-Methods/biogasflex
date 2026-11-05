@@ -1,0 +1,70 @@
+name: import-verified-biogasflex-v091
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.bootstrap/BiogasFlex_v0.9.1_Release_Engineering_Verified_Package.zip'
+permissions:
+  contents: write
+jobs:
+  extract-verified-research-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify package checksum and extract complete v0.9.1 tree
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path, PurePosixPath
+          import hashlib, shutil, stat, zipfile
+
+          archive = Path(".bootstrap/BiogasFlex_v0.9.1_Release_Engineering_Verified_Package.zip")
+          expected_sha = "7f46b1b59a888a74f72e6e4dcdff9808ea0a53dc70491ed395dfb4bfa236a19d"
+          actual_sha = hashlib.sha256(archive.read_bytes()).hexdigest()
+          assert actual_sha == expected_sha, f"Archive SHA256 mismatch: {actual_sha}"
+          prefix = "biogasflex-v0.9.1"
+          with zipfile.ZipFile(archive) as package:
+              members = package.infolist()
+              assert len(members) == 357, f"Expected 357 files; found {len(members)}"
+              assert package.testzip() is None, "ZIP CRC failure"
+              assert sum(m.file_size for m in members) < 25000000, "Unexpected extracted size"
+              seen = set()
+              for member in members:
+                  name = PurePosixPath(member.filename)
+                  parts = name.parts
+                  assert parts and parts[0] == prefix, f"Unexpected ZIP prefix: {name}"
+                  assert all(p not in ("", ".", "..") for p in parts), f"Unsafe path: {name}"
+                  assert not member.is_dir(), f"Unexpected ZIP directory: {name}"
+                  mode = (member.external_attr >> 16) & 0o170000
+                  assert mode != stat.S_IFLNK, f"Unsafe ZIP symlink: {name}"
+                  target = Path(*parts[1:])
+                  assert target.parts, "Empty target path"
+                  lowered = str(target).casefold()
+                  assert lowered not in seen, f"Case-insensitive duplicate: {name}"
+                  seen.add(lowered)
+                  target.parent.mkdir(parents=True, exist_ok=True)
+                  target.write_bytes(package.read(member))
+          shutil.rmtree(".bootstrap")
+          Path(".github/workflows/bootstrap.yml").unlink()
+          print(f"Verified and extracted {len(seen)} files; archive SHA256 {actual_sha}")
+          PY
+      - name: Validate v0.9.1 manifest and Git checkout completeness
+        shell: bash
+        run: |
+          git add -A
+          python scripts/verify_v09_manifest.py
+          python scripts/verify_v091_git_coverage.py
+      - name: Commit and push verified project tree
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "Import verified BiogasFlex v0.9.1 research baseline"
+          git push origin HEAD:main
