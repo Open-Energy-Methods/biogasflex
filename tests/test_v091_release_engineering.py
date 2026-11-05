@@ -115,9 +115,9 @@ class ManifestAdversarialTests(unittest.TestCase):
 class VersionAndDocumentationTests(unittest.TestCase):
     def test_release_version_consistency(self):
         from biogasflex import __version__
-        self.assertEqual(__version__, '0.9.1')
-        self.assertIn('version = "0.9.1"',(ROOT/'pyproject.toml').read_text(encoding='utf-8'))
-        self.assertIn('version: "0.9.1"',(ROOT/'CITATION.cff').read_text(encoding='utf-8'))
+        self.assertEqual(__version__, '0.9.2')
+        self.assertIn('version = "0.9.2"',(ROOT/'pyproject.toml').read_text(encoding='utf-8'))
+        self.assertIn('version: "0.9.2"',(ROOT/'CITATION.cff').read_text(encoding='utf-8'))
 
     def test_expected_release_scripts_exist(self):
         for name in ('reproduce_v091.sh','reproduce_v091.ps1','verify_v091_environment.py'):

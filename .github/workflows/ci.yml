@@ -1,4 +1,4 @@
-name: biogasflex-v091-release-gates
+name: biogasflex-v092-dual-certificates
 on:
   push:
   pull_request:
@@ -29,11 +29,11 @@ jobs:
       - name: Linux or macOS offline research gates
         if: runner.os != 'Windows'
         shell: bash
-        run: bash scripts/reproduce_v091.sh
+        run: bash scripts/reproduce_v092.sh
       - name: Windows PowerShell offline research gates
         if: runner.os == 'Windows'
         shell: pwsh
-        run: ./scripts/reproduce_v091.ps1
+        run: ./scripts/reproduce_v092.ps1
   wheel-install-smoke:
     name: Built wheel installation / Python 3.13 / Ubuntu
     runs-on: ubuntu-latest
@@ -48,7 +48,7 @@ jobs:
         run: |
           python -m pip wheel --no-deps --wheel-dir dist .
           python -m venv .venv
-          .venv/bin/python -m pip install dist/biogasflex-0.9.1-py3-none-any.whl
+          .venv/bin/python -m pip install dist/biogasflex-0.9.2-py3-none-any.whl
           .venv/bin/python -m pip check
       - name: Smoke test installed wheel outside checkout
         shell: bash

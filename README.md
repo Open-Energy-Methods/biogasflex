@@ -1,3 +1,40 @@
+# BiogasFlex v0.9.2 — Optimality certificates (development candidate)
+
+**Status:** pre-release, not field validated, independently human-reviewed or DOI-published.
+v0.9.2 preserves all original frozen scientific files and the 216 market / five hypothetical
+outage results, while adding an independently assembled **mathematical dual**
+certificate for each saved market LP. The new certificate uses SciPy/HiGHS
+(as does the original solver), so it verifies a separate formulation
+rather than an independent solver or physical experiment.
+
+**Full checked-out source reproduction (Python 3.10+, SciPy>=1.11,<2):**
+
+```bash
+python -m pip install -e .
+bash scripts/reproduce_v092.sh
+```
+
+Windows PowerShell:
+
+```powershell
+python -m pip install -e .
+./scripts/reproduce_v092.ps1
+```
+
+This includes inherited 155 regression tests plus the new v0.9.2 tests,
+clean scratch recomputation of all 221 stored market/outage cases,
+source and ledger audits, 286 inherited scientific file hashes,
+216 independent primal/dual checks, strict manifest and Git coverage.
+Dependencies may require network access during installation; scientific
+reproduction operates on included observations thereafter.
+See [optimality method and boundaries](docs/V092_OPTIMALITY_CERTIFICATION.md),
+[reproducibility history](docs/V091_REPRODUCIBILITY_MATRIX.md), and
+[change evidence](docs/V092_CHANGE_EVIDENCE.csv).
+**Do not extrapolate scenario counts into probabilities or selected-day
+incremental modeled contribution into real annual CHP profit.**
+
+---
+
 # BiogasFlex v0.9.1 — Release engineering and checkout reproducibility
 
 **Status:** locally and GitHub-hosted tested development release candidate. **Scientific results are unchanged from v0.9.** This increment repairs the tracked-file/manifest contract, tests distribution installation, hardens integrity checks, and makes CI reproduction more explicit. It is **not** a published GitHub release, DOI, plant validation or independent human review.

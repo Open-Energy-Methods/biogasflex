@@ -1,3 +1,13 @@
+# v0.9.2 — Dual mathematical optimality checking (development candidate)
+
+- Added an independently **formulated**, bounded-LP dual for all 216 frozen CHP market cases, with primal feasibility, dual feasibility and economic-contribution gap checks.
+- Added adversarial edits of gas dispatch, CHP rating, cost claim and nonfinite input, plus an analytical two-interval €8.25 oracle.
+- Kept the same SciPy/HiGHS solver backend; this is **not independent solver implementation** or external reviewer certification.
+- Updated version metadata, full Bash/PowerShell reproduction gates and hosted Python 3.11–3.13 cross-platform CI. No frozen model, observed source, simulation result or scientific claim altered.
+- Human scientific review, realistic CHP dynamics and site-economic/critical-service evidence remain out of scope. No GitHub Release or Zenodo DOI is being made.
+
+---
+
 # v0.9.1 — 2026-11-05 — release-engineering increment (pre-v1.0)
 
 - Carry forward all v0.9 model formulas, frozen scientific input data and 216+5 numerical results without recalibration or altered findings. Added 286-file inherited scientific SHA-256 pin set.
