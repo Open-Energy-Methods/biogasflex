@@ -174,9 +174,11 @@ class HourCommitmentTests(unittest.TestCase):
                                  "initial_power_mw_e":0.4,
                                  "startup_cost_eur":0.0,
                                  "shutdown_cost_eur":0.0,
+                                 "minimum_down_hours":0.25,
                                  "initial_remaining_dwell_hours":0.25}
         r=optimize_commitment_milp(c,slots())
         best,_=oracle_two_slot(initial_on=True,remaining=0.25,
+                               minimum_down=0.25,
                                startup_cost=0.0,shutdown_cost=0.0)
         self.assertAlmostEqual(best,45.0)
         self.assertAlmostEqual(r["net_contribution_eur"],best)
