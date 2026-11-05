@@ -1,6 +1,6 @@
 # BiogasFlex v0.9.2 — Optimality certificates (development candidate)
 
-**Status:** pre-release, not field validated, independently human-reviewed or DOI-published.
+**Status:** pre-release with a **10/10 green hosted cross-platform CI matrix** ([v0.9.2 Actions](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/42034834791)); not field validated, independently human-reviewed or DOI-published.
 v0.9.2 preserves all original frozen scientific files and the 216 market / five hypothetical
 outage results, while adding an independently assembled **mathematical dual**
 certificate for each saved market LP. The new certificate uses SciPy/HiGHS

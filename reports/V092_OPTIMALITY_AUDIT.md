@@ -59,3 +59,7 @@ Still absent: physical CHP transient constraints, measured site heat and
 electricity operational data, defensible storage and auxiliary heat
 investment/operating cost estimation, and real islanding capability.
 No GitHub Release or Zenodo DOI is authorized by this internal audit.
+
+## Dedicated v0.9.2 environment verifier and final pre-merge checks
+
+[Follow-up hosted Actions run 42034834791](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/42034834791) completed **10/10 PASS** with dedicated `scripts/verify_v092_environment.py`, including nine platform/Python combinations and the wheel smoke. No frozen source, input, scenario or reported output file changed; only code outside the frozen research hash set, documentation, metadata and release integrity manifests were modified. Final release status remains a *development candidate*, not an externally reviewed or DOI-published result.

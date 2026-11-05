@@ -12,9 +12,9 @@ development-branch run, not an independently replicated laboratory study.
 
 **Observed source:** [GitHub Actions run 42034376782](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/42034376782) for branch commit
 `2310e0ae155995a27004c91da942391db3004469`. All ten jobs
-completed successfully. This record preceded the subsequent dedicated
-v0.9.2 environment verifier and documentation-only changes, which must
-pass their own final gates before merge.
+completed successfully. The dedicated v0.9.2 environment verifier and documentation changes
+subsequently passed all ten hosted jobs in [run 42034834791](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/42034834791)
+on commit `1513772d3a876f749aa129ae80849557e0d9d5cb`.
 
 ## Core checks observed on Linux Python 3.12
 
