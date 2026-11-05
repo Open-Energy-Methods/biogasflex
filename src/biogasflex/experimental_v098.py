@@ -27,7 +27,7 @@ REQUIRED = {
     "minimum_on_power_mw_e", "initial_on", "initial_power_mw_e",
     "startup_cost_eur", "shutdown_cost_eur",
     "minimum_up_hours", "minimum_down_hours", "initial_remaining_dwell_hours",
-    "terminal_gas_inventory_mwh_lhv",
+    "terminal_gas_inventory_mwh_lhv", "initial_power_observation_age_hours",
 }
 
 
@@ -98,7 +98,8 @@ def _transition_audit(states, starts, stops, power, durations, limits) -> float:
                 (y and not limits["minimum_on_power_mw_e"]-TOL <= p <=
                  limits["rated_power_mw_e"]+TOL)):
             raise DispatchError("Binary CHP power/nameplate/minimum-on limit violated")
-        elapsed = 0.5*(durations[t] if t==0 else durations[t-1]+durations[t])
+        elapsed = (limits["initial_power_observation_age_hours"]+0.5*durations[0]
+                   if t==0 else 0.5*(durations[t-1]+durations[t]))
         if prior==y==1:
             violation=max(violation,
                           p-prev_p-limits["ramp_up_mw_e_per_hour"]*elapsed,
@@ -187,7 +188,8 @@ def optimize_commitment_milp(config: dict, intervals: Sequence[Interval]) -> dic
 
         # Steady-on midpoint ramps; on/off transitions deliberately
         # exempted (they are NOT realistic startup/shutdown trajectories).
-        elapsed=0.5*(dt[t] if t==0 else dt[t-1]+dt[t])
+        elapsed=(lim["initial_power_observation_age_hours"]+0.5*dt[0]
+                 if t==0 else 0.5*(dt[t-1]+dt[t]))
         big_m=gas.rating_mw_e
         for sign, rlim in ((1,lim["ramp_up_mw_e_per_hour"]),(-1,lim["ramp_down_mw_e_per_hour"])):
             coeff={u0+t:sign*gas.eta_e,y0+t:big_m}
@@ -411,6 +413,7 @@ def evaluate_rolling_prices(config: dict,
             "initial_power_mw_e":current_power,
             "initial_remaining_dwell_hours":current_remaining,
             "terminal_gas_inventory_mwh_lhv":original_target,
+            "initial_power_observation_age_hours":0.0 if t==0 else duration[t-1]/2,
         }
         plan=optimize_commitment_milp(prepared,snapshot)
         chosen=plan["hourly"][0]
