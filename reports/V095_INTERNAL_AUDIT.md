@@ -1,7 +1,7 @@
 # BiogasFlex v0.9.5 — internal operating-envelope and forecast experiment audit
 
 **Prepared:** 5 November 2026. **Status:** software development candidate;
-pending observed GitHub Actions verification. This is an internal
+with **10/10 hosted branch CI jobs passed** ([run 42042375641](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/42042375641)). This is an internal
 mathematical and code audit, **not external human scientific review**.
 
 ## Research scope and freeze boundary
@@ -53,3 +53,20 @@ probabilities. External independent review tracked in GitHub issue #3.
 ## Analytical boundary correction found by hosted CI
 
 The original synthetic reversed-forecast oracle erroneously assumed that a\nzero-initial-inventory CHP could *advance* gas from the future to\nthe first hour. Corrected exact forecast regret is **€20** with\nnonbinding ramps and **€5** with the declared 0.1 MW_e/hour ramp;\nforecast schedule realized incremental value over the fixed comparator\nis zero. This is a consequence of strict first-period gas conservation,\nnot a numerical solver flaw. The correction changes only synthetic\noracle expectations, internal documentation and tests, never the\noriginal scientific scenario results.\n
+## Verified internal numerical results
+
+The hosted Ubuntu Python 3.12 reproduction completed 192 tests and all
+216 inherited primal-dual market cases, 96 inherited solver-free
+synthetic cases, 286 original frozen research file SHA-256 pins and
+389 manifest file hashes. The 24-interval synthetic experiment showed
+zero ramp violation. Two-hour ramp limits 0, 0.05, 0.1, 0.2 and
+100 MW_e/h resulted in expected modeled incremental contributions
+€0, €2.50, €5, €10 and €20. Minimum always-on power 0, 0.2,
+0.36 MW_e with nonbinding ramp gave €20, €20, €4. Corrected
+synthetic reversed-forecast regret is €20 with loose ramp and €5
+with the declared ramp, with €0 realized increment versus the
+constant-stock fixed comparator. Full 10-host matrix is recorded in
+`docs/V095_REPRODUCIBILITY_MATRIX.md`.
+
+This is internal software mathematical/constraint QA, not an external
+scientific review or an operational/financial plant performance study.

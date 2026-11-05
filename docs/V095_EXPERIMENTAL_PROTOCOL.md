@@ -111,7 +111,7 @@ original market-case dual LP checks, all 216+5 original market and
 hypothetical-interruption reproductions, and the v0.9.3 96-case
 solver-free synthetic two-interval suite.
 
-### Nonclaims
+See [observed v0.9.5 hosted QA](V095_REPRODUCIBILITY_MATRIX.md)\nfor 10/10 platform results, 192 tests, the complete toy sensitivity\nseries, and the corrected empty-initial-gas forecasting oracle.\n\n### Nonclaims
 
 This does not establish actual CHP ramp performance, startup limits,
 heat demand measurements, plant export permissions, calibrated gas

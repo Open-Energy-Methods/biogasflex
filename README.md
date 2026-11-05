@@ -1,6 +1,6 @@
 # BiogasFlex v0.9.5 — Experimental ramp and synthetic forecast sensitivity
 
-**Status:** research development candidate, not a published GitHub
+**Status:** **10/10 GitHub Actions verification jobs passed** ([v0.9.5 hosted run](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/42042375641)); still a research development candidate, not a published GitHub
 Release, Zenodo DOI, real CHP control design, or human-reviewed
 scientific finding. This version advances directly from v0.9.3:
 no v0.9.4 release is being asserted.
@@ -28,7 +28,7 @@ checks remain unchanged.
 
 Read the [v0.9.5 mathematical protocol](docs/V095_EXPERIMENTAL_PROTOCOL.md),
 [internal audit](reports/V095_INTERNAL_AUDIT.md), and
-[change evidence](docs/V095_CHANGE_EVIDENCE.csv). These experiments do
+[change evidence](docs/V095_CHANGE_EVIDENCE.csv), and\n[hosted reproducibility results](docs/V095_REPRODUCIBILITY_MATRIX.md). These experiments do
 not establish actual CHP ramp/startup performance, representative
 annual revenues, plant investment/NPV, calibrated forecast losses, or
 islanding/black-start capability.
