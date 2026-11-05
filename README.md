@@ -1,6 +1,6 @@
 # BiogasFlex v0.9.7 — Clock-hour CHP commitment and carried initial obligations
 
-**Status:** development candidate under software verification; not
+**Status:** **10/10 hosted CI gates passed twice** ([final reviewed code push](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/42052149427) and [matching PR workflow](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/42052216953)); software development candidate, not
 a public GitHub Release, Zenodo DOI, measured CHP control model or
 independently human-reviewed research result.
 
@@ -40,7 +40,7 @@ verification and cross-platform CI remain mandatory.
 
 See the [hour-based scientific protocol](docs/V097_HOURLY_COMMITMENT_PROTOCOL.md),
 [internal audit](reports/V097_INTERNAL_AUDIT.md) and
-[verification change register](docs/V097_CHANGE_EVIDENCE.csv).
+[verification change register](docs/V097_CHANGE_EVIDENCE.csv), and\n[observed v0.9.7 reproducibility matrix](docs/V097_REPRODUCIBILITY_MATRIX.md).
 
 **This is not evidence of calibrated CHP startup physics,
 actual electricity revenues, plant economics, or

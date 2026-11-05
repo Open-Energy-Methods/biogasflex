@@ -62,3 +62,28 @@ market revenues, actual emissions/NPV and verified islanding
 are outside this candidate. No empirical CHP validation
 or independent human scientific review. Issue #3 remains open.
 No automatic public GitHub Release or Zenodo DOI.
+
+## Observed hosted mathematical and integrity QA
+
+The [reviewed-code push](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/42052149427)
+and [pull-request workflow](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/42052216953)
+both completed successfully with all ten jobs on the 3-OS,
+3-Python-version and installed-wheel matrix.
+
+Observed Ubuntu Python 3.12 output confirms **224 passing
+tests**, **216 original market dual LP certificates**, **96
+inherited solver-free small-case comparisons**, **286 original
+research file hashes**, and **415 strict distribution SHA-256
+file hashes** at the reviewed code tip.
+
+The solver-free exact two-slot oracle reproduced the modeled
+net contribution **€45 / €45 / €40** for minimum-up dwell
+0.25h / 1h / 1.01h and correctly rejected the 1.26h
+horizon-violating startup. The synthetic 24h/36-slot stress
+reported max gas-balance residual **5.551e-17 MWh_LHV**
+and max steady-ON ramp excess **2.637e-16 MW_e**.
+
+The new reproducibility matrix is one more document and
+requires final-commit integrity checks. These are solely
+hypothetical software/model calculations, not plant validation
+or externally peer-reviewed engineering evidence.

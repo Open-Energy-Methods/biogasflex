@@ -155,7 +155,7 @@ outage cases, 96 solver-free v0.9.3 comparisons, v0.9.5
 ramp/forecast stress and v0.9.6 binary commitment oracles
 remain in the full offline and cross-platform CI reproduction.
 
-### Scientific nonclaims
+See the [observed v0.9.7 hosted QA matrix](V097_REPRODUCIBILITY_MATRIX.md)\nfor two 10/10 hosted workflows, 224 passing tests and the numerical\n24-hour mixed-resolution residuals. Final documentation is separately\nsubject to the complete SHA-256 / Git integrity gates.\n\n### Scientific nonclaims
 
 Time-based minimum dwell is a mathematical scheduling
 constraint, **not validated equipment operating data**.

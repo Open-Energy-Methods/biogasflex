@@ -13,7 +13,7 @@
 - Added synthetic **24h / 36 slots**, alternating 15-minute
   and one-hour resolution, with gas, heat, steady-ramp and
   min-hour constraints; no observed data.
-- Added 13 unit tests, 3 CLI tests, opt-in `hourly-commitment`
+- **Hosted software verification:** two independent workflow triggers\n  (branch push and PR) both passed **10/10** hosted jobs for the\n  reviewed scientific code. 224 regression tests, all 216 historical\n  dual certificates, 96 prior solver-free comparisons, 286 original\n  pinned research files, and 415 original-branch manifest entries passed.\n  See [v0.9.7 observed matrix](docs/V097_REPRODUCIBILITY_MATRIX.md).\n- New synthetic 24h / 36-slot tests measured gas and steady-ON\n  ramp numerical residuals 5.55e-17 MWh_LHV and 2.64e-16 MW_e,\n  respectively, within declared tolerances.\n- Added 13 unit tests, 3 CLI tests, opt-in `hourly-commitment`
   endpoint, versioned Bash/PowerShell full reproduction,
   package/CFF metadata and 10-job OS/Python/wheel CI.
 - Retained original 286 frozen research hashes, original
