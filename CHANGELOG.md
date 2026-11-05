@@ -1,3 +1,42 @@
+# v0.9.8 — 2026-11-05 — Synthetic rolling-horizon forecast price study
+
+- New separate opt-in CHP on/off MILP extension with
+  explicit **unchanging terminal gas inventory target**
+  despite receding-horizon replans updating starting stock.
+- For each forecast snapshot optimize full remaining
+  horizon, execute only the first interval, update
+  gas and commitment state, then replan. Maintain
+  known initial ON/OFF and residual dwell obligations.
+- Carry prior interval midpoint observation age into
+  steady-ON ramp constraints rather than spuriously
+  resetting the elapsed time at each replan.
+- Recompute actual electricity and CHP heat/cost
+  ledger from concatenated executed actions at
+  **synthetic realized** electricity prices.
+- Compute a mathematically valid matched-boundary
+  continuous LP relaxation at each replan; refuse
+  infeasible fixed comparators and hindsight
+  contradictions rather than fabricating uplift.
+- New independent analytic price-error oracles:
+  two-slot reversed forecast €20 regret;
+  three-slot updated forecast €70 versus
+  stale €60 and perfect hindsight €80 (all
+  invented data, not actual market revenue).
+- Add 15 adversarial mathematical and 3 CLI
+  tests, full Windows/Unix offline reproduction,
+  10-job GitHub Actions matrix, data fixtures,
+  checksum coverage and scientific protocol.
+- Preserve original 286 research file hashes,
+  216 market plus five hypothetical interruptions,
+  216 market dual certificates, 96 solver-free
+  comparisons, and v0.9.5–v0.9.7 experimental
+  code and audits.
+- No public GitHub Release, DOI, field operation
+  validation, actual trained forecast, or
+  independent human peer review.
+
+---
+
 # v0.9.7 — 2026-11-05 — Elapsed-hour CHP commitment with carried prior obligations
 
 - Introduced separate opt-in continuous-time-unit **hour-based**
