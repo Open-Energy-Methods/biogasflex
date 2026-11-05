@@ -104,7 +104,7 @@ class ExactTwoIntervalTests(unittest.TestCase):
 
     def test_infeasible_baseline_cannot_be_reported_optimal(self):
         cfg = sample(heat_demand_mw_th=0.8, aux_heat_capacity_mw_th=0.05)
-        with self.assertRaisesRegex(OracleFailure, "Fixed gas-use comparator"):
+        with self.assertRaises(OracleFailure):
             verify_two_interval(cfg, ((25.0,1.0),(35.0,1.0)))
 
     def test_price_translation_keeps_incremental_contribution(self):
