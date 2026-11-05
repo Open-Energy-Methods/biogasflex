@@ -1,16 +1,18 @@
 """BiogasFlex command-line entry points."""
 import argparse
 import json
+import math
 from pathlib import Path
-from .baseline import run as baseline_run
+from .baseline import Interval, run as baseline_run
 from .dispatch import run_dispatch, run_sweep
 from .heat_dispatch import run_heat_dispatch, load_heat_case
 from .experimental_v095 import optimize_operating_surrogate, evaluate_fixed_forecast_schedule
 from .experimental_v096 import optimize_commitment_milp
 from .experimental_v097 import optimize_commitment_milp as optimize_hourly_commitment
+from .experimental_v098 import evaluate_rolling_prices
 from .svk import fetch_local_day
 
-parser = argparse.ArgumentParser(description='BiogasFlex 0.9.7: audited baseline, heat-aware dispatch and conditional service security')
+parser = argparse.ArgumentParser(description='BiogasFlex 0.9.8: audited baseline, heat-aware dispatch and conditional service security')
 sub = parser.add_subparsers(dest='command', required=True)
 p = sub.add_parser('fetch-svk', help='Retrieve a licensed day of historical SE3 prices')
 p.add_argument('--output', type=Path, default=Path('data/external/svk_se3_20200101.csv'))
@@ -51,6 +53,11 @@ p=sub.add_parser('hourly-commitment',help='v0.9.7 EXPERIMENTAL clock-hour CHP on
 p.add_argument('--config',type=Path,default=Path('examples/v097_fractional_hour_config.json'))
 p.add_argument('--prices',type=Path,default=Path('examples/v097_fractional_hour_prices.csv'))
 p.add_argument('--output',type=Path,default=None,help='Optional full experimental JSON; stdout summary by default')
+p=sub.add_parser('rolling-forecast',help='v0.9.8 EXPERIMENTAL synthetic price-only forecast/execute/replan with fixed terminal gas stock')
+p.add_argument('--config',type=Path,default=Path('examples/v098_toy_config.json'))
+p.add_argument('--realized-prices',type=Path,default=Path('examples/v098_toy_realized_prices.csv'))
+p.add_argument('--forecast-snapshots',type=Path,default=Path('examples/v098_toy_forecast_snapshots.json'))
+p.add_argument('--output',type=Path,default=None,help='Opt-in full JSON report; otherwise summary only')
 args=parser.parse_args()
 if args.command == 'fetch-svk':
     result=fetch_local_day(local_date='2020-01-01',bidding_zone='SE3',output=args.output)
@@ -88,11 +95,29 @@ elif args.command == 'hourly-commitment':
     if args.output is not None:
         args.output.parent.mkdir(parents=True,exist_ok=True)
         args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n',encoding='utf-8')
+elif args.command == 'rolling-forecast':
+    cfg, realized=load_heat_case(args.config,args.realized_prices)
+    forecast_file=json.loads(args.forecast_snapshots.read_text(encoding='utf-8'))
+    forecasts=forecast_file.get('forecasts_eur_per_mwh') if isinstance(forecast_file,dict) else None
+    if not isinstance(forecasts,list) or len(forecasts)!=len(realized):
+        raise ValueError('One remaining-horizon forecast list per realized interval required')
+    snapshots=[]
+    for t,suffix in enumerate(forecasts):
+        if not isinstance(suffix,list) or len(suffix)!=len(realized)-t:
+            raise ValueError(f'Forecast snapshot {t} must span all remaining intervals')
+        if any(type(p) not in (int,float) or not math.isfinite(p) for p in suffix):
+            raise ValueError('Forecast prices must be finite numbers and not booleans')
+        snapshots.append([Interval(row.start_utc,float(p),row.hours,row.zone)
+                          for row,p in zip(realized[t:],suffix)])
+    result=evaluate_rolling_prices(cfg,realized,snapshots)
+    if args.output is not None:
+        args.output.parent.mkdir(parents=True,exist_ok=True)
+        args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n',encoding='utf-8')
 elif args.command == 'dispatch':
     result=run_dispatch(args.config,args.prices,args.output,capacity_mwh_lhv=args.capacity_mwh_lhv)
 else:
     result=run_sweep(args.config,args.prices,args.output)
-if args.command in ('operating-surrogate','forecast-regret','unit-commitment','hourly-commitment'):
+if args.command in ('operating-surrogate','forecast-regret','unit-commitment','hourly-commitment','rolling-forecast'):
     print(json.dumps({
         'status':'EXPERIMENTAL_NOT_PLANT_VALIDATED',
         'model_type':result['model_type'],
@@ -100,6 +125,9 @@ if args.command in ('operating-surrogate','forecast-regret','unit-commitment','h
         'output_path':str(args.output) if args.output is not None else None,
         'incremental_contribution_eur':result.get('incremental_contribution_eur'),
         'net_contribution_eur':result.get('net_contribution_eur'),
+        'steps_executed':result.get('steps_executed'),
+        'rolling_realized_contribution_eur':result.get('rolling_realized_contribution_eur'),
+        'perfect_foresight_net_contribution_eur':result.get('perfect_foresight_net_contribution_eur'),
         'start_count':result.get('start_count'),
         'stop_count':result.get('stop_count'),
         'fixed_reference_feasible':result.get('fixed_reference_feasible'),
