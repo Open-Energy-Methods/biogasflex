@@ -1,0 +1,58 @@
+name: biogasflex-v091-release-gates
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  research-reproduction:
+    name: Reproduce on ${{ matrix.os }} / Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install current package and check dependencies
+        run: |
+          python -m pip install -e .
+          python -m pip check
+          python scripts/verify_v091_environment.py --require-installed
+      - name: Linux or macOS offline research gates
+        if: runner.os != 'Windows'
+        shell: bash
+        run: bash scripts/reproduce_v091.sh
+      - name: Windows PowerShell offline research gates
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./scripts/reproduce_v091.ps1
+  wheel-install-smoke:
+    name: Built wheel installation / Python 3.13 / Ubuntu
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Build distributable wheel and install with dependencies
+        shell: bash
+        run: |
+          python -m pip wheel --no-deps --wheel-dir dist .
+          python -m venv .venv
+          .venv/bin/python -m pip install dist/biogasflex-0.9.1-py3-none-any.whl
+          .venv/bin/python -m pip check
+      - name: Smoke test installed wheel outside checkout
+        shell: bash
+        run: |
+          cd /tmp
+          "$GITHUB_WORKSPACE/.venv/bin/python" -m biogasflex --help
+          "$GITHUB_WORKSPACE/.venv/bin/python" "$GITHUB_WORKSPACE/scripts/verify_v091_environment.py" --require-installed
