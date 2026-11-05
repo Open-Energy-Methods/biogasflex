@@ -1,0 +1,12 @@
+{
+  "study_id": "v07_heat_service_sensitivity_predeclared_20261105",
+  "observed_price_input": "data/observed/svk_se3_20200101_CC-BY-4.0.csv",
+  "reference_config": "config/v07_lovsta_heat_proxy.json",
+  "frozen_price_window": "2020-01-01 Europe/Stockholm civil day (24 hourly records; 2019-12-31T23:00Z to 2020-01-01T23:00Z)",
+  "heat_demand_multipliers_of_2022_annual_mean_heat_production": [0.0, 0.75, 1.0, 1.1],
+  "assumed_aux_heat_cost_eur_per_mwh_th": [0.0, 5.0, 10.0, 20.0, 80.0, 200.0],
+  "gas_storage_capacity_mwh_lhv": 1.0,
+  "heat_dump_penalty_eur_per_mwh_th": 0.0,
+  "chp_variable_cost_eur_per_mwh_e": 0.0,
+  "interpretation": "SENSITIVITY ONLY. Assumed hourly service fractions and backup costs, not measured Lövsta heat demand, operating costs, or realized market values. No annual extrapolation, no fitted price-based parameters."
+}

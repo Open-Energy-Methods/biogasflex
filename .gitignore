@@ -1,0 +1,25 @@
+# Reproducible tracked research snapshots are included in the manifest.
+# Ignore only generated work products and developer environments.
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.venv/
+.coverage
+build/
+dist/
+.DS_Store
+
+# Legacy external folder: retain the attribution-licensed frozen input.
+data/external/*
+!data/external/.gitkeep
+!data/external/svk_se3_20200101.csv
+
+# Preserve recorded v0.5 JSON outputs and its documentation only.
+results/v0.5/*
+!results/v0.5/README.md
+!results/v0.5/*.json

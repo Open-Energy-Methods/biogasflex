@@ -1,0 +1,88 @@
+test_dst_fall_back_25_hour_day (test_baseline.BaselineTests.test_dst_fall_back_25_hour_day) ... ok
+test_dst_spring_forward_23_hour_day (test_baseline.BaselineTests.test_dst_spring_forward_23_hour_day) ... ok
+test_hourly_revenue_independently_recomputed (test_baseline.BaselineTests.test_hourly_revenue_independently_recomputed) ... ok
+test_missing_final_observation_rejected_by_duration (test_baseline.BaselineTests.test_missing_final_observation_rejected_by_duration) ... ok
+test_missing_interval_rejected (test_baseline.BaselineTests.test_missing_interval_rejected) ... ok
+test_negative_price_is_accepted (test_baseline.BaselineTests.test_negative_price_is_accepted) ... ok
+test_no_silent_duplicate_timestamp (test_baseline.BaselineTests.test_no_silent_duplicate_timestamp) ... ok
+test_nonfinite_price_rejected (test_baseline.BaselineTests.test_nonfinite_price_rejected) ... ok
+test_price_ordering_is_canonical (test_baseline.BaselineTests.test_price_ordering_is_canonical) ... ok
+test_price_unit_wrong (test_baseline.BaselineTests.test_price_unit_wrong) ... ok
+test_quarter_hour_price_duration (test_baseline.BaselineTests.test_quarter_hour_price_duration) ... ok
+test_synthetic_oracle (test_baseline.BaselineTests.test_synthetic_oracle) ... ok
+test_unsupported_efficiency_and_capacity (test_baseline.BaselineTests.test_unsupported_efficiency_and_capacity) ... ok
+test_utc_offsets_equivalent (test_baseline.BaselineTests.test_utc_offsets_equivalent) ... ok
+test_zone_mismatch (test_baseline.BaselineTests.test_zone_mismatch) ... ok
+test_annual_lovsta_rating_and_headroom (test_baseline.ObservedReferenceTests.test_annual_lovsta_rating_and_headroom) ... ok
+test_license_attribution_is_present (test_baseline.ObservedReferenceTests.test_license_attribution_is_present) ... ok
+test_licensed_svk_snapshot_integrity (test_baseline.ObservedReferenceTests.test_licensed_svk_snapshot_integrity) ... ok
+test_lovsta_cross_year_counterfactual_ledger_and_revenue (test_baseline.ObservedReferenceTests.test_lovsta_cross_year_counterfactual_ledger_and_revenue) ... ok
+test_lovsta_24h_baseline_equals_v05 (test_dispatch.ReferenceCase.test_lovsta_24h_baseline_equals_v05) ... ok
+test_lovsta_24h_energy_conservation (test_dispatch.ReferenceCase.test_lovsta_24h_energy_conservation) ... ok
+test_predeclared_lovsta_sweep_contains_zero_and_monotonic (test_dispatch.ReferenceCase.test_predeclared_lovsta_sweep_contains_zero_and_monotonic) ... ok
+test_verified_24_hour_utc_window (test_dispatch.ReferenceCase.test_verified_24_hour_utc_window) ... ok
+test_zero_upward_headroom_even_with_real_prices (test_dispatch.ReferenceCase.test_zero_upward_headroom_even_with_real_prices) ... ok
+test_flat_price_unchanged_gross_revenue (test_dispatch.ToyOracle.test_flat_price_unchanged_gross_revenue) ... ok
+test_independent_two_period_analytic_optimum (test_dispatch.ToyOracle.test_independent_two_period_analytic_optimum)
+Independent algebra: u1=0.6-S1, u2=0.6+S1; ... ok
+test_infeasible_fixed_comparator_not_used (test_dispatch.ToyOracle.test_infeasible_fixed_comparator_not_used) ... ok
+test_infeasible_solver_does_not_write_valid_result (test_dispatch.ToyOracle.test_infeasible_solver_does_not_write_valid_result) ... ok
+test_input_file_hashes_and_reproducibility (test_dispatch.ToyOracle.test_input_file_hashes_and_reproducibility) ... ok
+test_negative_market_price_shifting (test_dispatch.ToyOracle.test_negative_market_price_shifting) ... ok
+test_nonzero_fixed_flaring_and_losses_are_not_avoided (test_dispatch.ToyOracle.test_nonzero_fixed_flaring_and_losses_are_not_avoided) ... ok
+test_reject_gap_between_intervals (test_dispatch.ToyOracle.test_reject_gap_between_intervals) ... ok
+test_reject_missing_price_terminal_boundary (test_dispatch.ToyOracle.test_reject_missing_price_terminal_boundary) ... ok
+test_reject_nonphysical_inputs (test_dispatch.ToyOracle.test_reject_nonphysical_inputs) ... ok
+test_reject_wrong_terminal_timestamp (test_dispatch.ToyOracle.test_reject_wrong_terminal_timestamp) ... ok
+test_starting_inventory_cyclic_not_depleted (test_dispatch.ToyOracle.test_starting_inventory_cyclic_not_depleted) ... ok
+test_toy_sweep_plateaus_at_0p4 (test_dispatch.ToyOracle.test_toy_sweep_plateaus_at_0p4) ... ok
+test_unequal_intervals_conserve_gas (test_dispatch.ToyOracle.test_unequal_intervals_conserve_gas) ... ok
+test_zero_storage_identical_schedule (test_dispatch.ToyOracle.test_zero_storage_identical_schedule) ... ok
+test_zero_upward_headroom (test_dispatch.ToyOracle.test_zero_upward_headroom) ... ok
+test_200_eur_auxiliary_cost_zero_uplift (test_heat_dispatch.HeatAnalyticalOracle.test_200_eur_auxiliary_cost_zero_uplift) ... ok
+test_20_eur_heat_cost_analytic_uplift (test_heat_dispatch.HeatAnalyticalOracle.test_20_eur_heat_cost_analytic_uplift) ... ok
+test_80_eur_backup_exact_analytic_solution (test_heat_dispatch.HeatAnalyticalOracle.test_80_eur_backup_exact_analytic_solution)
+With S1=s, electricity=60+60s; backup=0.45s, cost=80*0.45s. ... ok
+test_common_fixed_flaring_losses_do_not_create_extra_gas (test_heat_dispatch.HeatAnalyticalOracle.test_common_fixed_flaring_losses_do_not_create_extra_gas) ... ok
+test_flat_price_with_positive_backup_cost_no_positive_uplift (test_heat_dispatch.HeatAnalyticalOracle.test_flat_price_with_positive_backup_cost_no_positive_uplift) ... ok
+test_heat_dump_penalty_reduces_value (test_heat_dispatch.HeatAnalyticalOracle.test_heat_dump_penalty_reduces_value) ... ok
+test_negative_early_price_still_heat_constrained (test_heat_dispatch.HeatAnalyticalOracle.test_negative_early_price_still_heat_constrained) ... ok
+test_no_backup_means_fixed_output_when_thermally_binding (test_heat_dispatch.HeatAnalyticalOracle.test_no_backup_means_fixed_output_when_thermally_binding) ... ok
+test_no_heat_load_reduces_to_v06_electricity_oracle (test_heat_dispatch.HeatAnalyticalOracle.test_no_heat_load_reduces_to_v06_electricity_oracle) ... ok
+test_no_heat_sink_cancels_shifting (test_heat_dispatch.HeatAnalyticalOracle.test_no_heat_sink_cancels_shifting) ... ok
+test_nonzero_initial_gas_stock_cycles (test_heat_dispatch.HeatAnalyticalOracle.test_nonzero_initial_gas_stock_cycles) ... ok
+test_variable_chp_cost_cancels_if_equal_generation (test_heat_dispatch.HeatAnalyticalOracle.test_variable_chp_cost_cancels_if_equal_generation) ... ok
+test_variable_timestep_keeps_both_conservation_laws (test_heat_dispatch.HeatAnalyticalOracle.test_variable_timestep_keeps_both_conservation_laws) ... ok
+test_varying_heat_demand_profiles_supported (test_heat_dispatch.HeatAnalyticalOracle.test_varying_heat_demand_profiles_supported) ... ok
+test_zero_cost_demand_still_prioritizes_direct_chp_heat (test_heat_dispatch.HeatAnalyticalOracle.test_zero_cost_demand_still_prioritizes_direct_chp_heat) ... ok
+test_zero_storage_equals_feasible_baseline (test_heat_dispatch.HeatAnalyticalOracle.test_zero_storage_equals_feasible_baseline) ... ok
+test_auxiliary_capacity_infeasible_fixed_rejected (test_heat_dispatch.HeatInvalidInput.test_auxiliary_capacity_infeasible_fixed_rejected) ... ok
+test_bool_value_rejected (test_heat_dispatch.HeatInvalidInput.test_bool_value_rejected) ... ok
+test_dump_capacity_infeasible_fixed_rejected (test_heat_dispatch.HeatInvalidInput.test_dump_capacity_infeasible_fixed_rejected) ... ok
+test_invalid_length_rejected (test_heat_dispatch.HeatInvalidInput.test_invalid_length_rejected) ... ok
+test_missing_heat_cost_rejected (test_heat_dispatch.HeatInvalidInput.test_missing_heat_cost_rejected) ... ok
+test_missing_heat_demand_rejected (test_heat_dispatch.HeatInvalidInput.test_missing_heat_demand_rejected) ... ok
+test_missing_model_identifier_rejected (test_heat_dispatch.HeatInvalidInput.test_missing_model_identifier_rejected) ... ok
+test_nan_heat_cost_rejected (test_heat_dispatch.HeatInvalidInput.test_nan_heat_cost_rejected) ... ok
+test_negative_dump_penalty_rejected (test_heat_dispatch.HeatInvalidInput.test_negative_dump_penalty_rejected) ... ok
+test_negative_heat_flow_in_recomputed_ledger_is_caught (test_heat_dispatch.HeatInvalidInput.test_negative_heat_flow_in_recomputed_ledger_is_caught) ... ok
+test_negative_price_is_allowed_but_negative_demand_rejected (test_heat_dispatch.HeatInvalidInput.test_negative_price_is_allowed_but_negative_demand_rejected) ... ok
+test_output_hash_and_recomputation (test_heat_dispatch.HeatInvalidInput.test_output_hash_and_recomputation) ... ok
+test_requires_terminal_price_interval (test_heat_dispatch.HeatInvalidInput.test_requires_terminal_price_interval) ... ok
+test_solver_error_never_reported_as_zero_uplift (test_heat_dispatch.HeatInvalidInput.test_solver_error_never_reported_as_zero_uplift) ... ok
+test_unrealistic_generator_baseline_rejected (test_heat_dispatch.HeatInvalidInput.test_unrealistic_generator_baseline_rejected) ... ok
+test_lovsta_cost_80_null_uplift_not_mislabeled_actual (test_heat_dispatch.SourceBoundary.test_lovsta_cost_80_null_uplift_not_mislabeled_actual) ... ok
+test_lovsta_heat_proxy_matches_public_annual_totals_algebraically (test_heat_dispatch.SourceBoundary.test_lovsta_heat_proxy_matches_public_annual_totals_algebraically) ... ok
+test_observed_prices_integrity_preserved (test_heat_dispatch.SourceBoundary.test_observed_prices_integrity_preserved) ... ok
+test_optimized_contribution_never_below_fixed_in_lovsta_cost_sweep (test_heat_dispatch.SourceBoundary.test_optimized_contribution_never_below_fixed_in_lovsta_cost_sweep) ... ok
+test_detects_corrupted_heat_service (test_results_audit.IndependentCheckerDefendsIntegrity.test_detects_corrupted_heat_service) ... ok
+test_detects_corrupted_revenue_ledger (test_results_audit.IndependentCheckerDefendsIntegrity.test_detects_corrupted_revenue_ledger) ... ok
+test_detects_corrupted_stock (test_results_audit.IndependentCheckerDefendsIntegrity.test_detects_corrupted_stock) ... ok
+test_detects_not_optimal_status (test_results_audit.IndependentCheckerDefendsIntegrity.test_detects_not_optimal_status) ... ok
+test_published_lovsta_audit (test_results_audit.IndependentCheckerDefendsIntegrity.test_published_lovsta_audit) ... ok
+test_published_oracle_audit (test_results_audit.IndependentCheckerDefendsIntegrity.test_published_oracle_audit) ... ok
+
+----------------------------------------------------------------------
+Ran 81 tests in 0.091s
+
+OK

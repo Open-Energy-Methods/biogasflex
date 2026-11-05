@@ -1,0 +1,25 @@
+{
+  "review": "separate implementation, standard-library-only; self/AI-assisted not human review",
+  "checks": [
+    {
+      "file": "synthetic_oracle_heat_cost80.json",
+      "interval_count": 2,
+      "gas_balance_pass": true,
+      "heat_service_pass": true,
+      "objective_recomputed_pass": true,
+      "incremental_contribution_eur": 9.599999999999994,
+      "gross_electricity_increment_eur": 24.0,
+      "heat_demand_mwh_th": 0.54
+    },
+    {
+      "file": "lovsta_crossyear_heat_cost80.json",
+      "interval_count": 24,
+      "gas_balance_pass": true,
+      "heat_service_pass": true,
+      "objective_recomputed_pass": true,
+      "incremental_contribution_eur": 7.815970093361102e-14,
+      "gross_electricity_increment_eur": 0.0,
+      "heat_demand_mwh_th": 8.053424657534249
+    }
+  ]
+}

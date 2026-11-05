@@ -1,0 +1,2 @@
+# Canonical JSON-in-YAML-1.2 configuration: see baseline.json for machine-readable source.
+# Do not maintain a divergent second parameter set. Code reads baseline.json.

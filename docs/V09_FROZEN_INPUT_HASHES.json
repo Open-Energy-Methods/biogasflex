@@ -1,0 +1,11 @@
+{
+  "version": "0.9.0",
+  "purpose": "Input freeze of original v0.8 published observations and registry. Tampering in model output may not alter this independent pin.",
+  "inputs": {
+    "scenarios/registry.json": "cdba52df4d96cf84dea6efacd9d5ca596ccda8d211ba6a8e201dca283489e67a",
+    "config/v07_lovsta_heat_proxy.json": "c28ed235eddd99781bc05fb9273ecc57199a4612833dd36b1de7cf97909e9e13",
+    "data/observed/svk_se3_20200101_CC-BY-4.0.csv": "25734490a17b1c3506ae0b7ca873d38bfbf1991f4746afeeac1b39f93873bce8",
+    "data/observed/svk_se3_2020_april_01_CC-BY-4.0.csv": "560415b0b38fd764c64bf40c182737d60b94838a39db677da96f7649ba4661b0",
+    "data/observed/svk_se3_2020_october_01_CC-BY-4.0.csv": "a5e1a3dfb9407f91b124973c8c9ecf08d188b8c5833b057a4a378dd4d3988b22"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "version": "0.6.0",
+  "case_id": "analytical_two_hour_toy_oracle_2026_v06",
+  "model_type": "continuous LP",
+  "predeclared_storage_sweep_mwh_lhv": [
+    0.0,
+    0.1,
+    0.2,
+    0.4,
+    0.8
+  ],
+  "cases": [
+    {
+      "capacity_mwh_lhv": 0.0,
+      "baseline_revenue_eur": 60.0,
+      "optimal_revenue_eur": 60.0,
+      "incremental_gross_revenue_eur": 0.0,
+      "max_balance_residual_mwh": 0.0,
+      "solver_status": 0
+    },
+    {
+      "capacity_mwh_lhv": 0.1,
+      "baseline_revenue_eur": 60.0,
+      "optimal_revenue_eur": 66.0,
+      "incremental_gross_revenue_eur": 6.0,
+      "max_balance_residual_mwh": 2.7755575615628914e-17,
+      "solver_status": 0
+    },
+    {
+      "capacity_mwh_lhv": 0.2,
+      "baseline_revenue_eur": 60.0,
+      "optimal_revenue_eur": 72.00000000000001,
+      "incremental_gross_revenue_eur": 12.000000000000014,
+      "max_balance_residual_mwh": 5.551115123125783e-17,
+      "solver_status": 0
+    },
+    {
+      "capacity_mwh_lhv": 0.4,
+      "baseline_revenue_eur": 60.0,
+      "optimal_revenue_eur": 84.0,
+      "incremental_gross_revenue_eur": 24.0,
+      "max_balance_residual_mwh": 0.0,
+      "solver_status": 0
+    },
+    {
+      "capacity_mwh_lhv": 0.8,
+      "baseline_revenue_eur": 60.0,
+      "optimal_revenue_eur": 84.0,
+      "incremental_gross_revenue_eur": 24.0,
+      "max_balance_residual_mwh": 0.0,
+      "solver_status": 0
+    }
+  ],
+  "claim_boundary": "Electricity-only perfect-foresight gross opportunity; no heat-service validation",
+  "provenance": {
+    "config_path": "config/v06_oracle_two_period.json",
+    "config_sha256": "48e47579151a4caf8cc2c70b695e5eff3b2734c787aedfda554cc053989cdc4b",
+    "price_path": "data/synthetic/prices_2period_oracle.csv",
+    "price_sha256": "28a1dbe8db098faab34696088738ab0a0f462f0eef6c02923d956067aeb99cd7"
+  }
+}

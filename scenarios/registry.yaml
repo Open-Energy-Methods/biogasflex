@@ -1,0 +1,19 @@
+# Research-readable mirror of registry.json; execution reads registry.json only.
+# Study definition frozen before v0.8 optimizer results; not externally preregistered.
+study_id: BIO-V08-20261105-PREDECLARED-SE3-2020-QUARTER-START
+price_selection_rule: first civil day of Jan, Apr, Jul, Oct 2020 (SE3, fixed before results)
+accepted_days: [2020-01-01, 2020-04-01, 2020-10-01]
+excluded_day: 2020-07-01  # provider gap, no filling or substitution
+storage_mwh_lhv: [0.0, 0.25, 1.0]
+heat_demand_factors: [0.75, 1.0]
+assumed_aux_heat_cost_eur_mwh_th: [20.0, 80.0]
+electric_efficiency_lhv: [0.38, 0.40, 0.42]
+electric_rating_variants: [reference_499kw, stylized_low_5pct_headroom]
+expected_market_scenarios: 216
+outage_duration_hours: 3
+outage_gas_inflow_mw_lhv: 0
+critical_electric_load_mw: 0.12
+critical_heat_load_mw: 0.10
+outage_inventory_mwh_lhv: [0.0, 0.3, 0.6]
+outage_islanding_capability: explicitly hypothetical
+claim: scenario sensitivity only; not measured hourly plant operations or actual outage security

@@ -1,0 +1,91 @@
+{
+  "version": "0.8.0",
+  "case_id": "buffer_0p6_chp_unavailable",
+  "boundary": "Hypothetical 3-hour gas-inflow outage; grid power unavailable; island-capable CHP and available equipment ASSUMED where enabled, not demonstrated. Gas buffer precharged exogenously; no cyclic stock. Service accounting, not regional resilience or validated black start.",
+  "assumptions": {
+    "case_id": "buffer_0p6_chp_unavailable",
+    "duration_hours": 3,
+    "gas_inflow_mw_lhv": 0.0,
+    "electric_efficiency_lhv": 0.4,
+    "thermal_efficiency_lhv": 0.3915939519083461,
+    "chp_electric_rating_mw": 0.499,
+    "gas_storage_capacity_mwh_lhv": 0.6,
+    "initial_stock_mwh_lhv": 0.6,
+    "critical_electric_load_mw": 0.12,
+    "critical_heat_load_mw": 0.1,
+    "island_capable": true,
+    "chp_available": false,
+    "grid_available": false,
+    "auxiliary_heat_available": false
+  },
+  "solver": {
+    "backend": "HiGHS",
+    "success": true,
+    "status_code": 0,
+    "termination": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+  },
+  "energy_totals": {
+    "gas_inflow_mwh_lhv": 0.0,
+    "gas_utilized_mwh_lhv": 0.0,
+    "initial_inventory_mwh_lhv": 0.6,
+    "terminal_inventory_mwh_lhv": 0.6,
+    "electric_demand_mwh": 0.36,
+    "electric_served_mwh": 0.0,
+    "electric_unserved_mwh": 0.36,
+    "heat_demand_mwh_th": 0.30000000000000004,
+    "heat_served_mwh_th": 0.0,
+    "heat_unserved_mwh_th": 0.30000000000000004,
+    "dumped_heat_mwh_th": 0.0,
+    "electric_service_fraction": 0.0,
+    "heat_service_fraction": 0.0
+  },
+  "max_abs_residuals": {
+    "gas_inventory_mwh_lhv": 0.0,
+    "electric_cogeneration_mwh": 0.0,
+    "heat_cogeneration_mwh": 0.0,
+    "electric_service_mwh": 0.0,
+    "heat_service_mwh": 0.0
+  },
+  "hourly": [
+    {
+      "hour_index": 0,
+      "gas_use_mw_lhv": 0.0,
+      "stock_start_mwh_lhv": 0.6,
+      "stock_end_mwh_lhv": 0.6,
+      "critical_electric_load_mw": 0.12,
+      "electric_served_mw": -0.0,
+      "electric_unserved_mw": 0.12,
+      "critical_heat_load_mw_th": 0.1,
+      "heat_served_mw_th": -0.0,
+      "heat_unserved_mw_th": 0.1,
+      "heat_dump_mw_th": 0.0
+    },
+    {
+      "hour_index": 1,
+      "gas_use_mw_lhv": 0.0,
+      "stock_start_mwh_lhv": 0.6,
+      "stock_end_mwh_lhv": 0.6,
+      "critical_electric_load_mw": 0.12,
+      "electric_served_mw": -0.0,
+      "electric_unserved_mw": 0.12,
+      "critical_heat_load_mw_th": 0.1,
+      "heat_served_mw_th": -0.0,
+      "heat_unserved_mw_th": 0.1,
+      "heat_dump_mw_th": 0.0
+    },
+    {
+      "hour_index": 2,
+      "gas_use_mw_lhv": 0.0,
+      "stock_start_mwh_lhv": 0.6,
+      "stock_end_mwh_lhv": 0.6,
+      "critical_electric_load_mw": 0.12,
+      "electric_served_mw": -0.0,
+      "electric_unserved_mw": 0.12,
+      "critical_heat_load_mw_th": 0.1,
+      "heat_served_mw_th": -0.0,
+      "heat_unserved_mw_th": 0.1,
+      "heat_dump_mw_th": 0.0
+    }
+  ],
+  "registry_sha256": "cdba52df4d96cf84dea6efacd9d5ca596ccda8d211ba6a8e201dca283489e67a"
+}

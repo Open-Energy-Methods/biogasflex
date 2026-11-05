@@ -1,0 +1,6 @@
+capacity_mwh_lhv,baseline_revenue_eur,optimal_revenue_eur,incremental_gross_revenue_eur,max_balance_residual_mwh,solver_status
+0.0,60.0,60.0,0.0,0.0,0
+0.1,60.0,66.0,6.0,2.7755575615628914e-17,0
+0.2,60.0,72.00000000000001,12.000000000000014,5.551115123125783e-17,0
+0.4,60.0,84.0,24.0,0.0,0
+0.8,60.0,84.0,24.0,0.0,0

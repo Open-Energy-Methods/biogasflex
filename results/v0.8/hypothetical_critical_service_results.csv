@@ -1,0 +1,6 @@
+case_id,gas_stock_precharged_mwh_lhv,island_capable_assumed,chp_available_assumed,electric_critical_demand_mwh,electric_critical_served_mwh,electric_critical_unserved_mwh,fraction_electric_served,heat_critical_demand_mwh_th,heat_critical_served_mwh_th,heat_critical_unserved_mwh_th,fraction_heat_served,terminal_gas_mwh_lhv
+no_buffer,0.0,True,True,0.36,0.0,0.36,0.0,0.30000000000000004,0.0,0.30000000000000004,0.0,0.0
+buffer_0p3,0.3,True,True,0.36,0.12000000000000001,0.24,0.33333333333333337,0.30000000000000004,0.11747818557250383,0.18252181442749618,0.39159395190834606,0.0
+buffer_0p6,0.6,True,True,0.36,0.24000000000000002,0.11999999999999997,0.6666666666666667,0.30000000000000004,0.23495637114500767,0.06504362885499235,0.7831879038166921,0.0
+buffer_0p6_not_islanded,0.6,False,True,0.36,0.0,0.36,0.0,0.30000000000000004,0.0,0.30000000000000004,0.0,0.6
+buffer_0p6_chp_unavailable,0.6,True,False,0.36,0.0,0.36,0.0,0.30000000000000004,0.0,0.30000000000000004,0.0,0.6

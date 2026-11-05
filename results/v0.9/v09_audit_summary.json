@@ -1,0 +1,16 @@
+{
+  "audit": "PASS",
+  "version": "0.9.0",
+  "audited_core_results": "0.8.0",
+  "frozen_inputs_verified": 5,
+  "source_registry_scenarios_reconstructed": 216,
+  "market_cases_independently_recalculated": 216,
+  "emergency_cases_verified": 5,
+  "positive_cases": 96,
+  "near_zero_cases": 120,
+  "min_increment_eur": 0.0,
+  "median_increment_eur": 8.526512829121202e-14,
+  "max_increment_eur": 15.795327799657514,
+  "limits": "Internal audit only. Perfect foresight, hypothetical dispatch and outage capability; no observed plant operation, independent human review, probabilities, CAPEX/NPV or actual exports.",
+  "python_stdlib_only": true
+}

@@ -1,0 +1,19 @@
+{
+  "case_id": "lovsta_2022_annual_mean_gas_buffer_under_se3_2020_prices_COUNTERFACTUAL",
+  "evidence_status": "2022 plant rating and annual outputs documented; 2020 electricity prices observed; efficiency and gas buffer hypothetical, entire dispatch simulated",
+  "price_zone": "SE3",
+  "electric_rating_mw": 0.499,
+  "gas_input_mw_lhv": 0.8569063926940638,
+  "electric_efficiency_lhv": 0.4,
+  "thermal_efficiency_lhv": 0.3915939519083461,
+  "gas_storage_capacity_mwh_lhv": 1.0,
+  "initial_gas_inventory_mwh_lhv": 0,
+  "fixed_flaring_mw_lhv": 0,
+  "fixed_losses_mw_lhv": 0,
+  "price_window_end_utc": "2020-01-01T23:00:00+00:00",
+  "expected_duration_hours": 24,
+  "storage_sweep_mwh_lhv": [0, 0.1, 0.25, 0.5, 1.0, 2.0],
+  "methodological_note": "Perfect-foresight electricity-only ceiling; no hourly measured gas production, gas storage or CHP heat service. 2022 annual mean assumed constant at 2020 SE3 day-ahead prices. No gas export, CHP minimum load, starts, ramping, heat demand, parasitic electric use or imbalance cost.",
+  "observed_plant_reference": "Åberg (2024) SLU thesis, Lövsta 2022 annual electricity 3002.6 MWh, heat 2939.5 MWh and 499 kW generator rating",
+  "observed_market_reference": "Svenska kraftnät historic SE3 day-ahead prices (CC BY 4.0), 2020-01-01 local Sweden"
+}

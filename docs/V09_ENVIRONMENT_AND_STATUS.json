@@ -1,0 +1,22 @@
+{
+  "release": "v0.9.0 research-development audit candidate",
+  "build_context_date": "2026-11-05",
+  "python_version": "3.13.5",
+  "python_implementation": "CPython",
+  "platform_for_initial_validation": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "scipy_version": "1.17.0",
+  "optimization_backend": "scipy.optimize.linprog(method=\"highs\")",
+  "required_python": ">=3.10",
+  "required_scipy": ">=1.11,<2",
+  "network_needed_for_frozen_reproduction": false,
+  "original_v08_test_count": 117,
+  "additional_v09_tests": 21,
+  "total_tests": 138,
+  "market_cases": 216,
+  "hypothetical_outage_cases": 5,
+  "source_pins": 5,
+  "external_peer_review_completed": false,
+  "plant_operational_validation_completed": false,
+  "third_party_git_release_created": false,
+  "doi_assigned": false
+}

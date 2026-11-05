@@ -1,0 +1,46 @@
+test_dst_fall_back_25_hour_day (test_baseline.BaselineTests.test_dst_fall_back_25_hour_day) ... ok
+test_dst_spring_forward_23_hour_day (test_baseline.BaselineTests.test_dst_spring_forward_23_hour_day) ... ok
+test_hourly_revenue_independently_recomputed (test_baseline.BaselineTests.test_hourly_revenue_independently_recomputed) ... ok
+test_missing_final_observation_rejected_by_duration (test_baseline.BaselineTests.test_missing_final_observation_rejected_by_duration) ... ok
+test_missing_interval_rejected (test_baseline.BaselineTests.test_missing_interval_rejected) ... ok
+test_negative_price_is_accepted (test_baseline.BaselineTests.test_negative_price_is_accepted) ... ok
+test_no_silent_duplicate_timestamp (test_baseline.BaselineTests.test_no_silent_duplicate_timestamp) ... ok
+test_nonfinite_price_rejected (test_baseline.BaselineTests.test_nonfinite_price_rejected) ... ok
+test_price_ordering_is_canonical (test_baseline.BaselineTests.test_price_ordering_is_canonical) ... ok
+test_price_unit_wrong (test_baseline.BaselineTests.test_price_unit_wrong) ... ok
+test_quarter_hour_price_duration (test_baseline.BaselineTests.test_quarter_hour_price_duration) ... ok
+test_synthetic_oracle (test_baseline.BaselineTests.test_synthetic_oracle) ... ok
+test_unsupported_efficiency_and_capacity (test_baseline.BaselineTests.test_unsupported_efficiency_and_capacity) ... ok
+test_utc_offsets_equivalent (test_baseline.BaselineTests.test_utc_offsets_equivalent) ... ok
+test_zone_mismatch (test_baseline.BaselineTests.test_zone_mismatch) ... ok
+test_annual_lovsta_rating_and_headroom (test_baseline.ObservedReferenceTests.test_annual_lovsta_rating_and_headroom) ... ok
+test_license_attribution_is_present (test_baseline.ObservedReferenceTests.test_license_attribution_is_present) ... ok
+test_licensed_svk_snapshot_integrity (test_baseline.ObservedReferenceTests.test_licensed_svk_snapshot_integrity) ... ok
+test_lovsta_cross_year_counterfactual_ledger_and_revenue (test_baseline.ObservedReferenceTests.test_lovsta_cross_year_counterfactual_ledger_and_revenue) ... ok
+test_lovsta_24h_baseline_equals_v05 (test_dispatch.ReferenceCase.test_lovsta_24h_baseline_equals_v05) ... ok
+test_lovsta_24h_energy_conservation (test_dispatch.ReferenceCase.test_lovsta_24h_energy_conservation) ... ok
+test_predeclared_lovsta_sweep_contains_zero_and_monotonic (test_dispatch.ReferenceCase.test_predeclared_lovsta_sweep_contains_zero_and_monotonic) ... ok
+test_verified_24_hour_utc_window (test_dispatch.ReferenceCase.test_verified_24_hour_utc_window) ... ok
+test_zero_upward_headroom_even_with_real_prices (test_dispatch.ReferenceCase.test_zero_upward_headroom_even_with_real_prices) ... ok
+test_flat_price_unchanged_gross_revenue (test_dispatch.ToyOracle.test_flat_price_unchanged_gross_revenue) ... ok
+test_independent_two_period_analytic_optimum (test_dispatch.ToyOracle.test_independent_two_period_analytic_optimum)
+Independent algebra: u1=0.6-S1, u2=0.6+S1; ... ok
+test_infeasible_fixed_comparator_not_used (test_dispatch.ToyOracle.test_infeasible_fixed_comparator_not_used) ... ok
+test_infeasible_solver_does_not_write_valid_result (test_dispatch.ToyOracle.test_infeasible_solver_does_not_write_valid_result) ... ok
+test_input_file_hashes_and_reproducibility (test_dispatch.ToyOracle.test_input_file_hashes_and_reproducibility) ... ok
+test_negative_market_price_shifting (test_dispatch.ToyOracle.test_negative_market_price_shifting) ... ok
+test_nonzero_fixed_flaring_and_losses_are_not_avoided (test_dispatch.ToyOracle.test_nonzero_fixed_flaring_and_losses_are_not_avoided) ... ok
+test_reject_gap_between_intervals (test_dispatch.ToyOracle.test_reject_gap_between_intervals) ... ok
+test_reject_missing_price_terminal_boundary (test_dispatch.ToyOracle.test_reject_missing_price_terminal_boundary) ... ok
+test_reject_nonphysical_inputs (test_dispatch.ToyOracle.test_reject_nonphysical_inputs) ... ok
+test_reject_wrong_terminal_timestamp (test_dispatch.ToyOracle.test_reject_wrong_terminal_timestamp) ... ok
+test_starting_inventory_cyclic_not_depleted (test_dispatch.ToyOracle.test_starting_inventory_cyclic_not_depleted) ... ok
+test_toy_sweep_plateaus_at_0p4 (test_dispatch.ToyOracle.test_toy_sweep_plateaus_at_0p4) ... ok
+test_unequal_intervals_conserve_gas (test_dispatch.ToyOracle.test_unequal_intervals_conserve_gas) ... ok
+test_zero_storage_identical_schedule (test_dispatch.ToyOracle.test_zero_storage_identical_schedule) ... ok
+test_zero_upward_headroom (test_dispatch.ToyOracle.test_zero_upward_headroom) ... ok
+
+----------------------------------------------------------------------
+Ran 40 tests in 0.055s
+
+OK

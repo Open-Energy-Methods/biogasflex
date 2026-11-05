@@ -1,0 +1,5 @@
+aux_cost_eur_per_mwh_th,fixed_electricity_value_eur,optimized_electricity_value_eur,gross_electricity_increment_eur,aux_heat_cost_increment_eur,net_scenario_contribution_increment_eur,aux_heat_mwh_th,dumped_heat_mwh_th
+0.0,60.0,84.0,24.0,0.0,24.0,0.18000000000000005,0.18
+20.0,60.0,84.0,24.0,3.600000000000001,20.400000000000006,0.18000000000000005,0.18
+80.0,60.0,84.0,24.0,14.400000000000004,9.599999999999994,0.18000000000000005,0.18
+200.0,60.0,60.0,0.0,0.0,0.0,0.0,0.0

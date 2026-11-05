@@ -1,0 +1,18 @@
+[project]
+name = "biogasflex"
+version = "0.9.1"
+description = "Auditable heat-constrained biogas CHP dispatch LP and reproducible baselines"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+dependencies = ["scipy>=1.11,<2"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

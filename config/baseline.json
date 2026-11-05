@@ -1,0 +1,18 @@
+{
+  "case_id": "illustrative_se3_chp_fixed_2020_new_year",
+  "description": "Stylized CHP plant, not a measured Swedish plant or plant digital twin",
+  "parameter_status": "assumed",
+  "electric_rating_mw": 0.4,
+  "gas_input_mw_lhv": 0.6,
+  "electric_efficiency_lhv": 0.4,
+  "thermal_efficiency_lhv": 0.45,
+  "price_zone": "SE3",
+  "market_date_local": "2020-01-01",
+  "market_timezone": "Europe/Stockholm",
+  "price_unit": "EUR/MWh_e",
+  "efficiency_note": "efficiencies hypothetical, consistent with assumed gas LHV input; not calibrated to a real CHP plant",
+  "heat_note": "thermal potential only, no claimed useful heat delivery",
+  "baseline_mode": "fixed_24h_must_run",
+  "price_source": "Svenska kraftnat CKAN dataset cf392ef3-7345-4e98-970e-83088c185570",
+  "raw_price_rights": "CC BY 4.0 for the specific Svenska kraftnät historical SE3 day-ahead resource; attribute producer and dataset (see data/observed/README.md)"
+}

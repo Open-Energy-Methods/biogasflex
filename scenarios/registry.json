@@ -1,0 +1,123 @@
+{
+  "study_id": "BIO-V08-20261105-PREDECLARED-SE3-2020-QUARTER-START",
+  "study_status": "internal predeclared scenario specification; not externally registered or peer reviewed",
+  "registered_before_optimizer_execution": true,
+  "claim_boundary": "2020 observed prices with documented 2022 annual-average CHP reference and hypothetical heat and operating conditions; conditional perfect-foresight LP; not observed dispatch, time-series validation, or probabilistic forecast.",
+  "price_window_selection_rule": "Local civil day 1 of Jan, Apr, Jul, Oct 2020, independently of result. July 1 fails hourly completeness QA and is excluded; no imputation or replacement day. Three complete days used. NOT an annual or representative sample.",
+  "market_windows": [
+    {
+      "id": "jan",
+      "civil_date": "2020-01-01",
+      "file": "data/observed/svk_se3_20200101_CC-BY-4.0.csv",
+      "end_utc": "2020-01-01T23:00:00+00:00",
+      "required_hours": 24
+    },
+    {
+      "id": "apr",
+      "civil_date": "2020-04-01",
+      "file": "data/observed/svk_se3_2020_april_01_CC-BY-4.0.csv",
+      "end_utc": "2020-04-01T22:00:00+00:00",
+      "required_hours": 24
+    },
+    {
+      "id": "oct",
+      "civil_date": "2020-10-01",
+      "file": "data/observed/svk_se3_2020_october_01_CC-BY-4.0.csv",
+      "end_utc": "2020-10-01T22:00:00+00:00",
+      "required_hours": 24
+    }
+  ],
+  "rejected_window": {
+    "civil_date": "2020-07-01",
+    "reason": "A gap in provider hourly records: the extracted 24 records span a 25-hour UTC interval (2020-06-30 22:00 to 2020-07-01 22:00); cannot treat as complete 24-hour local day. Excluded before any optimizer result inspection.",
+    "imputation": "none"
+  },
+  "gas_storage_mwh_lhv": [
+    0.0,
+    0.25,
+    1.0
+  ],
+  "heat_demand_factors_of_2022_annual_mean_production": [
+    0.75,
+    1.0
+  ],
+  "assumed_backup_cost_eur_mwh_th": [
+    20.0,
+    80.0
+  ],
+  "electrical_efficiency_lhv": [
+    0.38,
+    0.4,
+    0.42
+  ],
+  "rating_variants": [
+    {
+      "id": "reference_499kw",
+      "rule": "fixed_mw",
+      "value": 0.499,
+      "provenance": "SLU thesis reports nameplate electric rating 499 kW"
+    },
+    {
+      "id": "stylized_low_5pct_headroom",
+      "rule": "ratio_to_mean_electric",
+      "value": 1.05,
+      "provenance": "HYPOTHETICAL reduced installed rating =1.05 × mean electric output at selected efficiency, not the Lövsta nameplate"
+    }
+  ],
+  "scenario_count_expected": 216,
+  "gas_supply_basis": "2022 Lövsta annual-average 3002.6 MWh_e with eta_e=0.4 implies gas input 0.85690639 MW_LHV; gas input unchanged when varying efficiency; NOT a measured annual gas-LHV flow.",
+  "thermal_efficiency_basis": "Fixed hypothetical thermal efficiency fitted to 2022 annual heat/electric ratio at 40% electric efficiency, not measured heat conversion.",
+  "resilience_cases": [
+    {
+      "id": "no_buffer",
+      "stock_mwh_lhv": 0.0,
+      "island_capable": true,
+      "chp_available": true
+    },
+    {
+      "id": "buffer_0p3",
+      "stock_mwh_lhv": 0.3,
+      "island_capable": true,
+      "chp_available": true
+    },
+    {
+      "id": "buffer_0p6",
+      "stock_mwh_lhv": 0.6,
+      "island_capable": true,
+      "chp_available": true
+    },
+    {
+      "id": "buffer_0p6_not_islanded",
+      "stock_mwh_lhv": 0.6,
+      "island_capable": false,
+      "chp_available": true
+    },
+    {
+      "id": "buffer_0p6_chp_unavailable",
+      "stock_mwh_lhv": 0.6,
+      "island_capable": true,
+      "chp_available": false
+    }
+  ],
+  "resilience_definition": {
+    "time_h": 3,
+    "gas_inflow_during_disruption_mw_lhv": 0.0,
+    "critical_electric_load_mw": 0.12,
+    "critical_heat_load_mw": 0.1,
+    "electric_efficiency_lhv": 0.4,
+    "thermal_efficiency_lhv": 0.3915939519083461,
+    "chp_electric_rating_mw": 0.499,
+    "grid_power_available": false,
+    "backup_heat_available": false,
+    "island_capable_and_black_start_is_hypothetical": true,
+    "metric": "MWh electric/heat critical demand served during declared interruption; not regional resilience, plant capability or black-start validation."
+  },
+  "excluded_from_scope": [
+    "Probability or confidence intervals",
+    "Enacted Swedish policy premiums or incentives",
+    "Outage recovery/restart constraints",
+    "Plant measured hourly heat demand",
+    "Plant actual islanding or export meter data",
+    "Net profitability or emissions implications"
+  ]
+}

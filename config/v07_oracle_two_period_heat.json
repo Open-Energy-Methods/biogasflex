@@ -1,0 +1,29 @@
+{
+  "case_id": "v07_analytic_two_period_heat_backup_80_EUR_MWhth",
+  "evidence_status": "ENTIRELY SYNTHETIC analytic heat service oracle; heat demand and EUR80 backup coefficient are not measured",
+  "price_zone": "SE3",
+  "electric_rating_mw": 0.4,
+  "gas_input_mw_lhv": 0.6,
+  "electric_efficiency_lhv": 0.4,
+  "thermal_efficiency_lhv": 0.45,
+  "gas_storage_capacity_mwh_lhv": 0.4,
+  "initial_gas_inventory_mwh_lhv": 0.0,
+  "fixed_flaring_mw_lhv": 0.0,
+  "fixed_losses_mw_lhv": 0.0,
+  "price_window_end_utc": "2020-01-01T02:00:00+00:00",
+  "expected_duration_hours": 2,
+  "storage_sweep_mwh_lhv": [
+    0,
+    0.1,
+    0.2,
+    0.4,
+    0.8
+  ],
+  "heat_service_model": "instantaneous_heat_service_no_thermal_store_v07",
+  "heat_demand_mw_th": 0.27,
+  "aux_heat_capacity_mw_th": 0.3,
+  "heat_dump_capacity_mw_th": 0.5,
+  "aux_heat_cost_eur_per_mwh_th": 80.0,
+  "heat_dump_penalty_eur_per_mwh_th": 0.0,
+  "chp_variable_cost_eur_per_mwh_e": 0.0
+}

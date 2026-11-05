@@ -1,0 +1,70 @@
+{
+  "version": "0.6.0",
+  "case_id": "lovsta_2022_annual_mean_gas_buffer_under_se3_2020_prices_COUNTERFACTUAL",
+  "model_type": "continuous LP",
+  "predeclared_storage_sweep_mwh_lhv": [
+    0.0,
+    0.1,
+    0.25,
+    0.5,
+    1.0,
+    2.0
+  ],
+  "cases": [
+    {
+      "capacity_mwh_lhv": 0.0,
+      "baseline_revenue_eur": 228.17017899543376,
+      "optimal_revenue_eur": 228.17017899543376,
+      "incremental_gross_revenue_eur": 0.0,
+      "max_balance_residual_mwh": 0.0,
+      "solver_status": 0
+    },
+    {
+      "capacity_mwh_lhv": 0.1,
+      "baseline_revenue_eur": 228.17017899543376,
+      "optimal_revenue_eur": 228.38657899543375,
+      "incremental_gross_revenue_eur": 0.21639999999999304,
+      "max_balance_residual_mwh": 2.7755575615628914e-17,
+      "solver_status": 0
+    },
+    {
+      "capacity_mwh_lhv": 0.25,
+      "baseline_revenue_eur": 228.17017899543376,
+      "optimal_revenue_eur": 228.71117899543376,
+      "incremental_gross_revenue_eur": 0.5409999999999968,
+      "max_balance_residual_mwh": 1.1102230246251565e-16,
+      "solver_status": 0
+    },
+    {
+      "capacity_mwh_lhv": 0.5,
+      "baseline_revenue_eur": 228.17017899543376,
+      "optimal_revenue_eur": 229.24824036529677,
+      "incremental_gross_revenue_eur": 1.0780613698630077,
+      "max_balance_residual_mwh": 0.0,
+      "solver_status": 0
+    },
+    {
+      "capacity_mwh_lhv": 1.0,
+      "baseline_revenue_eur": 228.17017899543376,
+      "optimal_revenue_eur": 230.25015936073055,
+      "incremental_gross_revenue_eur": 2.079980365296791,
+      "max_balance_residual_mwh": 1.1102230246251565e-16,
+      "solver_status": 0
+    },
+    {
+      "capacity_mwh_lhv": 2.0,
+      "baseline_revenue_eur": 228.17017899543376,
+      "optimal_revenue_eur": 231.86027022831047,
+      "incremental_gross_revenue_eur": 3.6900912328767106,
+      "max_balance_residual_mwh": 1.1102230246251565e-16,
+      "solver_status": 0
+    }
+  ],
+  "claim_boundary": "Electricity-only perfect-foresight gross opportunity; no heat-service validation",
+  "provenance": {
+    "config_path": "config/v06_lovsta_counterfactual.json",
+    "config_sha256": "b424b12a90ce6c6f50155f85ec39326090c0ec533a7810f1c4edc7f34d2c5766",
+    "price_path": "data/observed/svk_se3_20200101_CC-BY-4.0.csv",
+    "price_sha256": "25734490a17b1c3506ae0b7ca873d38bfbf1991f4746afeeac1b39f93873bce8"
+  }
+}

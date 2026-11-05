@@ -1,0 +1,24 @@
+test_dst_fall_back_25_hour_day (test_baseline.BaselineTests.test_dst_fall_back_25_hour_day) ... ok
+test_dst_spring_forward_23_hour_day (test_baseline.BaselineTests.test_dst_spring_forward_23_hour_day) ... ok
+test_hourly_revenue_independently_recomputed (test_baseline.BaselineTests.test_hourly_revenue_independently_recomputed) ... ok
+test_missing_final_observation_rejected_by_duration (test_baseline.BaselineTests.test_missing_final_observation_rejected_by_duration) ... ok
+test_missing_interval_rejected (test_baseline.BaselineTests.test_missing_interval_rejected) ... ok
+test_negative_price_is_accepted (test_baseline.BaselineTests.test_negative_price_is_accepted) ... ok
+test_no_silent_duplicate_timestamp (test_baseline.BaselineTests.test_no_silent_duplicate_timestamp) ... ok
+test_nonfinite_price_rejected (test_baseline.BaselineTests.test_nonfinite_price_rejected) ... ok
+test_price_ordering_is_canonical (test_baseline.BaselineTests.test_price_ordering_is_canonical) ... ok
+test_price_unit_wrong (test_baseline.BaselineTests.test_price_unit_wrong) ... ok
+test_quarter_hour_price_duration (test_baseline.BaselineTests.test_quarter_hour_price_duration) ... ok
+test_synthetic_oracle (test_baseline.BaselineTests.test_synthetic_oracle) ... ok
+test_unsupported_efficiency_and_capacity (test_baseline.BaselineTests.test_unsupported_efficiency_and_capacity) ... ok
+test_utc_offsets_equivalent (test_baseline.BaselineTests.test_utc_offsets_equivalent) ... ok
+test_zone_mismatch (test_baseline.BaselineTests.test_zone_mismatch) ... ok
+test_annual_lovsta_rating_and_headroom (test_baseline.ObservedReferenceTests.test_annual_lovsta_rating_and_headroom) ... ok
+test_license_attribution_is_present (test_baseline.ObservedReferenceTests.test_license_attribution_is_present) ... ok
+test_licensed_svk_snapshot_integrity (test_baseline.ObservedReferenceTests.test_licensed_svk_snapshot_integrity) ... ok
+test_lovsta_cross_year_counterfactual_ledger_and_revenue (test_baseline.ObservedReferenceTests.test_lovsta_cross_year_counterfactual_ledger_and_revenue) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.005s
+
+OK

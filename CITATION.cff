@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If using the BiogasFlex development candidate, cite the software version and underlying data providers. There is no DOI or peer-reviewed paper yet."
+title: "BiogasFlex: Auditable Storage-Buffered Biogas CHP Flexibility Demonstrator"
+type: software
+authors:
+  - family-names: "Sivaprasadan"
+    given-names: "Abhijith"
+version: "0.9.1"
+license: "MIT"
+abstract: "Research-development candidate for heat-aware, storage-buffered CHP linear dispatch, finite scenario sensitivity and bounded hypothetical critical-service accounting. Numerical verification, not operational validation."
