@@ -123,7 +123,7 @@ class VersionAndDocumentationTests(unittest.TestCase):
         for name in ('reproduce_v091.sh','reproduce_v091.ps1','verify_v091_environment.py'):
             self.assertTrue((ROOT/'scripts'/name).is_file(),name)
         workflow=(ROOT/'.github/workflows/ci.yml').read_text(encoding='utf-8')
-        for literal in ('windows-latest','macos-latest','ubuntu-latest','3.13','reproduce_v091.sh','reproduce_v091.ps1'):
+        for literal in ('windows-latest','macos-latest','ubuntu-latest','3.13','reproduce_v092.sh','reproduce_v092.ps1'):
             self.assertIn(literal,workflow)
 
 if __name__ == '__main__':
