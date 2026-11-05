@@ -135,10 +135,21 @@ class ExactTwoIntervalTests(unittest.TestCase):
         self.assertLess(report["max_abs_optimized_objective_disagreement_eur"], 2e-6)
 
     def test_no_solver_dependencies_in_analytical_oracle(self):
+        import ast
         source = (ROOT/"scripts/oracle_v093_two_interval.py").read_text(encoding="utf-8")
-        self.assertNotIn("from scipy",source)
-        self.assertNotIn("import scipy",source)
-        self.assertNotIn("numpy",source.lower())
+        tree = ast.parse(source)
+        imported = []
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                imported.extend(alias.name for alias in node.names)
+            elif isinstance(node, ast.ImportFrom) and node.module:
+                imported.append(node.module)
+        self.assertTrue(imported)
+        self.assertFalse(
+            any(name.split(".")[0] in {"scipy", "numpy", "biogasflex"}
+                for name in imported),
+            imported,
+        )
 
 
 if __name__ == "__main__":
