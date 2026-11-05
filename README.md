@@ -1,3 +1,40 @@
+# BiogasFlex v0.9.5 — Experimental ramp and synthetic forecast sensitivity
+
+**Status:** research development candidate, not a published GitHub
+Release, Zenodo DOI, real CHP control design, or human-reviewed
+scientific finding. This version advances directly from v0.9.3:
+no v0.9.4 release is being asserted.
+
+The new **opt-in, continuously-on** CHP optimization adds directional
+electric-output ramp limits and a minimum power bound while preserving
+cyclic gas conservation and instantaneous heat service. A fixed
+synthetic forecast dispatch can also be scored against an explicitly
+supplied realized-price trajectory, with ex-post perfect-foresight
+regret. **This is not a unit-commitment MILP or validated plant model.**
+
+```bash
+python -m pip install -e .
+bash scripts/reproduce_v095.sh
+python -m biogasflex operating-surrogate
+python -m biogasflex forecast-regret
+```
+
+For Windows PowerShell use `./scripts/reproduce_v095.ps1`.
+Both new commands run **entirely fabricated toy scenarios**,
+show a result summary, and write no output unless `--output` is set.
+The original 286 pinned scientific files, 216 24-hour market cases,
+five hypothetical emergencies and inherited independent audit
+checks remain unchanged.
+
+Read the [v0.9.5 mathematical protocol](docs/V095_EXPERIMENTAL_PROTOCOL.md),
+[internal audit](reports/V095_INTERNAL_AUDIT.md), and
+[change evidence](docs/V095_CHANGE_EVIDENCE.csv). These experiments do
+not establish actual CHP ramp/startup performance, representative
+annual revenues, plant investment/NPV, calibrated forecast losses, or
+islanding/black-start capability.
+
+---
+
 # BiogasFlex v0.9.3 — Analytical oracle and synthetic stress (development candidate)
 
 **Status:** hosted **10/10 CI jobs passed** ([v0.9.3 verified run](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/42038354589)). Still a development candidate, not a public GitHub Release, DOI, field calibration, or human peer-reviewed result.
@@ -31,7 +68,8 @@ verification. Installing dependencies may need internet access;
 the research reproduction itself is offline.
 
 See [verification protocol](docs/V093_VERIFICATION_PROTOCOL.md),
-[internal audit](reports/V093_INTERNAL_AUDIT.md),\n[observed host matrix](docs/V093_REPRODUCIBILITY_MATRIX.md) and
+[internal audit](reports/V093_INTERNAL_AUDIT.md),
+[observed host matrix](docs/V093_REPRODUCIBILITY_MATRIX.md) and
 [change register](docs/V093_CHANGE_EVIDENCE.csv).
 Synthetic stress does not prove real CHP economics, general 24-hour
 solver independence, representative annual results, storage vessel

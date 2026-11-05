@@ -1,3 +1,23 @@
+# v0.9.5 — 2026-11-05 — experimental CHP power envelopes and forecast regret
+
+- Added a separate opt-in **continuous always-on** heat-aware CHP LP:
+  minimum electric power, up/down MW_e/hour midpoint ramps, declared
+  starting power; an infeasible fixed comparator is explicitly rejected.
+- Added synthetic **fixed-schedule forecast-vs-realization** valuation
+  with no replanning and an ex-post perfect-foresight regret bound.
+- Added fully invented 2-hour toy examples, deterministic 24-hour
+  ramp audit, 15 operating and 3 user CLI tests.
+- Extended active package version, CITATION, reproducibility scripts,
+  3×3 hosted CI and independent wheel-install smoke, strict manifest.
+- Retained all 286 frozen scientific source pins, original 216+5
+  research results, 216 dual certificates and 96 solver-free synthetic
+  comparisons.
+- Explicitly **skipped 0.9.4**: no intervening version/release is
+  claimed. No physical plant validation, realistic on/off commitment,
+  actual profitability, public GitHub Release, or Zenodo DOI is implied.
+
+---
+
 # v0.9.3 — 2026-11-05 — independent two-interval oracle and deterministic stress
 
 - New standard-library exact 2-interval optimum by breakpoint
