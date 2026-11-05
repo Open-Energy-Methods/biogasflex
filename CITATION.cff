@@ -5,6 +5,6 @@ type: software
 authors:
   - family-names: "Sivaprasadan"
     given-names: "Abhijith"
-version: "0.9.2"
+version: "0.9.3"
 license: "MIT"
 abstract: "Research-development candidate for heat-aware, storage-buffered CHP linear dispatch, finite scenario sensitivity and bounded hypothetical critical-service accounting. Numerical verification, not operational validation."

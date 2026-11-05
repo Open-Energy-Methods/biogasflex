@@ -1,3 +1,44 @@
+# BiogasFlex v0.9.3 — Analytical oracle and synthetic stress (development candidate)
+
+**Status:** hosted **10/10 CI jobs passed** ([v0.9.3 verified run](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/42038354589)). Still a development candidate, not a public GitHub Release, DOI, field calibration, or human peer-reviewed result.
+
+This increment adds a **solver-free exact two-interval oracle** and a
+**96-case seeded synthetic stress suite**, checking cost/price
+translations, storage monotonicity, zero-buffer behavior and
+irregular interval lengths. The existing 216 original market-case
+primal/dual checks and the original five hypothetical outage cases
+remain unchanged.
+
+Reproduce from a complete checkout (after installing Python 3.10+
+and dependencies):
+
+```bash
+python -m pip install -e .
+bash scripts/reproduce_v093.sh
+```
+
+Windows PowerShell:
+
+```powershell
+python -m pip install -e .
+./scripts/reproduce_v093.ps1
+```
+
+The full gate includes original independently audited research results,
+**286 frozen source hashes**, 216 dual certificates, 96 synthetic
+two-interval comparisons, strict manifest coverage and CI
+verification. Installing dependencies may need internet access;
+the research reproduction itself is offline.
+
+See [verification protocol](docs/V093_VERIFICATION_PROTOCOL.md),
+[internal audit](reports/V093_INTERNAL_AUDIT.md),\n[observed host matrix](docs/V093_REPRODUCIBILITY_MATRIX.md) and
+[change register](docs/V093_CHANGE_EVIDENCE.csv).
+Synthetic stress does not prove real CHP economics, general 24-hour
+solver independence, representative annual results, storage vessel
+feasibility or outage resilience.
+
+---
+
 # BiogasFlex v0.9.2 — Optimality certificates (development candidate)
 
 **Status:** pre-release with a **10/10 green hosted cross-platform CI matrix** ([v0.9.2 Actions](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/42034834791)); not field validated, independently human-reviewed or DOI-published.
@@ -27,7 +68,8 @@ source and ledger audits, 286 inherited scientific file hashes,
 216 independent primal/dual checks, strict manifest and Git coverage.
 Dependencies may require network access during installation; scientific
 reproduction operates on included observations thereafter.
-See [optimality method and boundaries](docs/V092_OPTIMALITY_CERTIFICATION.md),\n[hosted v0.9.2 reproducibility](docs/V092_REPRODUCIBILITY_MATRIX.md),
+See [optimality method and boundaries](docs/V092_OPTIMALITY_CERTIFICATION.md),
+[hosted v0.9.2 reproducibility](docs/V092_REPRODUCIBILITY_MATRIX.md),
 [reproducibility history](docs/V091_REPRODUCIBILITY_MATRIX.md), and
 [change evidence](docs/V092_CHANGE_EVIDENCE.csv).
 **Do not extrapolate scenario counts into probabilities or selected-day

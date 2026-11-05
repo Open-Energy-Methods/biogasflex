@@ -7,7 +7,7 @@ from .dispatch import run_dispatch, run_sweep
 from .heat_dispatch import run_heat_dispatch
 from .svk import fetch_local_day
 
-parser = argparse.ArgumentParser(description='BiogasFlex 0.9.2: audited baseline, heat-aware dispatch and conditional service security')
+parser = argparse.ArgumentParser(description='BiogasFlex 0.9.3: audited baseline, heat-aware dispatch and conditional service security')
 sub = parser.add_subparsers(dest='command', required=True)
 p = sub.add_parser('fetch-svk', help='Retrieve a licensed day of historical SE3 prices')
 p.add_argument('--output', type=Path, default=Path('data/external/svk_se3_20200101.csv'))
