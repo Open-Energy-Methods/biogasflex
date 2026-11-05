@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - '.bootstrap/BiogasFlex_v0.9.1_Release_Engineering_Verified_Package.zip'
+      - '.github/workflows/bootstrap.yml'
 permissions:
   contents: write
 jobs:
@@ -60,6 +61,10 @@ jobs:
       - name: Commit and push verified project tree
         shell: bash
         run: |
+          # GitHub Actions token cannot introduce new workflow files. The
+          # connected GitHub application adds the validated CI file afterward.
+          git rm --cached -f .github/workflows/ci.yml
+          rm -f .github/workflows/ci.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if git diff --cached --quiet; then
