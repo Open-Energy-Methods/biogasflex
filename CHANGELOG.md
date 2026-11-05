@@ -11,7 +11,7 @@
 - Explicit fixed reference feasibility: only report an increment
   for a genuinely feasible on/off baseline; preserve the original
   heat LP as a mathematical upper bound on net committed value.
-- Added 13 operating MILP and 3 CLI tests and a pure-Python
+- **Observed hosted verification:** 10/10 jobs green on Ubuntu, macOS, Windows Python 3.11–3.13 and a wheel smoke; all 208 regression tests, 216 original dual cases, 96 v0.9.3 solver-free cases, 286 original research hashes and 402-file pre-final manifest passed. See [v0.9.6 matrix](docs/V096_REPRODUCIBILITY_MATRIX.md).\n- Synthetic 24-hour commitment audit checked two-interval min up/down periods with zero gas/steady-on ramp residuals.\n- Added 13 operating MILP and 3 CLI tests and a pure-Python
   exhaustive 3h toy oracle (€55/€35/€15 for minimum up-time
   1/2/3), plus read-only verification script and mock data.
 - Added versioned Python environment MILP smoke, Bash/PowerShell

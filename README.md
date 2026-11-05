@@ -1,6 +1,6 @@
 # BiogasFlex v0.9.6 — Experimental binary CHP commitment (development candidate)
 
-**Scope:** Software verification of an explicitly synthetic on/off
+**Status:** **10/10 hosted CI jobs passed** ([v0.9.6 verified development workflow](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/42046779132)).\n\n**Scope:** Software verification of an explicitly synthetic on/off
 gas-buffered CHP MILP. No actual plant calibration, formal independent
 scientific review, published GitHub Release or DOI is claimed.
 
@@ -35,7 +35,7 @@ original scenario reproductions**, the inherited **96 solver-free
 synthetic comparisons** and v0.9.5 operating-envelope tests.
 See [exact modeling protocol](docs/V096_COMMITMENT_PROTOCOL.md),
 [change register](docs/V096_CHANGE_EVIDENCE.csv) and
-[internal audit](reports/V096_INTERNAL_AUDIT.md).
+[internal audit](reports/V096_INTERNAL_AUDIT.md), and\n[hosted v0.9.6 reproducibility matrix](docs/V096_REPRODUCIBILITY_MATRIX.md).
 
 **Do not treat synthetic CHP commitment value as real revenue,
 annual profit, equipment availability, guaranteed islanding,

@@ -138,7 +138,7 @@ solver-free two-interval synthetic tests, v0.9.5 operational/price
 stress, environment/wheel smoke, strict full-tree SHA-256 manifest
 and Git coverage.
 
-## Claims boundary and open research
+Hosted CI evidence and exact numerical outcomes are recorded in\n[the v0.9.6 reproducibility matrix](V096_REPRODUCIBILITY_MATRIX.md).\n\n## Claims boundary and open research
 
 The new MILP represents a *mathematical commitment surrogate*,
 not CHP start physics or an empirically calibrated control model.

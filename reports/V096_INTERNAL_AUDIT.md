@@ -1,7 +1,6 @@
 # BiogasFlex v0.9.6 — internal on/off commitment code audit
 
-**Prepared:** 2026-11-05. **Status:** experimental candidate pending hosted
-CI and external human scientific review. The scope is software
+**Prepared:** 2026-11-05. **Status:** experimental software candidate with\n**10/10 hosted CI PASS**; external human scientific review outstanding. The scope is software
 verification, **not** a validated CHP operator schedule.
 
 ## Scientific boundary
@@ -53,3 +52,23 @@ electrical grid constraints, NPV/CAPEX, realistic market settlement
 and islanding/black-start hardware are absent. Independent scientific
 methodological review tracked in issue #3 is outstanding. No public
 GitHub Release or DOI warranted by this incremental internal audit.
+
+## Observed QA evidence — 5 November 2026
+
+The [branch workflow 42046779132](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/42046779132)
+passed all **10/10 jobs** on Ubuntu/macOS/Windows Python 3.11–3.13
+and a separate installed-wheel smoke test. The Linux Python 3.12
+reproduction logs show **208 passing regression tests**, **216 original
+market LP dual checks**, **96 older solver-free synthetic comparisons**,
+**286 original frozen scientific hashes** and a complete **402-entry
+checksum manifest**. The new three-hour independent exhaustive
+fuel-grid oracle reproduced **€55/€35/€15** modeled net contributions
+for minimum-up 1/2/3 intervals. The separate 24-hour synthetic
+commitment case reported **zero** gas-balance residual and
+steady-on ramp violation with two-interval minimum up/down times.
+
+Final documentation changes add a v0.9.6 hosted matrix and one more
+manifest entry; the final snapshot must be reverified before merge.
+
+All values are internal **synthetic software consistency** checks,
+not observed plant earnings, dynamics or validated reliability.
