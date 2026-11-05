@@ -6,7 +6,7 @@ $steps = @(
     @('scripts/recompute_v09_against_frozen.py'),
     @('scripts/independent_v08_audit.py'),
     @('scripts/audit_v09_candidate.py'),
-    @('scripts/verify_v091_environment.py'),
+    @('scripts/verify_v092_environment.py'),
     @('scripts/verify_v091_inherited_frozen.py'),
     @('scripts/certify_v092_dual_bounds.py'),
     @('scripts/verify_v09_manifest.py'),

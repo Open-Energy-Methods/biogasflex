@@ -6,7 +6,7 @@ python -m unittest discover -s tests -q
 python scripts/recompute_v09_against_frozen.py
 python scripts/independent_v08_audit.py
 python scripts/audit_v09_candidate.py
-python scripts/verify_v091_environment.py
+python scripts/verify_v092_environment.py
 python scripts/verify_v091_inherited_frozen.py
 python scripts/certify_v092_dual_bounds.py
 python scripts/verify_v09_manifest.py

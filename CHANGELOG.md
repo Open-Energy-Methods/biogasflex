@@ -3,7 +3,7 @@
 - Added an independently **formulated**, bounded-LP dual for all 216 frozen CHP market cases, with primal feasibility, dual feasibility and economic-contribution gap checks.
 - Added adversarial edits of gas dispatch, CHP rating, cost claim and nonfinite input, plus an analytical two-interval €8.25 oracle.
 - Kept the same SciPy/HiGHS solver backend; this is **not independent solver implementation** or external reviewer certification.
-- Updated version metadata, full Bash/PowerShell reproduction gates and hosted Python 3.11–3.13 cross-platform CI. No frozen model, observed source, simulation result or scientific claim altered.
+- Updated version metadata, full Bash/PowerShell reproduction gates and hosted Python 3.11–3.13 cross-platform CI. The first hosted 10-job matrix passed; see [observed v0.9.2 evidence](docs/V092_REPRODUCIBILITY_MATRIX.md). A dedicated v0.9.2 environment checker preserves the historic v0.9.1 checker separately. No frozen model, observed source, simulation result or scientific claim altered.
 - Human scientific review, realistic CHP dynamics and site-economic/critical-service evidence remain out of scope. No GitHub Release or Zenodo DOI is being made.
 
 ---

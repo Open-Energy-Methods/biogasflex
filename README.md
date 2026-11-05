@@ -27,7 +27,7 @@ source and ledger audits, 286 inherited scientific file hashes,
 216 independent primal/dual checks, strict manifest and Git coverage.
 Dependencies may require network access during installation; scientific
 reproduction operates on included observations thereafter.
-See [optimality method and boundaries](docs/V092_OPTIMALITY_CERTIFICATION.md),
+See [optimality method and boundaries](docs/V092_OPTIMALITY_CERTIFICATION.md),\n[hosted v0.9.2 reproducibility](docs/V092_REPRODUCIBILITY_MATRIX.md),
 [reproducibility history](docs/V091_REPRODUCIBILITY_MATRIX.md), and
 [change evidence](docs/V092_CHANGE_EVIDENCE.csv).
 **Do not extrapolate scenario counts into probabilities or selected-day

@@ -1,4 +1,4 @@
-"""Offline environment and install metadata smoke check for v0.9.2."""
+"""Offline environment and install metadata smoke check for v0.9.1."""
 from __future__ import annotations
 import argparse
 from importlib import metadata
@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 
 MIN_PYTHON = (3, 10)
-RELEASE_VERSION = '0.9.2'
+RELEASE_VERSION = '0.9.1'
 
 def run(check_install: bool = False) -> dict:
     from biogasflex import __version__

@@ -25,7 +25,7 @@ jobs:
         run: |
           python -m pip install -e .
           python -m pip check
-          python scripts/verify_v091_environment.py --require-installed
+          python scripts/verify_v092_environment.py --require-installed
       - name: Linux or macOS offline research gates
         if: runner.os != 'Windows'
         shell: bash
@@ -55,4 +55,4 @@ jobs:
         run: |
           cd /tmp
           "$GITHUB_WORKSPACE/.venv/bin/python" -m biogasflex --help
-          "$GITHUB_WORKSPACE/.venv/bin/python" "$GITHUB_WORKSPACE/scripts/verify_v091_environment.py" --require-installed
+          "$GITHUB_WORKSPACE/.venv/bin/python" "$GITHUB_WORKSPACE/scripts/verify_v092_environment.py" --require-installed

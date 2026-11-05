@@ -80,7 +80,7 @@ class DualBoundTests(unittest.TestCase):
         self.assertEqual(__version__, "0.9.2")
         self.assertIn('version = "0.9.2"', (ROOT/"pyproject.toml").read_text(encoding="utf-8"))
         self.assertIn('version: "0.9.2"', (ROOT/"CITATION.cff").read_text(encoding="utf-8"))
-        for p in ("reproduce_v092.sh","reproduce_v092.ps1"):
+        for p in ("reproduce_v092.sh","reproduce_v092.ps1","verify_v092_environment.py"):
             self.assertTrue((ROOT/"scripts"/p).is_file())
             self.assertIn(p,(ROOT/".github/workflows/ci.yml").read_text(encoding="utf-8"))
 

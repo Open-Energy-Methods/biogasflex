@@ -72,4 +72,4 @@ positive cases are a finite-grid count, not a probability. The maximum
 €15.7953 is a selected-day *conditional incremental contribution*, not
 annual profit.
 
-This increment does **not** create a GitHub Release or Zenodo DOI.
+See [observed hosted reproducibility](V092_REPRODUCIBILITY_MATRIX.md) and [internal audit evidence](../reports/V092_OPTIMALITY_AUDIT.md).\n\nThis increment does **not** create a GitHub Release or Zenodo DOI.
