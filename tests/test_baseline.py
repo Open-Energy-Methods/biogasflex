@@ -140,7 +140,7 @@ class ObservedReferenceTests(unittest.TestCase):
         self.assertTrue(self.config['scenario_is_hypothetical'])
 
     def test_license_attribution_is_present(self):
-        provenance=(ROOT/'data/observed/README.md').read_text()
+        provenance=(ROOT/'data/observed/README.md').read_text(encoding='utf-8')
         self.assertIn('Svenska kraftnät',provenance)
         self.assertIn('Creative Commons Attribution 4.0',provenance)
         self.assertIn('reformatted extract',provenance)
