@@ -28,8 +28,8 @@ def config(**changes):
         "heat_dump_capacity_mw_th":0.5,"aux_heat_cost_eur_per_mwh_th":0.0,
         "heat_dump_penalty_eur_per_mwh_th":0.0,"chp_variable_cost_eur_per_mwh_e":0.0,
         "experimental_v096":{
-            "model":MODEL, "ramp_up_mw_e_per_hour":0.0,
-            "ramp_down_mw_e_per_hour":0.0, "minimum_on_power_mw_e":0.2,
+            "model":MODEL, "ramp_up_mw_e_per_hour":100.0,
+            "ramp_down_mw_e_per_hour":100.0, "minimum_on_power_mw_e":0.2,
             "initial_on":False,"initial_power_mw_e":0.0,
             "startup_cost_eur":5.0,"shutdown_cost_eur":2.0,
             "minimum_up_intervals":1, "minimum_down_intervals":1,
@@ -79,8 +79,6 @@ def half_grid_oracle(minimum_up=1, min_down=1, startup_cost=5.0):
             if starts[i] and (i+minimum_up>3 or not all(on[i:i+minimum_up])):
                 valid=False
             if stops[i] and (i+min_down>3 or any(on[i:i+min_down])):
-                valid=False
-            if i and on[i-1]==on[i]==1 and abs(fuel[i]-fuel[i-1])>1e-9:
                 valid=False
         if not valid:
             continue
