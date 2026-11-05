@@ -81,9 +81,9 @@ thermal CHP efficiency with auxiliary heat supplied, 1 MW_LHV net gas,
 | Ramp up/down 0.1 MW_e/hour | €5 |
 | Loose ramps and 0.36 MW_e continuously-on floor | €4 |
 | Loose ramps with no lower output floor | €20 |
-| Opposite synthetic forecast, loose ramps | €40 ex-post perfect-foresight regret |
+| Opposite synthetic forecast, loose ramps | €20 ex-post perfect-foresight regret |
 
-All contribution figures are synthetic modeled EUR over **two
+Because the initial inventory is **zero**, dispatch can defer gas to\nthe later expensive hour but cannot borrow gas from the future to\nrun *above production* in the first hour. Under reversed forecast\nprices, the forecast-scheduled dispatch therefore stays fixed, with\n€20 hindsight regret under loose ramps or €5 under the default\n0.1 MW_e/hour ramp. The realized increment over the fixed baseline\nis **€0** in both reversed-forecast examples.\n\nAll contribution figures are synthetic modeled EUR over **two
 intervals**, not commercial revenue or actual profit. A separate
 positive-thermal-efficiency test audits CHP heat conservation.
 

@@ -65,10 +65,10 @@ def audit():
         "ramp_down_mw_e_per_hour":100.0,
     }}
     price_error = evaluate_fixed_forecast_schedule(c,forecast,actual)
-    _close(price_error["perfect_foresight_regret_eur"],40.0,
+    _close(price_error["perfect_foresight_regret_eur"],20.0,
            "reversed synthetic price forecast regret")
-    _close(price_error["realized_increment_over_fixed_eur"],-20.0,
-           "adversarial forecast can underperform fixed generation")
+    _close(price_error["realized_increment_over_fixed_eur"],0.0,
+           "forecast cannot advance fuel without initial stock")
 
     # A second, longer 24-h synthetic operating stress checks the
     # midpoint ramp rows and noncyclic internal inventory (cyclic endpoint).

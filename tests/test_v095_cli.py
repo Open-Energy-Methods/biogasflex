@@ -21,8 +21,8 @@ class ExperimentalCLITests(unittest.TestCase):
 
     def test_synthetic_price_regret(self):
         r=json.loads(self.invoke("forecast-regret").stdout)
-        self.assertAlmostEqual(r["perfect_foresight_regret_eur"],10.0)
-        self.assertAlmostEqual(r["realized_increment_over_fixed_eur"],-5.0)
+        self.assertAlmostEqual(r["perfect_foresight_regret_eur"],5.0)
+        self.assertAlmostEqual(r["realized_increment_over_fixed_eur"],0.0)
 
     def test_explicit_full_json_export(self):
         with tempfile.TemporaryDirectory() as tmp:

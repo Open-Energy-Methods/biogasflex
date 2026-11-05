@@ -162,13 +162,13 @@ class ForecastRegretTests(unittest.TestCase):
         self.assertAlmostEqual(r["perfect_foresight_regret_eur"],0.0)
         self.assertAlmostEqual(r["realized_increment_over_fixed_eur"],20.0)
 
-    def test_reversed_price_signal_has_40_euro_regret(self):
+    def test_reversed_price_signal_has_20_euro_regret_with_empty_initial_storage(self):
         r = evaluate_fixed_forecast_schedule(
             self._free(), prices((100,0)), prices((0,100)))
         self.assertAlmostEqual(r["realized_perfect_foresight_upper_bound_eur"],
                                60.0-4.0)
-        self.assertAlmostEqual(r["perfect_foresight_regret_eur"],40.0)
-        self.assertAlmostEqual(r["realized_increment_over_fixed_eur"],-20.0)
+        self.assertAlmostEqual(r["perfect_foresight_regret_eur"],20.0)
+        self.assertAlmostEqual(r["realized_increment_over_fixed_eur"],0.0)
 
     def test_forecast_misalignment_rejected(self):
         start = datetime(2020,1,2,tzinfo=timezone.utc)

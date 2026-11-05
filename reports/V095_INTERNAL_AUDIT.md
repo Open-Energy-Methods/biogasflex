@@ -49,3 +49,7 @@ fluid constraints, measured CHP export/heat demand, market trading
 rules, forecast quality validation, CAPEX/NPV, site islanding ability,
 or field pilot evidence. Original simulated scenario counts are not
 probabilities. External independent review tracked in GitHub issue #3.
+
+## Analytical boundary correction found by hosted CI
+
+The original synthetic reversed-forecast oracle erroneously assumed that a\nzero-initial-inventory CHP could *advance* gas from the future to\nthe first hour. Corrected exact forecast regret is **€20** with\nnonbinding ramps and **€5** with the declared 0.1 MW_e/hour ramp;\nforecast schedule realized incremental value over the fixed comparator\nis zero. This is a consequence of strict first-period gas conservation,\nnot a numerical solver flaw. The correction changes only synthetic\noracle expectations, internal documentation and tests, never the\noriginal scientific scenario results.\n
