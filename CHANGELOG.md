@@ -8,6 +8,8 @@
 - Add Linux/macOS Bash and Windows PowerShell v0.9.1 reproducibility scripts and configure multi-OS Python 3.11/3.12/3.13 GitHub Actions plus separate wheel-install smoke.
 - Build wheel and sdist; document actual local environment and untested hosted runners truthfully. No GitHub release, Zenodo DOI, human peer review or physical validation.
 
+- **Hosted CI verification (2026-11-05):** 9/9 cross-platform reproducibility jobs passed (Ubuntu, Windows, macOS × Python 3.11–3.13); 1/1 installed-wheel smoke job passed. Repaired Windows timezone data dependency, locale-sensitive provenance reading, case-insensitive filesystem adversarial testing, and Windows Git CRLF conversion of frozen files. Recorded [GitHub Actions evidence](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/42029027186). No frozen scientific results changed.
+
 ---
 
 # Changelog

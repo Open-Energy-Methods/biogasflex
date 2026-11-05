@@ -83,9 +83,16 @@ class ManifestAdversarialTests(unittest.TestCase):
         self.assertEqual(manifest.verify(self.root),1)
 
     def test_case_preserving_unlisted_file_rejected(self):
-        (self.src/'MODULE.py').write_text('unexpected')
-        with self.assertRaisesRegex(manifest.ManifestFailure,'unrecorded'):
-            manifest.verify(self.root)
+        alternate = self.src/'MODULE.py'
+        alternate.write_text('unexpected', encoding='utf-8')
+        # On case-insensitive filesystems, MODULE.py aliases module.py and is
+        # a checksum mutation; on case-sensitive filesystems it is unlisted.
+        if alternate.samefile(self.src/'module.py'):
+            with self.assertRaisesRegex(manifest.ManifestFailure, 'Checksum mismatch'):
+                manifest.verify(self.root)
+        else:
+            with self.assertRaisesRegex(manifest.ManifestFailure, 'unrecorded'):
+                manifest.verify(self.root)
 
     def test_symlink_in_source_rejected(self):
         target=self.root/'README.md'
