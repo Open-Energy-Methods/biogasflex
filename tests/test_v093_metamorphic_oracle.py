@@ -1,4 +1,4 @@
-"""Regression and adversarial checks for the solver-free BiogasFlex v0.9.3 oracle."""
+"""Regression and adversarial checks for the solver-free BiogasFlex v0.9.5 oracle."""
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone

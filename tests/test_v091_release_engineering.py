@@ -115,15 +115,15 @@ class ManifestAdversarialTests(unittest.TestCase):
 class VersionAndDocumentationTests(unittest.TestCase):
     def test_release_version_consistency(self):
         from biogasflex import __version__
-        self.assertEqual(__version__, '0.9.3')
-        self.assertIn('version = "0.9.3"',(ROOT/'pyproject.toml').read_text(encoding='utf-8'))
-        self.assertIn('version: "0.9.3"',(ROOT/'CITATION.cff').read_text(encoding='utf-8'))
+        self.assertEqual(__version__, '0.9.5')
+        self.assertIn('version = "0.9.5"',(ROOT/'pyproject.toml').read_text(encoding='utf-8'))
+        self.assertIn('version: "0.9.5"',(ROOT/'CITATION.cff').read_text(encoding='utf-8'))
 
     def test_expected_release_scripts_exist(self):
         for name in ('reproduce_v091.sh','reproduce_v091.ps1','verify_v091_environment.py'):
             self.assertTrue((ROOT/'scripts'/name).is_file(),name)
         workflow=(ROOT/'.github/workflows/ci.yml').read_text(encoding='utf-8')
-        for literal in ('windows-latest','macos-latest','ubuntu-latest','3.13','reproduce_v093.sh','reproduce_v093.ps1'):
+        for literal in ('windows-latest','macos-latest','ubuntu-latest','3.13','reproduce_v095.sh','reproduce_v095.ps1'):
             self.assertIn(literal,workflow)
 
 if __name__ == '__main__':
