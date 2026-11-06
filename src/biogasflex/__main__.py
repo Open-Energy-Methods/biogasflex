@@ -10,6 +10,7 @@ from .experimental_v095 import optimize_operating_surrogate, evaluate_fixed_fore
 from .experimental_v096 import optimize_commitment_milp
 from .experimental_v097 import optimize_commitment_milp as optimize_hourly_commitment
 from .experimental_v098 import evaluate_rolling_prices
+from .experimental_v099 import run_manifest
 from .svk import fetch_local_day
 
 parser = argparse.ArgumentParser(description='BiogasFlex 0.9.8.1: audited baseline, heat-aware dispatch and conditional service security')
@@ -58,6 +59,9 @@ p.add_argument('--config',type=Path,default=Path('examples/v098_toy_config.json'
 p.add_argument('--realized-prices',type=Path,default=Path('examples/v098_toy_realized_prices.csv'))
 p.add_argument('--forecast-snapshots',type=Path,default=Path('examples/v098_toy_forecast_snapshots.json'))
 p.add_argument('--output',type=Path,default=None,help='Opt-in full JSON report; otherwise summary only')
+p=sub.add_parser('historical-replay',help='v0.9.9 observed 2020 SE3 prices + naive causal price replay against entirely hypothetical CHP')
+p.add_argument('--manifest',type=Path,default=Path('examples/v099_historical_backtest.json'))
+p.add_argument('--output',type=Path,default=None,help='Opt in to write full scientific provenance and per-step replay JSON')
 args=parser.parse_args()
 if args.command == 'fetch-svk':
     result=fetch_local_day(local_date='2020-01-01',bidding_zone='SE3',output=args.output)
@@ -113,11 +117,34 @@ elif args.command == 'rolling-forecast':
     if args.output is not None:
         args.output.parent.mkdir(parents=True,exist_ok=True)
         args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n',encoding='utf-8')
+elif args.command == 'historical-replay':
+    path=args.manifest.resolve()
+    root=Path(__file__).resolve().parents[2]
+    result=run_manifest(root,path,include_hourly=args.output is not None)
+    if args.output is not None:
+        args.output.parent.mkdir(parents=True,exist_ok=True)
+        args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\\n',encoding='utf-8')
 elif args.command == 'dispatch':
     result=run_dispatch(args.config,args.prices,args.output,capacity_mwh_lhv=args.capacity_mwh_lhv)
 else:
     result=run_sweep(args.config,args.prices,args.output)
-if args.command in ('operating-surrogate','forecast-regret','unit-commitment','hourly-commitment','rolling-forecast'):
+if args.command == 'historical-replay':
+    print(json.dumps({
+        'status':result['status'],
+        'version':result['version'],
+        'observed_heldout_days':result['observed_heldout_days'],
+        'forecast_methods':result['forecast_methods'],
+        'output_path':str(args.output) if args.output is not None else None,
+        'studies':[{
+            'case_id':s['case_id'],
+            'method':s['method'],
+            'one_step_mae_eur_mwh':s['one_step_mae_eur_mwh'],
+            'rolling_realized_contribution_eur':s['rolling_realized_contribution_eur'],
+            'perfect_hindsight_regret_eur':s['perfect_hindsight_regret_eur'],
+        } for s in result['studies']],
+        'claim_limit':'Observed prices, synthetic CHP; hypothetical sequential-reveal experiment, not operational day-ahead price forecasting or validated revenue',
+    },indent=2,allow_nan=False))
+elif args.command in ('operating-surrogate','forecast-regret','unit-commitment','hourly-commitment','rolling-forecast'):
     print(json.dumps({
         'status':'EXPERIMENTAL_NOT_PLANT_VALIDATED',
         'model_type':result['model_type'],
