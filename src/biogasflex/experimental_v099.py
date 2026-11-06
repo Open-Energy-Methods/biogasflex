@@ -4,7 +4,8 @@ This is NOT an operationally available day-ahead price forecast, site
 validation, or training a statistical electricity model. Price levels are
 exposed strictly after each interval in a hypothetical sequential replay.
 Future interval *calendar* is known in advance; future prices are hidden.
-Only fixed, predeclared lag-one and three-observation-mean naive predictors.
+Three fixed, predeclared naive predictors: lag-one, three-observation mean
+and a time-varying prior-day local-hour shape with causal level adjustment.
 """
 from __future__ import annotations
 
@@ -14,12 +15,14 @@ import json
 import math
 from pathlib import Path
 from typing import Any, Sequence
+from zoneinfo import ZoneInfo
 
 from .baseline import Interval, parse_prices
 from .experimental_v098 import evaluate_rolling_prices
 from .heat_dispatch import prepare_heat_inputs
 
-METHODS = ("last_observed", "trailing_three_mean")
+METHODS = ("last_observed", "trailing_three_mean", "diurnal_template_bias")
+LOCAL_TIME_ZONE = ZoneInfo("Europe/Stockholm")
 MODEL = "historical_price_sequential_replay_synthetic_chp_v099"
 
 
@@ -39,12 +42,26 @@ def _grid(intervals: Sequence[Interval], label: str) -> None:
             raise ValueError(f"{label} contains a missing, duplicated, unsorted or overlapping interval")
 
 
+def _local_hour_template(training: Sequence[Interval]) -> dict[int, float]:
+    """Earlier complete Stockholm local-day hourly shape, never fit on holdout.
+
+    Explicitly reject missing or repeated local hours, and DST transition
+    days; no imputation or interpolation.
+    """
+    if len(training) != 24 or any(r.hours != 1.0 for r in training):
+        raise ValueError("Diurnal template needs 24 hourly observations from one earlier local day")
+    local = [r.start_utc.astimezone(LOCAL_TIME_ZONE) for r in training]
+    if len({r.date() for r in local}) != 1 or {r.hour for r in local} != set(range(24)):
+        raise ValueError("Diurnal template requires complete unique local hours 0..23")
+    return {r.hour: training[i].price_eur_per_mwh for i, r in enumerate(local)}
+
+
 def make_causal_snapshots(
     training: Sequence[Interval],
     realized: Sequence[Interval],
     method: str,
 ) -> tuple[list[list[Interval]], list[dict[str, Any]]]:
-    """Emit one remaining-horizon constant-price snapshot per decision.
+    """Emit a full causal remaining-horizon price snapshot at each decision.
 
     Invariant: prediction at t reads training + realized[:t] ONLY.
     Timestamps and interval durations for the future are known scheduling
@@ -61,16 +78,33 @@ def make_causal_snapshots(
     if prior_end > realized[0].start_utc:
         raise ValueError("Training observations overlap or occur after holdout start: future information")
     history = [r.price_eur_per_mwh for r in training]
+    template = _local_hour_template(training) if method == "diurnal_template_bias" else None
     records: list[dict[str, Any]] = []
     snapshots: list[list[Interval]] = []
     for t, row in enumerate(realized):
-        price = history[-1] if method == "last_observed" else math.fsum(history[-3:]) / min(3, len(history))
         cutoff = prior_end if t == 0 else realized[t-1].start_utc + timedelta(hours=realized[t-1].hours)
         if cutoff > row.start_utc:
             raise ValueError("Forecast cutoff exceeds simulated decision time")
+        if template is not None:
+            # Prior-day 24h *shape*. The only target-day information used is
+            # the PREVIOUS completed interval, not current/future prices.
+            prior = realized[t-1] if t else None
+            bias = (prior.price_eur_per_mwh
+                    - template[prior.start_utc.astimezone(LOCAL_TIME_ZONE).hour]
+                    if prior is not None else 0.0)
+            predicted = [
+                template[future.start_utc.astimezone(LOCAL_TIME_ZONE).hour]+bias
+                for future in realized[t:]
+            ]
+        else:
+            p = (history[-1] if method == "last_observed"
+                 else math.fsum(history[-3:]) / min(3, len(history)))
+            predicted = [p] * (len(realized)-t)
+        if any(not math.isfinite(p) for p in predicted):
+            raise ValueError("Nonfinite causal historical price forecast")
         snapshots.append([
             Interval(future.start_utc, price, future.hours, future.zone)
-            for future in realized[t:]
+            for future, price in zip(realized[t:],predicted)
         ])
         records.append({
             "step": t,
@@ -79,7 +113,7 @@ def make_causal_snapshots(
             "training_samples": len(training),
             "prior_holdout_observations_used": t,
             "future_holdout_observations_used": 0,
-            "one_step_predicted_eur_mwh": price,
+            "one_step_predicted_eur_mwh": predicted[0],
             "one_step_realized_eur_mwh": row.price_eur_per_mwh,
         })
         # Strict causal update: this observed price was invisible at step t.
@@ -206,7 +240,7 @@ def run_manifest(
         "version":"0.9.9","model_type":MODEL,
         "status":"HISTORICAL_PRICES_SYNTHETIC_PLANT_HYPOTHETICAL_SEQUENTIAL_REPLAY",
         "source_attribution":"Svenska kraftnät, SE3 day-ahead area prices 2020; CC BY 4.0",
-        "methodology":"Jan 2020 historical anchor; two 24h out-of-sample calendar windows (April and October), two untuned causal naive price predictors; no within-window future prices to forecast",
+        "methodology":"Jan 2020 historical anchor; two 24h out-of-sample April and October windows, three untuned causal price predictors including time-varying local-hour training profile; no target future prices used",
         "limitations":"Prices are real but hypothetically revealed one interval at a time, not an operationally available day-ahead forecast or physical plant revenue. Two selected days do not establish statistical skill.",
         "hypothetical_chp_config_sha256":hashlib.sha256(config_path.read_bytes()).hexdigest(),
         "source_hashes":data_sources,

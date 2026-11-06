@@ -24,7 +24,8 @@
   ],
   "methods": [
     "last_observed",
-    "trailing_three_mean"
+    "trailing_three_mean",
+    "diurnal_template_bias"
   ],
   "limitations": [
     "Svk original historical hourly prices are observed, not statistical ex-ante price forecasts",
