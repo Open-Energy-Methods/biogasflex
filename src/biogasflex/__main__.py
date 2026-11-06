@@ -123,7 +123,7 @@ elif args.command == 'historical-replay':
     result=run_manifest(root,path,include_hourly=args.output is not None)
     if args.output is not None:
         args.output.parent.mkdir(parents=True,exist_ok=True)
-        args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\\n',encoding='utf-8')
+        args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n',encoding='utf-8')
 elif args.command == 'dispatch':
     result=run_dispatch(args.config,args.prices,args.output,capacity_mwh_lhv=args.capacity_mwh_lhv)
 else:

@@ -159,7 +159,10 @@ def _read_declared(path: Path, spec: dict, zone: str) -> list[Interval]:
         raise ValueError("Historical replay inputs must be relative attributed observed-source files")
     rows = parse_prices(path/path_value,zone,
                         end_utc=spec["end_utc"],required_hours=float(spec["count"]))
-    if len(rows)!=spec["count"] or rows[0].start_utc.isoformat()!=datetime.fromisoformat(spec["first_utc"].replace("Z","+00:00")).astimezone(timezone.utc).isoformat():
+    start=datetime.fromisoformat(spec["first_utc"].replace("Z","+00:00"))
+    if start.tzinfo is None or start.utcoffset()!=timedelta(0):
+        raise ValueError("Declared first historical timestamp must be explicit UTC")
+    if len(rows)!=spec["count"] or rows[0].start_utc!=start:
         raise ValueError("Observed source has missing, extra or incorrect first UTC rows")
     _grid(rows,"Source observations")
     return rows
@@ -174,7 +177,7 @@ def run_manifest(
     """Strict offline manifest replay. No downloads, no output file by default."""
     manifest=json.loads(manifest_path.read_text(encoding="utf-8"))
     if (manifest.get("model")!=MODEL or manifest.get("zone")!="SE3"
-        or set(manifest.get("methods",[]))!=set(METHODS)
+        or manifest.get("methods")!=list(METHODS)
         or len(manifest.get("holdouts",[]))!=2):
         raise ValueError("Expected fixed two-holdout, two-method v0.9.9 protocol")
     config_path=root/manifest["hypothetical_chp_config"]
