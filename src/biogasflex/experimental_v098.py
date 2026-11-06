@@ -312,7 +312,7 @@ def optimize_commitment_milp(config: dict, intervals: Sequence[Interval]) -> dic
     if value>relaxed_bound+COST_TOL:
         raise DispatchError("Committed value exceeds matched-boundary LP relaxation")
     return {
-        "version":"0.9.8","case_id":gas.case_id,"model_type":MODEL,
+        "version":"0.9.8.1","case_id":gas.case_id,"model_type":MODEL,
         "boundary":("Price-only synthetic rolling commitment, explicit gas terminal "
                     "target, elapsed-hour prior dwell and fixed heat/gas profile; "
                     "no calibrated CHP transients, dynamic plant measurements, "
@@ -518,7 +518,7 @@ def evaluate_rolling_prices(config: dict,
     if regret < -COST_TOL:
         raise DispatchError("Realized rolling control beats optimal full-horizon hindsight")
     return {
-        "version":"0.9.8","model_type":MODEL,
+        "version":"0.9.8.1","model_type":MODEL,
         "case_id":inp.gas.case_id,
         "scope":("Synthetic price-only rolling forecasts with one-interval execution "
                  "and full remaining-horizon replanning; exact gas and heat assumptions, "

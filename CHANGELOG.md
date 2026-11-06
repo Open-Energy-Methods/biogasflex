@@ -1,3 +1,36 @@
+# v0.9.8.1 — 2026-11-06 — Rolling-commitment maintenance
+
+- Preserve the user-declared first-slot power-observation age.
+  In v0.9.8, the rolling evaluator reset it to zero,
+  which could incorrectly invalidate a feasible ramp
+  schedule despite the single-horizon solver accepting it.
+- Handle a physically invalid must-run reference as
+  **optional**. If fixed gas use would exceed nameplate
+  or heat backup/dump resources, the flexible MILP may
+  still be entirely physically feasible. Do not abort
+  that valid result; return `null` for the unavailable
+  fixed comparator and uplift.
+- Add explicit reason code `fixed_reference_status`,
+  distinguishing physical, terminal, and commitment
+  feasibility rather than labelling a fabricated gain.
+- Six additional adversarial tests including independently
+  computed single-slot ramp (€40) and two-slot
+  storage-shifting (€56) witnesses; expected suite
+  **248 tests**, to be confirmed by hosted CI.
+- Preserve v0.9.8 price-only synthetic forecast
+  experiments, 286 frozen scientific artifacts,
+  216 historic dual certificates, 96 solver-free
+  comparison cases, 216+5 reproduced scenarios, and
+  prior v0.9.5/v0.9.6/v0.9.7 audits.
+- Update package and citation metadata, full
+  cross-platform reproduction, installed-wheel CI
+  and SHA-256 integrity coverage.
+- Remains a development release: no equipment-
+  calibrated controller, trained market forecast,
+  peer review, public Release or DOI.
+
+---
+
 # v0.9.8 — 2026-11-05 — Synthetic rolling-horizon forecast price study
 
 - New separate opt-in CHP on/off MILP extension with

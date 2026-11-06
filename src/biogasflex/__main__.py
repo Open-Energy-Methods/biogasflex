@@ -12,7 +12,7 @@ from .experimental_v097 import optimize_commitment_milp as optimize_hourly_commi
 from .experimental_v098 import evaluate_rolling_prices
 from .svk import fetch_local_day
 
-parser = argparse.ArgumentParser(description='BiogasFlex 0.9.8: audited baseline, heat-aware dispatch and conditional service security')
+parser = argparse.ArgumentParser(description='BiogasFlex 0.9.8.1: audited baseline, heat-aware dispatch and conditional service security')
 sub = parser.add_subparsers(dest='command', required=True)
 p = sub.add_parser('fetch-svk', help='Retrieve a licensed day of historical SE3 prices')
 p.add_argument('--output', type=Path, default=Path('data/external/svk_se3_20200101.csv'))
@@ -53,7 +53,7 @@ p=sub.add_parser('hourly-commitment',help='v0.9.7 EXPERIMENTAL clock-hour CHP on
 p.add_argument('--config',type=Path,default=Path('examples/v097_fractional_hour_config.json'))
 p.add_argument('--prices',type=Path,default=Path('examples/v097_fractional_hour_prices.csv'))
 p.add_argument('--output',type=Path,default=None,help='Optional full experimental JSON; stdout summary by default')
-p=sub.add_parser('rolling-forecast',help='v0.9.8 EXPERIMENTAL synthetic price-only forecast/execute/replan with fixed terminal gas stock')
+p=sub.add_parser('rolling-forecast',help='v0.9.8.1 EXPERIMENTAL synthetic price-only forecast/execute/replan with fixed terminal gas stock')
 p.add_argument('--config',type=Path,default=Path('examples/v098_toy_config.json'))
 p.add_argument('--realized-prices',type=Path,default=Path('examples/v098_toy_realized_prices.csv'))
 p.add_argument('--forecast-snapshots',type=Path,default=Path('examples/v098_toy_forecast_snapshots.json'))
