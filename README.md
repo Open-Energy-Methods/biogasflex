@@ -1,3 +1,51 @@
+# BiogasFlex v0.9.8.1 — Rolling-horizon maintenance patch
+
+**Status:** experimental software maintenance, not equipment-validated
+CHP dispatch, measured electricity forecasting or an externally
+reviewed scientific release. No public GitHub Release or DOI.
+
+This narrow patch preserves the opt-in synthetic
+v0.9.8 price-only rolling-horizon commitment MILP
+and fixes two state/benchmark handling defects:
+
+- The first replan now honors the **declared initial
+  power-observation age** instead of silently
+  overwriting it with zero, preserving correct
+  elapsed-hour ramp feasibility.
+- An **infeasible fixed-operation reference** (for
+  example one exceeding nameplate or auxiliary
+  heat capacity) no longer aborts an otherwise
+  physically feasible flexible CHP dispatch.
+  The invalid reference and its uplift report
+  `null`; the optimized dispatch remains subject
+  to strict conservation, dwell, ramp and LP-bound audits.
+
+Run on Unix:
+
+```bash
+python -m pip install -e .
+bash scripts/reproduce_v0981.sh
+python scripts/audit_v0981_maintenance.py
+python -m biogasflex rolling-forecast
+```
+
+On Windows PowerShell use
+`./scripts/reproduce_v0981.ps1`.
+The new independent test fixtures verify €40 in a
+one-hour ramp observation example and €56 in a
+two-hour nameplate-constrained flexible gas-storage
+example; both are **fictional** analytical oracles.
+
+All 286 pinned historical scientific source/result
+files and the v0.9.5–v0.9.7 models remain unchanged.
+See the [v0.9.8.1 maintenance protocol](docs/V0981_MAINTENANCE_PROTOCOL.md)
+and the original
+[v0.9.8 synthetic rolling study](docs/V098_ROLLING_PROTOCOL.md).
+Human independent scientific review remains open
+under [issue #3](https://github.com/Open-Energy-Methods/biogasflex/issues/3).
+
+---
+
 # BiogasFlex v0.9.8 — Synthetic rolling-price CHP commitment experiment
 
 **Status:** development candidate; no public GitHub Release,
