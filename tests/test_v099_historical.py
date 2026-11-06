@@ -113,9 +113,11 @@ class CausalHistoricalRegressions(unittest.TestCase):
         tr=_read_declared(ROOT,MANIFEST["training"],"SE3")
         for spec,expected in [
             (MANIFEST["holdouts"][0],{"last_observed":2.7604166666666665,
-                                      "trailing_three_mean":4.499583333333332}),
+                                      "trailing_three_mean":4.499583333333332,
+                                      "diurnal_template_bias":3.4045833333333335}),
             (MANIFEST["holdouts"][1],{"last_observed":4.094166666666665,
-                                      "trailing_three_mean":7.238194444444445}),
+                                      "trailing_three_mean":7.238194444444445,
+                                      "diurnal_template_bias":4.270833333333333}),
         ]:
             actual=_read_declared(ROOT,spec,"SE3")
             for method,oracle in expected.items():
@@ -136,6 +138,41 @@ class CausalHistoricalRegressions(unittest.TestCase):
         self.assertEqual(len(out["actual_executed_hourly"]),3)
         self.assertFalse(out["trained_forecast_model"])
         self.assertFalse(out["operational_forecast_skill_claimed"])
+
+    def test_diurnal_shape_and_previous_observation_bias(self):
+        training=_read_declared(ROOT,MANIFEST["training"],"SE3")
+        april=_read_declared(ROOT,MANIFEST["holdouts"][0],"SE3")
+        s,log=make_causal_snapshots(training,april[:4],"diurnal_template_bias")
+        self.assertAlmostEqual(s[0][0].price_eur_per_mwh,28.78)
+        self.assertAlmostEqual(s[0][1].price_eur_per_mwh,28.45)
+        self.assertNotAlmostEqual(s[0][0].price_eur_per_mwh,
+                                  s[0][1].price_eur_per_mwh)
+        # First actual 4.25 => bias 4.25-28.78. Next Jan local-hour
+        # price 28.45 => causal forecast 28.45 + (4.25-28.78)=3.92.
+        self.assertAlmostEqual(s[1][0].price_eur_per_mwh,3.92)
+        self.assertEqual(log[0]["prior_holdout_observations_used"],0)
+
+    def test_diurnal_future_mutation_cannot_change_earlier_snapshots(self):
+        training=_read_declared(ROOT,MANIFEST["training"],"SE3")
+        october=_read_declared(ROOT,MANIFEST["holdouts"][1],"SE3")[:5]
+        altered=list(october)
+        altered[2]=Interval(october[2].start_utc,8000.0,1.0,"SE3")
+        a,_=make_causal_snapshots(training,october,"diurnal_template_bias")
+        b,_=make_causal_snapshots(training,altered,"diurnal_template_bias")
+        self.assertEqual([[x.price_eur_per_mwh for x in ss] for ss in a[:3]],
+                         [[x.price_eur_per_mwh for x in ss] for ss in b[:3]])
+        self.assertNotAlmostEqual(a[3][0].price_eur_per_mwh,b[3][0].price_eur_per_mwh)
+
+    def test_diurnal_requires_complete_unique_local_civil_day(self):
+        training,actual=self.setup_inputs()
+        with self.assertRaisesRegex(ValueError,"24 hourly"):
+            make_causal_snapshots(training,actual,"diurnal_template_bias")
+        # Jan 1 midnight UTC through 23:00 UTC spans *two* Stockholm
+        # local dates, not exactly one full local civil day.
+        invalid=rows(range(24),datetime(2020,1,1,tzinfo=timezone.utc))
+        target=rows([1,2,3],datetime(2020,1,3,tzinfo=timezone.utc))
+        with self.assertRaisesRegex(ValueError,"local hours"):
+            make_causal_snapshots(invalid,target,"diurnal_template_bias")
 
     def test_cli_lists_historical_replay(self):
         proc=subprocess.run([sys.executable,"-m","biogasflex","--help"],

@@ -5,9 +5,11 @@
   24-hour price snapshots used without modifications.
 - Chronological January **training anchor**, April/October
   **held-out** daily experiments. No October-to-April peeking.
-- Two predeclared, untuned **causal** naive price forecasts:
-  last known observation and mean of latest three known
-  observations; full-suffix forecasting for the existing
+- Three predeclared, untuned **causal** naive price forecasts:
+  last known observation, mean of latest three known observations,
+  and January local-hour price profile shifted by the strictly
+  previous target observation. The latter provides a time-varying
+  forecast shape rather than a flat objective; full-suffix forecasting for the existing
   v0.9.8.1 MILP with execution of only the first interval.
 - New as-of price-observation ledger, one-step MAE/RMSE
   (with independently calculated historical price oracles);

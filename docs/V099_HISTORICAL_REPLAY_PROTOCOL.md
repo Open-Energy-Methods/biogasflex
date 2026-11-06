@@ -45,7 +45,8 @@ no gaps/duplicates and existing SHA256 pins are all audited.
 
 ## Declared predictors
 
-Both predictor definitions and their three-observation window are
+All three predictor definitions, their three-observation window and
+the earlier-day local-hour template are
 declared before the held-out comparison, not tuned on the target days.
 
 **last_observed:** At decision t, repeat the most recently
@@ -57,7 +58,23 @@ January training price.
 of the latest three strictly known prices. Before first target
 observation use the final three January records.
 
-For both methods, the forecast for target slot `t`
+**diurnal_template_bias:** Use the **January training day**
+to make a 24-hour `Europe/Stockholm` local-clock price
+template. The forecast of each future slot uses the
+January price for its local clock hour plus a bias
+equal to the **previous completed** holdout interval's
+observed price minus its corresponding January
+local-hour template price. At the first holdout
+decision there is no target observation and bias=0.
+Require one unique record for each of local hours 0–23
+on the single earlier training civil day and reject
+DST/missing/duplicate-clock-hour histories. No
+target-holdout prices are used to fit the template.
+The resulting remaining-horizon forecast **varies
+across the future hours**, allowing direct tests
+of price-shape-responsive dispatch.
+
+For all three methods, the forecast for target slot `t`
 depends on training and observed target slots `0..t-1`
 ONLY. The actual target slot price is appended **after**
 the forecast is constructed. The future UTC calendar/slot
@@ -96,10 +113,10 @@ no result implies an operationally available strategy.
 Hand-computed expected MAEs from the original immutable
 CSV source are these regression reference values:
 
-| Held-out day | last_observed | trailing_three_mean |
-| --- | ---: | ---: |
-| 2020-04-01 | 2.760416667 | 4.499583333 |
-| 2020-10-01 | 4.094166667 | 7.238194444 |
+| Held-out day | last_observed | trailing_three_mean | diurnal_template_bias |
+| --- | ---: | ---: | ---: |
+| 2020-04-01 | 2.760416667 | 4.499583333 | 3.404583333 |
+| 2020-10-01 | 4.094166667 | 7.238194444 | 4.270833333 |
 
 Units: EUR/MWh_e. These values verify the **price accounting
 algorithm** and source series. They are not meaningful
@@ -119,7 +136,7 @@ python -m biogasflex historical-replay --output replay.json
 Windows PowerShell: `./scripts/reproduce_v099.ps1`.
 
 The command **does not write** by default. Only explicit
-`--output` saves all four 24-hour replay studies,
+`--output` saves all six 24-hour replay studies,
 as-of histories, study scores and optional executed
 CHP ledgers. Scripts are offline, sources frozen.
 

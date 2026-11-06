@@ -22,9 +22,11 @@ def audit():
         ("april","trailing_three_mean"):4.499583333333332,
         ("october","last_observed"):4.094166666666665,
         ("october","trailing_three_mean"):7.238194444444445,
+        ("april","diurnal_template_bias"):3.4045833333333335,
+        ("october","diurnal_template_bias"):4.270833333333333,
     }
-    if len(r["studies"])!=4:
-        raise AssertionError("Missing expected two-by-two historical counterfactual matrix")
+    if len(r["studies"])!=6:
+        raise AssertionError("Missing expected two-by-three historical counterfactual matrix")
     checked={}
     for study in r["studies"]:
         day="april" if "april" in study["holdout_source_path"] else "october"
@@ -54,7 +56,7 @@ def audit():
             "hindsight_regret_eur":study["perfect_hindsight_regret_eur"],
             "max_gas_balance_residual_mwh":study["max_gas_balance_residual_mwh"],
         }
-    if len(checked)!=4 or any(x["count"]!=24 for x in r["source_hashes"]):
+    if len(checked)!=6 or any(x["count"]!=24 for x in r["source_hashes"]):
         raise AssertionError("Data provenance matrix incomplete")
     return {
         "status":"PASS",
@@ -63,7 +65,7 @@ def audit():
         "observed_training_intervals":24,
         "observed_holdout_intervals":48,
         "observed_holdout_windows":2,
-        "forecast_methods":2,
+        "forecast_methods":3,
         "model":"SYNTHETIC_CHP hypothetical sequential price reveal",
         "operational_price_forecast_skill":"NOT_VERIFIED",
         "scientific_source_files_changed":False,

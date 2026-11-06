@@ -8,13 +8,17 @@ electricity market forecast or operational trading strategy**.
 
 The new `historical-replay` command runs **two predeclared 24-hour
 held-out days (April 1 and October 1, 2020)** using January 1 as
-chronologically earlier context. Two simple causal predictor baselines
+chronologically earlier context. Three predeclared causal predictor baselines
 are applied to the existing v0.9.8.1 rolling-horizon commitment MILP:
 
 - **last_observed:** hold the latest already observed price constant
   over the remaining planning horizon;
 - **trailing_three_mean:** hold the mean of the last three already
-  observed prices constant over that horizon.
+  observed prices constant over that horizon;
+- **diurnal_template_bias:** use the January local-hour price shape,
+  adjusted only by the price difference observed in the preceding
+  completed target interval. This third baseline gives the solver a
+  nonconstant, time-varying forecast shape without future leakage.
 
 At each step, forecasts are made before the current observed price
 becomes visible to the hypothetical replay. The report records
