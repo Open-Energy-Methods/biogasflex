@@ -265,10 +265,20 @@ def optimize_commitment_milp(config: dict, intervals: Sequence[Interval]) -> dic
     if abs(value+sol.fun)>COST_TOL:
         raise DispatchError("MILP primary objective differs from independent physical/economic ledger")
 
-    # The inherited fixed-use ledger is a descriptive arithmetic reference;
-    # it may be INFEASIBLE for a binary commitment model. Never label its
-    # difference a feasible dispatch uplift unless specifically audited.
-    fixed_ledger,_=_fixed_scenario(inp)
+    # The inherited fixed-use ledger is a descriptive arithmetic reference.
+    # It can be physically infeasible in a *feasible* flexible CHP MILP:
+    # such a comparator must not abort optimization or invent an uplift.
+    # Fixed-operation arithmetic is a *conditional* comparator, not a
+    # prerequisite for optimizing flexible dispatch. A stationary baseline
+    # can violate nameplate or auxiliary heat capacity even when storing
+    # gas and choosing a different time-profile gives a feasible MILP.
+    fixed_ledger=None
+    try:
+        fixed_ledger,_=_fixed_scenario(inp)
+    except DispatchError:
+        # Do not fabricate a fixed reference from invalid physical flows.
+        # Preserve the original solver and physical ledger as authoritative.
+        pass
     ref_power=[
         gas.eta_e*(gas.production_mw_lhv[t]-gas.fixed_flaring_mw_lhv[t]-gas.fixed_losses_mw_lhv[t])
         for t in range(n)
@@ -281,15 +291,15 @@ def optimize_commitment_milp(config: dict, intervals: Sequence[Interval]) -> dic
         ref_stops.append(int(y==0 and previous==1))
         previous=y
     feasible_ref=False
-    if abs(gas.initial_storage_mwh_lhv-terminal)<=TOL:
+    if fixed_ledger is not None and abs(gas.initial_storage_mwh_lhv-terminal)<=TOL:
         try:
             feasible_ref=(_transition_audit(ref_on,ref_starts,ref_stops,ref_power,dt,lim)<=TOL)
         except DispatchError:
             feasible_ref=False
     ref_total=(fixed_ledger["economic_contribution_proxy_eur"]
                -lim["startup_cost_eur"]*sum(ref_starts)
-               -lim["shutdown_cost_eur"]*sum(ref_stops))
-    if feasible_ref and value<ref_total-COST_TOL:
+               -lim["shutdown_cost_eur"]*sum(ref_stops)) if fixed_ledger is not None else None
+    if feasible_ref and ref_total is not None and value<ref_total-COST_TOL:
         raise DispatchError("Optimal MILP below a feasible fixed comparator")
     # A *real* LP relaxation of THIS SAME model and explicit terminal
     # stock target. It remains an upper bound even when rolling replans
@@ -322,7 +332,14 @@ def optimize_commitment_milp(config: dict, intervals: Sequence[Interval]) -> dic
         "net_contribution_eur":value,
         "fixed_reference_feasible":feasible_ref,
         "fixed_reference_net_contribution_eur":ref_total,
-        "increment_over_feasible_fixed_eur":value-ref_total if feasible_ref else None,
+        "fixed_reference_status":(
+            "FEASIBLE" if feasible_ref else
+            "PHYSICALLY_INFEASIBLE" if fixed_ledger is None else
+            "DIFFERENT_TERMINAL_INVENTORY"
+            if abs(gas.initial_storage_mwh_lhv-terminal)>TOL else
+            "COMMITMENT_INFEASIBLE"
+        ),
+        "increment_over_feasible_fixed_eur":value-ref_total if feasible_ref and ref_total is not None else None,
         "same_boundary_LP_relaxation_upper_bound_eur":relaxed_bound,
         "max_steady_on_ramp_violation_mw_e":ramp_violation,
         "hourly":[
@@ -413,7 +430,12 @@ def evaluate_rolling_prices(config: dict,
             "initial_power_mw_e":current_power,
             "initial_remaining_dwell_hours":current_remaining,
             "terminal_gas_inventory_mwh_lhv":original_target,
-            "initial_power_observation_age_hours":0.0 if t==0 else duration[t-1]/2,
+            # At t=0 preserve the *user-declared* observation age.
+            # Only later replans use the previous slot's midpoint age.
+            "initial_power_observation_age_hours":(
+                initial["initial_power_observation_age_hours"]
+                if t==0 else duration[t-1]/2
+            ),
         }
         plan=optimize_commitment_milp(prepared,snapshot)
         chosen=plan["hourly"][0]
