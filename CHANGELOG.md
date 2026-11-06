@@ -1,3 +1,35 @@
+# v0.9.9 — 2026-11-06 — Chronological historical-price/synthetic-CHP replay
+
+- New **opt-in** observed-market-price replay. Previously
+  attributed and frozen Svk 2020 SE3 January, April and October
+  24-hour price snapshots used without modifications.
+- Chronological January **training anchor**, April/October
+  **held-out** daily experiments. No October-to-April peeking.
+- Two predeclared, untuned **causal** naive price forecasts:
+  last known observation and mean of latest three known
+  observations; full-suffix forecasting for the existing
+  v0.9.8.1 MILP with execution of only the first interval.
+- New as-of price-observation ledger, one-step MAE/RMSE
+  (with independently calculated historical price oracles);
+  preserved actual gas and heat conservation and perfect
+  hindsight MILP bound. Strict reject-on-failure of gap,
+  duplicate, zone, UTC and training-overlap violations.
+- **Major scientific boundary:** 2020 price observations
+  are real, but CHP plant and its control, gas, heat and
+  economic inputs are synthetic; prices are revealed
+  sequentially only under a counterfactual information
+  regime that is NOT an available day-ahead trading
+  forecast. Two days do NOT establish prediction skill.
+- Preserve original 286 scientific source/result file
+  hashes, all inherited experimental regressions, 216
+  historical dual certificates, and 96 solver-free
+  LP comparisons. Extend cross-OS reproduction and
+  installed-wheel smoke tests, strict full-tree SHA256.
+- No new real-world claims, external human review,
+  GitHub Release, Zenodo DOI or science v1.0.
+
+---
+
 # v0.9.8.1 — 2026-11-06 — Rolling-commitment maintenance
 
 - Preserve the user-declared first-slot power-observation age.

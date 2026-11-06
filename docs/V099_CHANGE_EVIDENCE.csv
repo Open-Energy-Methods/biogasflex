@@ -1,0 +1,7 @@
+change_id,affected_scope,verification,science_boundary
+V099-01,Historical SE3 2020 data input,Existing SHA256 manifest and 24x3 unchanged source checks,Only previously cited historical prices
+V099-02,Causal baseline price forecasts,Adversarial future-price mutation and train/holdout no-overlap tests,Sequential price reveal is hypothetical
+V099-03,Forecast grid / UTC / zone,Missing duplicate nonsorted and nonfinite unit tests,No interpolation or silent timezone change
+V099-04,Rolling CHP use,Four full-day independently scored experiments and existing full physical ledger audit,CHP costs and gas/heat inputs remain wholly synthetic
+V099-05,Regret interpretation,Strict perfect-hindsight bound and baseline feasibility audit,Bound is within hypothetical model not field-available trading strategy
+V099-06,Release software integrity,All inherited tests 286 frozen science files 216 duals 96 oracles cross-platform wheel manifest,No v1.0 review DOI or public release
