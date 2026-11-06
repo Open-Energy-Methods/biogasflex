@@ -1,0 +1,36 @@
+{
+  "model": "historical_price_sequential_replay_synthetic_chp_v099",
+  "zone": "SE3",
+  "hypothetical_chp_config": "examples/v098_toy_config.json",
+  "training": {
+    "path": "data/observed/svk_se3_20200101_CC-BY-4.0.csv",
+    "first_utc": "2019-12-31T23:00:00+00:00",
+    "end_utc": "2020-01-01T23:00:00+00:00",
+    "count": 24
+  },
+  "holdouts": [
+    {
+      "path": "data/observed/svk_se3_2020_april_01_CC-BY-4.0.csv",
+      "first_utc": "2020-03-31T22:00:00+00:00",
+      "end_utc": "2020-04-01T22:00:00+00:00",
+      "count": 24
+    },
+    {
+      "path": "data/observed/svk_se3_2020_october_01_CC-BY-4.0.csv",
+      "first_utc": "2020-09-30T22:00:00+00:00",
+      "end_utc": "2020-10-01T22:00:00+00:00",
+      "count": 24
+    }
+  ],
+  "methods": [
+    "last_observed",
+    "trailing_three_mean",
+    "diurnal_template_bias"
+  ],
+  "limitations": [
+    "Svk original historical hourly prices are observed, not statistical ex-ante price forecasts",
+    "CHP and thermal inputs are invented",
+    "Sequential price reveal is a counterfactual information process, not an available day-ahead market bidding strategy",
+    "Two days are nonrepresentative and not enough for forecasting validation"
+  ]
+}

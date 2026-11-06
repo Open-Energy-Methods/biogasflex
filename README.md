@@ -1,3 +1,65 @@
+# BiogasFlex v0.9.9 — Observed-price chronological replay, hypothetical CHP
+
+**Research software only.** This opt-in experiment combines **actual
+2020 Svenska kraftnät SE3 market prices** with an **entirely synthetic CHP,
+gas storage and heat-service model**. The sequential hourly reveal of
+prices is an *imagined* information regime, **not a real day-ahead
+electricity market forecast or operational trading strategy**.
+
+The new `historical-replay` command runs **two predeclared 24-hour
+held-out days (April 1 and October 1, 2020)** using January 1 as
+chronologically earlier context. Three predeclared causal predictor baselines
+are applied to the existing v0.9.8.1 rolling-horizon commitment MILP:
+
+- **last_observed:** hold the latest already observed price constant
+  over the remaining planning horizon;
+- **trailing_three_mean:** hold the mean of the last three already
+  observed prices constant over that horizon;
+- **diurnal_template_bias:** use the January local-hour price shape,
+  adjusted only by the price difference observed in the preceding
+  completed target interval. This third baseline gives the solver a
+  nonconstant, time-varying forecast shape without future leakage.
+
+At each step, forecasts are made before the current observed price
+becomes visible to the hypothetical replay. The report records
+as-of information cutoffs, one-step MAE/RMSE, observed-price
+realized *model* contribution, hindsight regret, gas/heat conservation,
+and infeasible-fixed-comparator status. No price-model training
+or tuning on the held-out days is performed.
+
+```bash
+python -m pip install -e .
+bash scripts/reproduce_v099.sh
+python scripts/audit_v099_historical.py
+python -m biogasflex historical-replay
+# Optional detailed machine-readable audit (not written by default):
+python -m biogasflex historical-replay --output replay.json
+```
+
+Windows: `./scripts/reproduce_v099.ps1`.
+
+**Observed negative result:** Both constant-price predictors produced
+identical dispatch contributions on the two selected days. The
+nonconstant January-hourly template did alter dispatch, but produced
+**lower** contribution than those flat baselines on both dates.
+This is not proof of any predictor's operational skill. See the
+[full independent numerical outcome table and limitations](reports/V099_INTERNAL_AUDIT.md).
+
+Read the [v0.9.9 complete research boundary,
+source provenance and validation protocol](docs/V099_HISTORICAL_REPLAY_PROTOCOL.md).
+The original observed price files are CC BY 4.0 and remain unchanged.
+The **286** original pinned scientific source/result files and the
+v0.9.5–v0.9.8.1 synthetic and original models remain frozen.
+
+**Limitations:** two days are insufficient to establish meaningful
+forecast skill; sequential price availability is counterfactual;
+CHP and thermal costs are invented; no calibrated operational
+controller, measured returns, or externally reviewed findings.
+[Scientific reviewer issue #3](https://github.com/Open-Energy-Methods/biogasflex/issues/3)
+remains open. There is **no public GitHub Release or Zenodo DOI**.
+
+---
+
 # BiogasFlex v0.9.8.1 — Rolling-horizon maintenance patch
 
 **Status:** experimental software maintenance, not equipment-validated
