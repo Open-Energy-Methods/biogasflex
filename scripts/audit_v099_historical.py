@@ -43,9 +43,10 @@ def audit():
             raise AssertionError(f"Gas/heat/hindsight oracle violation: {key}")
         if study["operational_forecast_skill_claimed"] or study["trained_forecast_model"]:
             raise AssertionError("Unwarranted market prediction or operational claim")
-        if key in checked:
+        label=f"{day}/{study['method']}"
+        if label in checked:
             raise AssertionError("Duplicate audit study")
-        checked[key]={
+        checked[label]={
             "one_step_mae_eur_mwh":study["one_step_mae_eur_mwh"],
             "one_step_rmse_eur_mwh":study["one_step_rmse_eur_mwh"],
             "rolling_realized_eur":study["rolling_realized_contribution_eur"],
