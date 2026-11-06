@@ -123,6 +123,9 @@ algorithm** and source series. They are not meaningful
 evidence of model superiority from two days, and their
 first-step histories are months old.
 
+Read the [executed v0.9.9 internal numerical audit](../reports/V099_INTERNAL_AUDIT.md)
+for all six study values and the negative forecast-shape finding.
+
 ## Reproduction
 
 ```bash

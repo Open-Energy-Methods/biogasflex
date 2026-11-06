@@ -16,6 +16,11 @@
   preserved actual gas and heat conservation and perfect
   hindsight MILP bound. Strict reject-on-failure of gap,
   duplicate, zone, UTC and training-overlap violations.
+- **Reproduced negative finding:** Constant-price forecasts
+  produce equal execution values on both selected days because
+  total horizon gas utilization is fixed. The time-varying
+  January local-hour template changes decisions but performs
+  worse in both test windows. See `reports/V099_INTERNAL_AUDIT.md`.
 - **Major scientific boundary:** 2020 price observations
   are real, but CHP plant and its control, gas, heat and
   economic inputs are synthetic; prices are revealed

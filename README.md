@@ -38,6 +38,13 @@ python -m biogasflex historical-replay --output replay.json
 
 Windows: `./scripts/reproduce_v099.ps1`.
 
+**Observed negative result:** Both constant-price predictors produced
+identical dispatch contributions on the two selected days. The
+nonconstant January-hourly template did alter dispatch, but produced
+**lower** contribution than those flat baselines on both dates.
+This is not proof of any predictor's operational skill. See the
+[full independent numerical outcome table and limitations](reports/V099_INTERNAL_AUDIT.md).
+
 Read the [v0.9.9 complete research boundary,
 source provenance and validation protocol](docs/V099_HISTORICAL_REPLAY_PROTOCOL.md).
 The original observed price files are CC BY 4.0 and remain unchanged.
