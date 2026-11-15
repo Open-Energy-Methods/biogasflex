@@ -1,4 +1,4 @@
-name: biogasflex-v0914-market-and-chp-source-scopes
+name: biogasflex-v0914b-bounded-sensitivity-and-identifiability
 on:
   push:
   pull_request:
@@ -29,11 +29,15 @@ jobs:
       - name: Linux or macOS offline research gates
         if: runner.os != 'Windows'
         shell: bash
-        run: bash scripts/reproduce_v0914.sh
+        run: |
+          bash scripts/reproduce_v0914.sh
+          python scripts/audit_v0914b_sensitivity.py
       - name: Windows PowerShell offline research gates
         if: runner.os == 'Windows'
         shell: pwsh
-        run: ./scripts/reproduce_v0914.ps1
+        run: |
+          ./scripts/reproduce_v0914.ps1
+          python scripts/audit_v0914b_sensitivity.py
   wheel-install-smoke:
     name: Built wheel installation / Python 3.13 / Ubuntu
     runs-on: ubuntu-latest
