@@ -168,7 +168,8 @@ The QA screens enforce:
   buffer discontinuities.
 - Generator terminal electricity equals net PCC export +
   non-CHP load + CHP auxiliaries within screen allowance; generator
-  interval rating check is separate from the **grid** boundary.
+  interval rating check is scaled by measured engine-running fraction
+  and kept separate from the **grid** boundary.
 - Gas production = engine inlet + flare + change of dry-normalized
   buffer volume within screening allowance; measured gas normalized
   on a compatible dry basis is a prerequisite.
