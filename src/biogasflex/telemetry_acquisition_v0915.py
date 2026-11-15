@@ -74,6 +74,8 @@ def _require(ok: bool, message: str) -> None:
 
 
 def _number(value: object, label: str, nonnegative: bool = True) -> float:
+    if type(value) is bool:
+        raise TelemetryQAError(f"{label}: boolean is not a numerical measurement")
     try:
         x = float(value)
     except (ValueError, TypeError, OverflowError) as exc:
@@ -127,7 +129,8 @@ def _register(manifest: dict) -> tuple[dict, bool]:
         "covariance_matrix_authentic_and_reviewed":False,
         "all_instruments_independently_calibrated_and_reviewed":False,
     }.items():
-        _require(manifest[key] == expected, f"{key}: unreviewed or misleading metrology claim")
+        _require(type(manifest[key]) is type(expected) and manifest[key] == expected,
+                 f"{key}: unreviewed or misleading metrology claim")
     limit = _number(manifest["maximum_allowed_clock_offset_seconds"],
                     "maximum allowed sensor clock offset")
     _require(0 < limit <= 2, "Clock tolerance exceeds predeclared 2-second screen")
@@ -217,6 +220,12 @@ def audit_telemetry(manifest_path: str | Path = DEFAULT_MANIFEST,
     """
     manifest=json.loads(Path(manifest_path).read_text(encoding="utf8"))
     instruments,real=_register(manifest)
+    if real:
+        _require(csv_path is not None, "Real data requires an explicitly selected --csv file")
+        _require(not Path(manifest_path).resolve().is_relative_to(ROOT.resolve()),
+                 "Authorized real manifest must reside outside public research checkout")
+        _require(not Path(csv_path).resolve().is_relative_to(ROOT.resolve()),
+                 "Real raw data must reside outside public research checkout")
     if csv_path is None:
         src=Path(manifest["raw_csv_path"])
         src=src if src.is_absolute() else ROOT/src
