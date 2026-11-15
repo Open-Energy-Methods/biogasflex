@@ -13,6 +13,11 @@
 - Source DOI, provenance class, source paper, license, measured periods,
   original filenames, provider byte sizes and MD5 digests for seven
   distributed original measurement archives recorded in the source registry.
+- The dedicated online acquisition run **43704165251 PASSED for both
+  providers**: seven actual original downloaded sources verified against
+  provider MD5 and bytes, independent SHA256 fingerprints and bounded
+  workbook/ZIP profiles retained in
+  `reports/V0916_REAL_PUBLIC_CHP_SOURCE_ACQUISITION_AUDIT.md`.
 - Explicit network-opt-in `public-chp-sources --fetch` retrieves actual
   publication bytes, checks size+MD5, computes independent SHA256 and
   profiles ZIP/XLSX structures with path-traversal and expansion limits.
