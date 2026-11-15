@@ -1,0 +1,51 @@
+name: BiogasFlex external CC-BY CHP dataset acquisition (independent online)
+
+on:
+  push:
+    paths:
+      - '.github/workflows/public-chp-source-acquisition.yml'
+      - 'src/biogasflex/public_chp_sources_v0916.py'
+      - 'data/evidence/v0916_public_chp_source_registry.json'
+      - 'tests/test_v0916_public_chp_sources.py'
+  pull_request:
+    paths:
+      - '.github/workflows/public-chp-source-acquisition.yml'
+      - 'src/biogasflex/public_chp_sources_v0916.py'
+      - 'data/evidence/v0916_public_chp_source_registry.json'
+      - 'tests/test_v0916_public_chp_sources.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  retrieve-and-source-audit:
+    name: "Real published data: ${{ matrix.source }}"
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        source: [rise_lulea_2023_biogas_sofc, kitakyushu_japan_2001_2022_citygas_chp]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install published-source auditor and dependencies
+        run: python -m pip install -e .
+      - name: Download CC-BY published originals, verify provider MD5 and print structure and independent SHA256
+        shell: bash
+        env:
+          SOURCE: ${{ matrix.source }}
+        run: |
+          set -euo pipefail
+          python -m biogasflex public-chp-sources --source "$SOURCE" --fetch --report "$RUNNER_TEMP/${SOURCE}_provenance.json"
+      - name: Upload provenance report only (no raw redistributed files)
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: published-source-${{ matrix.source }}-sha256-and-sheets
+          path: ${{ runner.temp }}/${{ matrix.source }}_provenance.json
+          if-no-files-found: error
+          retention-days: 30

@@ -16,10 +16,11 @@ from .annual_chp_evidence import audit_annual_chp
 from .chp_parameter_evidence import run_register
 from .bounded_sensitivity_v0914b import run_manifest as run_bounded_sensitivity
 from .telemetry_acquisition_v0915 import audit_telemetry
+from .public_chp_sources_v0916 import run as run_public_chp_sources
 from .market_provenance_v0913 import run_market_source_audit, require_operational_validation
 from .svk import fetch_local_day
 
-parser = argparse.ArgumentParser(description='BiogasFlex 0.9.15: source-provenance auditable research CHP and strict market bid-time validation gate')
+parser = argparse.ArgumentParser(description='BiogasFlex 0.9.16: source-provenance auditable research CHP and strict market bid-time validation gate')
 sub = parser.add_subparsers(dest='command', required=True)
 p = sub.add_parser('fetch-svk', help='Retrieve a licensed day of historical SE3 prices')
 p.add_argument('--output', type=Path, default=Path('data/external/svk_se3_20200101.csv'))
@@ -95,8 +96,15 @@ p=sub.add_parser('telemetry-qa',
 p.add_argument('--manifest',type=Path,default=Path('examples/v0915_synthetic_acquisition_manifest.json'))
 p.add_argument('--csv',type=Path,default=None,help='Optional private/authorized raw input CSV path outside repository')
 p.add_argument('--output',type=Path,default=None,help='Optional full QA report, never write raw telemetry')
+p=sub.add_parser('public-chp-sources',
+    help='v0.9.16: curated two-source, real external CHP dataset provenance; --fetch opts in to licensed online downloads')
+p.add_argument('--source',choices=['all','rise_lulea_2023_biogas_sofc','kitakyushu_japan_2001_2022_citygas_chp'],default='all')
+p.add_argument('--fetch',action='store_true',help='Opt-in online original file MD5/SHA256 and XLSX/ZIP profile audit')
+p.add_argument('--report',type=Path,default=None,help='Write provenance report outside git checkout')
 args=parser.parse_args()
-if args.command == 'telemetry-qa':
+if args.command == 'public-chp-sources':
+    result=run_public_chp_sources(args.source,args.fetch,args.report)
+elif args.command == 'telemetry-qa':
     result=audit_telemetry(args.manifest,args.csv)
     if args.output is not None:
         args.output.parent.mkdir(parents=True,exist_ok=True)
@@ -201,7 +209,9 @@ elif args.command == 'dispatch':
     result=run_dispatch(args.config,args.prices,args.output,capacity_mwh_lhv=args.capacity_mwh_lhv)
 else:
     result=run_sweep(args.config,args.prices,args.output)
-if args.command == 'telemetry-qa':
+if args.command == 'public-chp-sources':
+    print(json.dumps(result,indent=2,allow_nan=False,ensure_ascii=False))
+elif args.command == 'telemetry-qa':
     print(json.dumps({
         'version':'0.9.15',
         'status':result['status'],
