@@ -200,6 +200,15 @@ class CHPTimeResolvedAcquisitionQA(unittest.TestCase):
             with self.assertRaisesRegex(TelemetryQAError,"SHA256"):
                 audit_telemetry(m,c)
 
+    def test_real_private_input_must_stay_outside_public_checkout(self):
+        with tempfile.TemporaryDirectory(prefix="v0915-FAKE-") as tmp:
+            manifest,private_csv=self._make_real_tmp(Path(tmp))
+            # A physically real CSV cannot be ingested from inside the
+            # publicly versioned science checkout even if it has a digest.
+            with self.assertRaisesRegex(TelemetryQAError,"outside public research checkout"):
+                audit_telemetry(manifest,SOURCE)
+            self.assertTrue(private_csv.is_file())
+
     def test_expired_calibration_metadata_rejected(self):
         def expired(m,r):
             m["instrument_registry"][0]["certificate_valid_until_utc"]="2026-09-30T00:00:00Z"
