@@ -1,3 +1,51 @@
+# BiogasFlex v0.9.15 — CHP telemetry acquisition-readiness and data QA
+
+**No real CHP telemetry has been acquired. No source calibration
+certificates have been independently authenticated. No real-plant
+predictive accuracy or operating envelope is validated.**
+
+This milestone adds a **time-resolved field-measurement protocol**, a pinned
+four-interval **synthetic-only** generator/gas/heat/grid/buffer energy fixture,
+an 11-instrument metrology register, and a fail-closed CSV/metadata auditor.
+The program separates generator-terminal production from signed net-grid
+export, treats gas on a dry-normal cubic-metre **LHV** basis, enforces UTC
+quarter-hour continuity, checks meters/clock/calibration metadata and
+screens energy/gas/heat balances using an explicitly *non-GUM*
+linear uncertainty allowance. It rejects plausible but modified source
+bytes, false site identity, suspect records, stale calibration metadata
+and contradictory flow/energy states.
+
+```powershell
+git pull origin main
+python -m pip install -e .
+python -m biogasflex telemetry-qa
+python -m biogasflex telemetry-qa --output qa_v0915_demo.json
+python scripts/audit_v0915_telemetry_qa.py
+.\scripts\reproduce_v0915.ps1
+```
+
+See [v0.9.15 field acquisition and independent validation
+protocol](docs/V0915_CHP_FIELD_ACQUISITION_VALIDATION_PROTOCOL.md) and
+the [separate high-frequency startup/ramp event requirements](data/schemas/v0915_high_rate_event_data_contract.json).
+The proposed 1-second event logging is a **provisional design target**;
+it is **not implemented** or supported by the 15-minute demo fixture.
+
+`telemetry-qa --manifest <authorized.json> --csv <private.csv>` supports
+raw real-data **schema/balance screening only** when an authorized operator
+can supply the data, 24-hour UTC coverage and the complete documented
+instrument metadata. Store private raw data and authorizations **outside
+the public repository**. A real-data QA pass is explicitly still
+`PENDING_HUMAN_VERIFICATION` and **not** physical model validation.
+
+Original price and market source-provenance constraints, 2012–2022
+published Polish landfill annual summaries, the unmerged manufacturer
+identities and the synthetic 81-cell bounded-sensitivity model remain
+unchanged. Independent field campaigns, defensible measured dynamic
+constraints, uncertainty covariance and out-of-sample testing are
+required before scientific v1.0.
+
+---
+
 # BiogasFlex v0.9.14-B — Synthetic CHP bounded sensitivity and identifiability
 
 **Research software, not a calibrated plant, grid-export forecast, or tradable
