@@ -6,9 +6,9 @@ always-ON ramp LP now have a systematic three-scale quarter-hour
 benchmark: **96, 192 and 672 intervals** (24h, 48h, 168h).
 
 - **MILP:** zero gas buffer + periodic 0/2 MW_LHV fictional gas input
-  force on/off switching; an independent algebraic witness fixes every
-  gas, power, startup and shutdown decision and hence the exact
-  mathematical objective.
+  force on/off switching; an independent algebraic witness fixes
+  gas/power/start/stop and proves the optimal heat allocation from
+  positive backup/dump costs, giving the exact mathematical objective.
 - **LP:** paired no-storage and buffered (0.75 MWh_LHV) scenarios
   test genuinely shiftable CHP output under 15-minute midpoint ramp
   constraints, cyclic gas stock and instantaneous heat service.
