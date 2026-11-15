@@ -14,6 +14,9 @@ DOI: https://doi.org/10.3390/en16052180.
 Source Tables 1–3 and contextual Table 8.
 Paper open-access (MDPI, Creative Commons Attribution 4.0).
 The CSV is a numerical transcription of its original published annual rows;
+source identity is pinned to SHA256 `ce018fd8ca3746a393c6a73c30321e8deb5c09ae8bef0497ab59b15bcbc33d10` and
+`annual-chp-evidence` refuses physically plausible but unattributed
+CSV substitutions;
 original data remain traceable to their source and are not represented
 as first-hand measurements by this repository.
 
