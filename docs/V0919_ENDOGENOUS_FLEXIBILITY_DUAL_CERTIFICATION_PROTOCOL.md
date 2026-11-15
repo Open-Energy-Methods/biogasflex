@@ -164,6 +164,25 @@ investment frontier, a guarantee of CHP reliability, a causal
 identification of equipment flexibility or a probabilistic
 robustness envelope.
 
+## Executed results and figures
+
+The [executed original solver and independent audit](../reports/V0919_EXECUTED_ENDOGENOUS_FLEXIBILITY_KKT.md)
+records 46 cases, 1,736 interval rows, and 6 genuinely
+optimized OFF/restart cases. Its three non-dominated
+hypothetical operational-design tables are recreated from
+the same input JSON by a separate independent KKT/reliability
+scope audit. The dedicated workflow also generates
+three portable SVG source plots using
+`scripts/plot_v0919_frontiers.py`, retaining figures
+and full calculation/proof JSON as **GitHub Actions
+artifacts rather than source-tracked raw data**.
+
+The three deterministic seeds **11, 37, 59** were chosen to
+avoid any identical price-path collisions in the specific
+modulo-9 formula. This is verified by an adversarial
+regression test. It is still NOT evidence of statistically
+representative electricity price uncertainty.
+
 ## Execution and reproduction
 
 ```powershell
