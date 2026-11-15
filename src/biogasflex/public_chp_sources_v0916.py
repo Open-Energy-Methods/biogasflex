@@ -15,6 +15,8 @@ from pathlib import Path
 import re
 import sys
 import urllib.request
+from urllib.error import HTTPError
+from urllib.parse import quote
 import xml.etree.ElementTree as ET
 from zipfile import ZipFile, BadZipFile
 
@@ -223,15 +225,31 @@ def profile_content(data:bytes,file_spec:dict)->dict:
         raise PublicSourceError(f"{name}: broken original ZIP") from exc
 
 def fetch_once(spec:dict)->bytes:
-    req=urllib.request.Request(spec["url"],headers={
-        "User-Agent":"BiogasFlex-research-v0916/0.1 (public CC-BY provenance audit)",
-        "Accept":"application/octet-stream"
-    })
-    with urllib.request.urlopen(req,timeout=80) as response:
-        require(response.status==200,f"{spec['name']}: HTTP {response.status}")
-        data=response.read(spec["bytes"]+1)
-    require(len(data)<=spec["bytes"],"Unexpected oversized source response")
-    return data
+    """Use only canonical source or the official Zenodo *record* endpoint.
+
+    Zenodo's content-negotiation can reject application/octet-stream (406).
+    Never fall back to a proxy, arbitrary mirror or weaker file-integrity
+    check; full published MD5 and exact size are still mandatory.
+    """
+    def download(url:str)->bytes:
+        req=urllib.request.Request(url,headers={
+            "User-Agent":"BiogasFlex-research-v0916/0.1 (public CC-BY provenance audit)",
+            "Accept":"*/*"
+        })
+        with urllib.request.urlopen(req,timeout=80) as response:
+            require(response.status==200,f"{spec['name']}: HTTP {response.status}")
+            data=response.read(spec["bytes"]+1)
+        require(len(data)<=spec["bytes"],"Unexpected oversized source response")
+        return data
+    try:
+        return download(spec["url"])
+    except HTTPError as exc:
+        if (exc.code not in (403,404,406)
+            or not spec["url"].startswith("https://zenodo.org/api/records/14163174/files/")
+            or spec["name"] not in ALLOWED["rise_lulea_2023_biogas_sofc"]["names"]):
+            raise
+        official="https://zenodo.org/records/14163174/files/"+quote(spec["name"])+"?download=1"
+        return download(official)
 
 def run(source:str,fetch:bool=False,report_path:Path|None=None)->dict:
     reg=checked_registry()
