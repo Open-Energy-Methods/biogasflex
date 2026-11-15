@@ -361,6 +361,20 @@ def audit(payload):
                "Missing binary model")
         demand(sum(r["model"]=="ALWAYS_ON_RAMP_LP" for r in results)==9,
                "Missing LP design")
+        # Without an actual optimizer-chosen OFF interval and a restart,
+        # these would remain only continuously-ON LP-like trajectories.
+        # A passing endogenous benchmark must genuinely exhibit binary choices.
+        demand(sum(c["start_count"]>0 for c in payload["cases"]
+                   if c["model"]=="ENDOGENOUS_ON_OFF_MILP")>0,
+               "No endogenous CHP restarts in full design")
+        demand(sum(any(row["on"]==0 for row in c["rows"])
+                   for c in payload["cases"]
+                   if c["model"]=="ENDOGENOUS_ON_OFF_MILP")>0,
+               "No optimized OFF periods in full design")
+        fingerprints={tuple(PRICES[i%24]+((seed*7+i*13+(i//4)*5)%9-4)
+                            for i in range(24)) for seed in SEEDS}
+        demand(len(fingerprints)==len(SEEDS),
+               "Predeclared synthetic scenario seeds generate duplicate price paths")
     for frontier in payload["frontiers"]:
         candidates=[c for c in payload["cases"]
                     if c["seed"]==frontier["seed"] and c["slots"]==24
