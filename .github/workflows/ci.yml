@@ -2,6 +2,10 @@ name: biogasflex-v0919-public-CHP-source-evidence-and-offline-model
 on:
   push:
   pull_request:
+concurrency:
+  group: biogasflex-${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 jobs:
