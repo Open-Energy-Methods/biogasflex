@@ -16,6 +16,7 @@ from statistics import mean
 
 DOI = "10.3390/en16052180"
 SOURCE_URL = "https://doi.org/" + DOI
+PUBLISHED_CSV_SHA256 = "ce018fd8ca3746a393c6a73c30321e8deb5c09ae8bef0497ab59b15bcbc33d10"
 PLANT = "polish_municipal_landfill_gas_chp"
 ELECTRIC_RATING_MW = 0.440
 THERMAL_RATING_MW = 0.520
@@ -114,6 +115,11 @@ def audit_annual_chp(path: str | Path) -> dict:
     hourly heat demand, generator efficiency or metered grid export.
     """
     rows, sha = load_rows(path)
+    if sha != PUBLISHED_CSV_SHA256:
+        raise EvidenceError(
+            "Source extract SHA256 does not match the pinned, attributed "
+            "2012-2022 publication transcription"
+        )
     periods = {}
     for label, selected in (
         ("2012-2017", rows[:6]), ("2018-2022", rows[6:])
