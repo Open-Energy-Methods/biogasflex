@@ -33,12 +33,12 @@ it is **not implemented** or supported by the 15-minute demo fixture.
 `telemetry-qa --manifest <authorized.json> --csv <private.csv>` supports
 raw real-data **schema/balance screening only** when an authorized operator
 can supply the data, 24-hour UTC coverage and the complete documented
-instrument metadata. Store private raw data and authorizations **outside
-the public repository**. A real-data QA pass is explicitly still
+instrument metadata. Both real manifests and private raw data must be stored **outside
+the public repository**; the CLI enforces that boundary. A real-data QA pass is explicitly still
 `PENDING_HUMAN_VERIFICATION` and **not** physical model validation.
 
 Original price and market source-provenance constraints, 2012–2022
-published Polish landfill annual summaries, the unmerged manufacturer
+published Polish landfill annual summaries, the unmatched manufacturer
 identities and the synthetic 81-cell bounded-sensitivity model remain
 unchanged. Independent field campaigns, defensible measured dynamic
 constraints, uncertainty covariance and out-of-sample testing are
