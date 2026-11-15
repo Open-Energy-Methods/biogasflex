@@ -22,6 +22,16 @@ $out=Join-Path $env:TEMP "biogasflex_kitakyushu_2005_real.json"
 python -m biogasflex real-chp-analysis --fetch --report $out
 ```
 
+The [executed actual 2005 results](reports/V0917_KITAKYUSHU_EXECUTED_REAL_HOURLY_RESULTS.md)
+report **8,760 matched observations**, **686,380 kWh** gas-engine
+source electricity, **199,510.35 source m³** engine gas input,
+**4,263 positive power/positive gas hours** and **343 contradictory
+power/gas source-hour states** (27 generation-without-gas and 316
+gas-without-generation). These discrepancies preclude naïve efficiency
+estimation; gas heating-value basis and source heat allocation are not
+verified. The report is derived from the original publisher-byte
+verified archives in [GitHub Actions real-source run 43711923353](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/43711923353).
+
 Full scientific [source-matched methodology](docs/V0917_KITAKYUSHU_REAL_HOURLY_ANALYSIS.md).
 Independent real data execution lives in
 [the online source-analysis workflow](.github/workflows/v0917-kitakyushu-real.yml);
