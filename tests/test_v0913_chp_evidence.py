@@ -144,6 +144,14 @@ class ManufacturerEvidenceContract(unittest.TestCase):
         self.assertFalse(audited["physical_validation_of_v0911_contracts"])
         self.assertFalse(audited["manufacturer_numeric_data_usable_as_site_performance"])
 
+    def test_constructive_annual_aggregate_nonidentifiability(self):
+        # Annual integrals and running hours do not uniquely specify ramps.
+        a, b = [0.2, 0.2, 0.2, 0.2], [0.1, 0.3, 0.1, 0.3]
+        self.assertEqual(sum(a), sum(b))
+        self.assertEqual(sum(p > 0 for p in a), sum(p > 0 for p in b))
+        self.assertNotEqual(max(abs(y-x) for x,y in zip(a,a[1:])),
+                            max(abs(y-x) for x,y in zip(b,b[1:])))
+
     def test_cli_produces_scope_limited_report(self):
         result = subprocess.run(
             [sys.executable, "-m", "biogasflex", "chp-evidence-register",
