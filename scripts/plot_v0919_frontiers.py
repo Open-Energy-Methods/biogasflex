@@ -20,13 +20,13 @@ def draw(payload:dict,out_dir:Path)->list[Path]:
         raise ValueError("Only the versioned, completed synthetic study can be rendered")
     if payload.get("claims",{}).get("real_plant_measurements_used") is not False:
         raise ValueError("A real plant report cannot be treated as a synthetic frontier")
+    dest=Path(out_dir).resolve()
+    if dest.is_relative_to(ROOT.resolve()):
+        raise ValueError("Figures must be written outside repository checkout")
     if len(payload.get("cases",[]))!=46 or len(payload.get("frontiers",[]))!=3:
         raise ValueError("Incomplete finite design")
     if len({c["seed"] for c in payload["frontiers"]})!=3:
         raise ValueError("Duplicated seed frontier")
-    dest=Path(out_dir).resolve()
-    if dest.is_relative_to(ROOT.resolve()):
-        raise ValueError("Figures must be written outside repository checkout")
     dest.mkdir(parents=True,exist_ok=True)
     paths=[]
     width,height=920,570
