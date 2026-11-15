@@ -45,7 +45,7 @@ distinct from a unique solution induced by pulsating gas supply.
 | Operating limits | 0.2 MW_e minimum ON, 0.8 MW_e/h midpoint ramps, 0.5h min ON and OFF |
 | Service and expense | 0.35 MW_th heat dump maximum; backup heat €6/MWh_th, heat dump €1/MWh_th, electric CHP variable cost €0.75/MWh_e |
 | Time | 24 × 15min = **6 hours**, strictly UTC |
-| Price sequences | **3 deterministic, deliberately selected illustrative patterns** with identifiers 11, 37, 83; NOT observed prices or random draws |
+| Price sequences | **3 deterministic, deliberately selected illustrative patterns** with identifiers 11, 37, 59; NOT observed prices or random draws |
 
 The economic objective is the model's hypothetical generator-terminal
 electricity-price contribution **minus modeled CHP variable, heat
