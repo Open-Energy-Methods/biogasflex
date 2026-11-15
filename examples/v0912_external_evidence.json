@@ -1,0 +1,40 @@
+{
+  "schema": "biogasflex_external_evidence_v0912",
+  "market_archive": {
+    "source_provider": "Svenska kraftnät",
+    "bidding_zone": "SE3",
+    "delivery_local_date": "2020-04-01",
+    "price_unit": "EUR-MWh",
+    "path": "data/observed/svk_se3_2020_april_01_CC-BY-4.0.csv",
+    "sha256": "560415b0b38fd764c64bf40c182737d60b94838a39db677da96f7649ba4661b0",
+    "resource_id": "cf392ef3-7345-4e98-970e-83088c185570",
+    "source_url": "https://data.svk.se/sv/dataset/market_data_day_ahead_area_prices/resource/cf392ef3-7345-4e98-970e-83088c185570",
+    "source_dataset_first_publication_date": "2026-04-09",
+    "snapshot_retrieval_date": "2026-11-05",
+    "preauction_decision_utc": "2020-03-31T09:00:00+00:00",
+    "original_per_interval_publication_proof": "NOT_ARCHIVED",
+    "permitted_claim": "OBSERVED_EX_POST_ONLY"
+  },
+  "measured_chp_reference": {
+    "classification": "PUBLISHED_METER_BASED_ANNUAL_SUMMARIES",
+    "site_id": "POLISH_LANDFILL_GAS_CHP_440KWE_EXTERNAL_REFERENCE",
+    "source_title": "Analysis of Energy Generation Efficiency and Reliability of a Cogeneration Unit Powered by Biogas",
+    "source_url": "https://www.mdpi.com/1996-1073/16/5/2180",
+    "doi": "10.3390/en16052180",
+    "published_date": "2023-02-24",
+    "licence": "CC-BY-4.0",
+    "source_tables": [
+      1,
+      2,
+      3
+    ],
+    "csv_path": "data/external_validation/ciula_lfg_chp_annual_2012_2022_CC-BY-4.0.csv",
+    "csv_sha256": "d4e2d89b21f71a75a809b9e10e21bc456bbd56858438b1df2e0a4187f2548fa4",
+    "rated_electrical_mw": 0.44,
+    "rated_thermal_mw": 0.52,
+    "originally_reported_2018_2022_gas_mean_m3_per_year": 1291515,
+    "site_fuel_class": "LANDFILL_GAS_NOT_CALIBRATED_SAME_PLANT",
+    "temporal_resolution": "ANNUAL_AGGREGATE_ONLY"
+  },
+  "hypothetical_chp_config": "examples/v0911_synthetic_chp.json"
+}
