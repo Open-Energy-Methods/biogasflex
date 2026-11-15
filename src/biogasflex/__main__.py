@@ -12,9 +12,10 @@ from .experimental_v097 import optimize_commitment_milp as optimize_hourly_commi
 from .experimental_v098 import evaluate_rolling_prices
 from .experimental_v099 import run_manifest
 from .market_v0910 import run_manifest as run_market_boundary_manifest
+from .annual_chp_evidence import audit_annual_chp
 from .svk import fetch_local_day
 
-parser = argparse.ArgumentParser(description='BiogasFlex 0.9.10: auditable CHP research models and optional synthetic day-ahead information gates')
+parser = argparse.ArgumentParser(description='BiogasFlex 0.9.12: auditable CHP research models and optional synthetic day-ahead information gates')
 sub = parser.add_subparsers(dest='command', required=True)
 p = sub.add_parser('fetch-svk', help='Retrieve a licensed day of historical SE3 prices')
 p.add_argument('--output', type=Path, default=Path('data/external/svk_se3_20200101.csv'))
@@ -70,8 +71,16 @@ p=sub.add_parser('contract-dispatch',
     help='v0.9.11 EXPERIMENTAL hard accepted MWh equality inside CHP MILP and constrained LP relaxation')
 p.add_argument('--manifest',type=Path,default=Path('examples/v0911_contract_hourly.json'))
 p.add_argument('--output',type=Path,default=None,help='Opt-in full audit; no files written by default')
+p=sub.add_parser('annual-chp-evidence',help='v0.9.12: audit published 2012-2022 annual landfill-CHP records; no dispatch calibration')
+p.add_argument('--csv',type=Path,default=Path('data/observed/ciula_2023_landfill_chp_annual.csv'))
+p.add_argument('--output',type=Path,default=None,help='Optional full source audit JSON; otherwise summary on stdout')
 args=parser.parse_args()
-if args.command == 'fetch-svk':
+if args.command == 'annual-chp-evidence':
+    result=audit_annual_chp(args.csv)
+    if args.output is not None:
+        args.output.parent.mkdir(parents=True,exist_ok=True)
+        args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n',encoding='utf8')
+elif args.command == 'fetch-svk':
     result=fetch_local_day(local_date='2020-01-01',bidding_zone='SE3',output=args.output)
 elif args.command == 'baseline':
     result=baseline_run(args.config,args.prices,args.output,args.mode)
@@ -148,7 +157,23 @@ elif args.command == 'dispatch':
     result=run_dispatch(args.config,args.prices,args.output,capacity_mwh_lhv=args.capacity_mwh_lhv)
 else:
     result=run_sweep(args.config,args.prices,args.output)
-if args.command == 'contract-dispatch':
+if args.command == 'annual-chp-evidence':
+    print(json.dumps({
+        'version':'0.9.12',
+        'status':result['status'],
+        'doi':result['doi'],
+        'evidence_level':result['evidence_level'],
+        'annual_records':len(result['annual_observations']),
+        'source_discrepancies':len(result['documented_source_discrepancies']),
+        '2018_2022_annual_row_mean_gas_m3':
+            result['periods']['2018-2022']['arithmetic_annual_means']['landfill_gas_recovered_m3'],
+        '2018_2022_as_published_mean_gas_m3':
+            result['published_reported_averages_unchanged']['2018-2022']['landfill_gas_recovered_m3'],
+        'input_csv_sha256':result['input_csv_sha256'],
+        'output_path':str(args.output) if args.output is not None else None,
+        'claim_limit':'Annual landfill CHP records only; no hourly dispatch calibration or observed revenues',
+    },indent=2,allow_nan=False))
+elif args.command == 'contract-dispatch':
     post=result["postclearing"]
     print(json.dumps({
         "version":"0.9.11",

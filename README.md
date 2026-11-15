@@ -1,3 +1,34 @@
+# BiogasFlex v0.9.12 — Published CHP annual evidence audit (research)
+
+**New:** source-verifiable 2012–2022 annual operating observations for a
+**440 kW_e / 520 kW_th Polish landfill-gas CHP unit** (Ciuła et al.,
+2023, [DOI 10.3390/en16052180](https://doi.org/10.3390/en16052180)).
+The opt-in `annual-chp-evidence` command independently checks published
+annual running hours, recovered gas, electricity/heat and nameplate bounds.
+A separate solver-free audit cross-checks arithmetic and highlights the
+paper's internally inconsistent post-period gas mean and growth percentages.
+
+```bash
+python -m pip install -e .
+python -m biogasflex annual-chp-evidence
+python -m biogasflex annual-chp-evidence --output annual_evidence_report.json
+python scripts/audit_v0912_external_chp.py
+bash scripts/reproduce_v0912.sh
+```
+
+Windows: `./scripts/reproduce_v0912.ps1`.
+
+**Scientific boundary:** This is **landfill gas, not anaerobic digester gas**.
+Annual CHP capacity/generation observations do **not** establish minimum
+stable power, ramp limits, hourly heat load, storage capacity or gas-to-engine
+mass balance. The pre-existing v0.9.11 contract-dispatch MILP remains
+synthetic, completely separate, and **not validated by this source**.
+See the [external evidence protocol](docs/V0912_EXTERNAL_CHP_EVIDENCE_PROTOCOL.md).
+Independent human review, metered dispatch validation, true market trades,
+public GitHub Release and DOI remain outstanding.
+
+---
+
 # BiogasFlex v0.9.11 — Hard-contracted CHP electricity delivery (experimental)
 
 **Status:** scientifically auditable numerical software, **not** an
