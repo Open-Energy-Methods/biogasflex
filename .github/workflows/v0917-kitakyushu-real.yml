@@ -1,0 +1,57 @@
+name: v0.9.17 Kitakyushu source-verified real hourly CHP study (online)
+
+on:
+  push:
+    paths:
+      - '.github/workflows/v0917-kitakyushu-real.yml'
+      - 'src/biogasflex/kitakyushu_real_v0917.py'
+      - 'src/biogasflex/public_chp_sources_v0916.py'
+      - 'data/evidence/v0916_public_chp_source_registry.json'
+      - 'tests/test_v0917_kitakyushu_real.py'
+  pull_request:
+    paths:
+      - '.github/workflows/v0917-kitakyushu-real.yml'
+      - 'src/biogasflex/kitakyushu_real_v0917.py'
+      - 'src/biogasflex/public_chp_sources_v0916.py'
+      - 'data/evidence/v0916_public_chp_source_registry.json'
+      - 'tests/test_v0917_kitakyushu_real.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verified-2005-analysis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install module
+        run: python -m pip install -e .
+      - name: Analyze only real pinned 2005 source bytes, do not commit raw data
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m biogasflex real-chp-analysis --fetch --report "$RUNNER_TEMP/kitakyushu_measured_2005_analysis.json"
+      - name: Generate reproducible vector plots from verified real report
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/plot_v0917_real.py --report "$RUNNER_TEMP/kitakyushu_measured_2005_analysis.json" --out-dir "$RUNNER_TEMP/kitakyushu_real_plots"
+      - name: Upload derived source-measurement SVG plots
+        uses: actions/upload-artifact@v4
+        with:
+          name: kitakyushu-2005-measured-monthly-figures
+          path: ${{ runner.temp }}/kitakyushu_real_plots/*.svg
+          if-no-files-found: error
+          retention-days: 60
+      - name: Save real source measurements aggregated report (no private raw data)
+        uses: actions/upload-artifact@v4
+        with:
+          name: kitakyushu-2005-real-source-accounting-report
+          path: ${{ runner.temp }}/kitakyushu_measured_2005_analysis.json
+          if-no-files-found: error
+          retention-days: 60

@@ -1,3 +1,54 @@
+# BiogasFlex v0.9.17 — Measured hourly Kitakyushu gas-engine source analysis
+
+**Actual externally published real CHP data, not calibrated biogas-engine
+prediction.** The v0.9.17 source-specific analyzer reads the **original
+2005 XLSX workbooks** from three independently checksum-pinned Figshare
+archives: gas-engine electrical power in kW, **city-gas** engine fuel
+meter volumes in source m³ and separately attributed `Gas 1/Gas 2`
+heat recovery rates in GJ/h. It rejects missing/duplicate hourly
+timestamps, unexpected headers or changed source binaries, verifies
+one-to-one alignment over 8,760 source-local hours, reports observed
+channel totals and disagreement/quality flags, and does **not** borrow
+gas heating values, assume calibrated equipment or infer subhour ramps.
+
+```powershell
+git pull origin main
+python -m pip install -e .
+python -m unittest tests.test_v0917_kitakyushu_real -v
+.\scripts\reproduce_v0917.ps1
+
+# Explicitly retrieve and verify actual source files before analyzing:
+$out=Join-Path $env:TEMP "biogasflex_kitakyushu_2005_real.json"
+python -m biogasflex real-chp-analysis --fetch --report $out
+```
+
+The [executed actual 2005 results](reports/V0917_KITAKYUSHU_EXECUTED_REAL_HOURLY_RESULTS.md)
+report **8,760 matched observations**, **686,380 kWh** gas-engine
+source electricity, **199,510.35 source m³** engine gas input,
+**4,263 positive power/positive gas hours** and **343 contradictory
+power/gas source-hour states** (27 generation-without-gas and 316
+gas-without-generation). These discrepancies preclude naïve efficiency
+estimation; gas heating-value basis and source heat allocation are not
+verified. The report is derived from the original publisher-byte
+verified archives in [GitHub Actions real-source run 43711923353](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/43711923353).
+
+Full scientific [source-matched methodology](docs/V0917_KITAKYUSHU_REAL_HOURLY_ANALYSIS.md).
+The real-source job also produces three **vector SVG plots** of
+observed monthly engine electricity, engine gas source volume and
+power/gas disagreement hours, computed from the 12-month report
+without interpolating any readings.
+
+Independent real data execution lives in
+[the online source-analysis workflow](.github/workflows/v0917-kitakyushu-real.yml);
+full offline CI remains independent of the internet.
+The dataset is a Japanese **CITY-GAS** reciprocating engine and distinct
+fuel cells: it is neither a biogas CHP operating curve nor measured
+Swedish grid sales. Gas conversion to MJ and engine thermal allocation
+are intentionally unverified. **Scientific v1.0 physical validation
+remains outstanding.**
+
+---
+
 ## Matlink Farm — v0.9.16-C acquisition handoff (raw data not obtained)
 
 The original NYSERDA Matlink Farm **145 kWe Waukesha anaerobic-digester biogas CHP** has source-described 15-minute measurements, but neither its original CSV files nor reuse permission and calibrated instrument definitions have been received. The [Matlink acquisition handoff](docs/V0916C_MATLINK_AUTHORIZED_DATA_HANDOFF.md) and [nine-condition evidence register](data/evidence/v0916c_matlink_source_access_register.json) document raw files, fuel-energy basis, meter boundaries, timezone/DST, heat-integral ambiguity, source permissions and physical-validation blockers. The institutional data-custodian inquiry was **prepared but not sent**. No operating records were invented and no engine was calibrated.

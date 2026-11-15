@@ -1,3 +1,35 @@
+## v0.9.17 — 2026-11-15 — Measured external CHP hourly channel study
+
+- Actual published Kitakyushu 2005 source results from independent online
+  run 43711923353: 8,760 aligned hourly records, 686,380 kWh engine
+  electrical output, 199,510.35 source m³ engine gas, 27
+  power-positive/gas-zero hours and 316 gas-positive/power-zero
+  hours. Original `Gas 1` and `Gas 2` heat recovery rate sums
+  remain separately reported with source heat allocation unverified.
+  Evidence recorded in the versioned executed research report.
+- First separately executed actual published Kitakyushu 2005 city-gas engine
+  **three-source** analysis, not merely metadata/ZIP structure preview:
+  engine electricity `Gas engine (kW)`, engine gas use `Gas engine (m3)`,
+  separately labelled `Gas 1/2(GJ/h)` heat recovery.
+- Rigorously check all original Figshare provider MD5/byte counts against
+  official metadata and observed SHA256 from an earlier successful real
+  download, exact 2005 nested workbook filename and source column labels.
+- Decode shared-string XLSX; verify all 8760 source-local hourly
+  timestamps and complete one-to-one three-workbook matches; count
+  missing, negative and conflicting engine electricity/gas reading
+  combinations; preserve descriptive measured totals and sample anomalies.
+- **Do not** assume source gas is normalized dry `Nm3`, assign
+  hypothetical city-gas LHV, equate `Gas 1/2` to useful end-use heat,
+  infer subhour ramp/starts or fit Swedish biogas engine parameters.
+- New isolated online reproducibility workflow generates **actual real
+  source** aggregate audit report; no large raw archives committed;
+  offline adversarial XLSX source and 8760-hour analytical fixture tests.
+- Preserve prior v0.9.16/15 physical source-validation refusal,
+  v0.9.14-B 81-cell sensitivity oracle, full inherited LP/MILP
+  numerical checks and market bid-time provenance gates.
+
+---
+
 ## v0.9.16-C — Matlink authorized source request and physical evidence blockers (2026-11-15)
 
 - Sourced the NYSERDA Matlink Farm biogas reciprocating-engine monitoring notes, distinguishing the original 91-channel 15-minute daily CSV logs from the derivative public hourly reports.
