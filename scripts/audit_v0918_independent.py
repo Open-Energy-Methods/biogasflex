@@ -224,7 +224,14 @@ def witness_case(item):
         # and p_t=.4u_t forces every binary and start/stop variable.
         # Therefore the independently calculated objective is not merely
         # a feasible primal value: it is the unique model optimum.
-        optimum_scope="EXACT_ALGEBRAIC_UNIQUE_SOLUTION_FOR_FIXED_ZERO_BUFFER_PULSE_CASE"
+        # Closed-form values are independently predetermined by
+        # production=0/2, daily 12h on, hourly prices and fixed costs.
+        # The test is robust to solver implementation and row ordering.
+        expected_exact={96:681.0,192:1360.0,672:4755.0}
+        if n in expected_exact:
+            close(objective,expected_exact[n],
+                  "independently predetermined 15-minute MILP objective",1e-6)
+        optimum_scope="EXACT_ALGEBRAIC_OPTIMUM_ZERO_BUFFER_PULSE_POSITIVE_HEAT_PENALTIES"
     else:
         demand(item["reported_start_count"] is None,"LP cannot claim binary starts")
         demand(item["reported_lp_relaxation_upper_bound_eur"]+TOL>=objective,
