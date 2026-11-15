@@ -36,6 +36,16 @@ python -m biogasflex benchmark-v0918 --output $full
 python scripts/audit_v0918_independent.py --input $full --output $proof
 ```
 
+The [executed independent week benchmark](reports/V0918_EXECUTED_QUARTER_HOUR_WEEK_BENCHMARK.md)
+reports all 9 modeled objectives and 3 rejected infeasibilities.
+For the hypothetical 168h case, the **exact independently witnessed**
+zero-buffer MILP objective was €4,755; modeled no-buffer and 0.75-MWh
+buffered LP values were €4,110.40 and €4,526.275, respectively
+(**€415.875 synthetic uplift**, not financial revenue).
+The separate source-free audit checked 2,880 15-minute records.
+Runner timings are descriptive one-run observations, not hardware
+or general MILP performance guarantees.
+
 See the [complete predeclared research protocol](docs/V0918_QUARTER_HOUR_WEEK_VERIFICATION_PROTOCOL.md)
 for assumptions, independent algebraic derivation and limitations.
 This benchmark does **not** implement 672-slot hard electricity awards:
