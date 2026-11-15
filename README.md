@@ -1,3 +1,51 @@
+# BiogasFlex v0.9.13 — Source-pinned historical market evidence and operational validation refusal
+
+**Research development candidate, not field-validated operations.**
+
+New `market-provenance` audits the **original Svk
+2020-04-01 SE3 prices** (24 hourly observations,
+24-price mean €6.9879/MWh) and records their
+**2026-04-09 source dataset publication date** and
+**2026-11-05 frozen-file retrieval date**.
+The data are genuine *retrospective historical prices*
+but do **not** establish original 2020 D−1
+auction publication/participant receipt times.
+We never treat them as verified 2020 ex-ante
+forecast inputs.
+
+The new command also **reuses**, without duplication,
+v0.9.12's independently published **2012–2022
+annual** Polish landfill-gas CHP observations and
+their documented source arithmetic issues.
+Annual measured summaries from a different 0.44-MW
+CHP do **not** validate the 0.8-MW synthetic
+BiogasFlex hourly gas/heat/ramp/stored-energy MILP.
+
+```bash
+python -m pip install -e .
+bash scripts/reproduce_v0913.sh
+python scripts/audit_v0913_market_provenance.py
+python -m biogasflex market-provenance
+python -m biogasflex market-provenance --output market_evidence.json
+# Optional strict real-operation requirement must FAIL CLOSED on this evidence:
+python -m biogasflex contract-dispatch --require-operational-validation
+```
+
+On Windows: `./scripts/reproduce_v0913.ps1`.
+
+[Complete new market chronology/evidence protocol](docs/V0913_MARKET_SOURCE_PROTOCOL.md).
+[Original external annual measured CHP study](docs/V0912_EXTERNAL_CHP_EVIDENCE_PROTOCOL.md).
+[Existing hard-award MILP specification](docs/V0911_HARD_CONTRACT_PROTOCOL.md).
+
+**No actual participant bids, real market profit,
+industrial CHP calibration, field validation,
+human-reviewed v1.0, Release or DOI** is claimed.
+The independent scientific review
+[issue #3](https://github.com/Open-Energy-Methods/biogasflex/issues/3)
+remains outstanding.
+
+---
+
 # BiogasFlex v0.9.12 — Published CHP annual evidence audit (research)
 
 **New:** source-verifiable 2012–2022 annual operating observations for a

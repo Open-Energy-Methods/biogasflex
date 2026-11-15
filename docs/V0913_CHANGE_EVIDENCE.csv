@@ -1,0 +1,6 @@
+change_id,scope,verification,scientific_boundary
+V0913-01,Svk SE3 historical source,Official source resource identifier exact 2020 sample SHA256 24 UTC rows unit and source calendar,Retrospective observed price only
+V0913-02,Original auction publication as-of,Archive record 2026-04-09 and reformatted retrieval 2026-11-05; forbid fabricated 2020 publication proof,No ex ante forecast or participant award proven
+V0913-03,Existing measured annual CHP study re-use,Invoke identical 2023 DOI CC BY v0.9.12 independently audited 11 annual records,Do not duplicate data or misattribute same reference to synthetic plant
+V0913-04,Real-operational qualification,Unconditional v0.9.13 fail-closed gate on missing historical price event and site matched telemetry,No grid metering or real trade
+V0913-05,Original commitment and CHP research,All inherited gas heat MILP plus original frozen source checks and numerical oracles,No model physics modifications

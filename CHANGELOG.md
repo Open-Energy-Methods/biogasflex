@@ -1,3 +1,36 @@
+# v0.9.13 — 2026-11-15 — Historical market as-of provenance with existing published CHP annual evidence
+
+- Add immutable Svk day-ahead 2020-04-01 SE3
+  source/zone/UTC grid audit to the already independently
+  published v0.9.12 CHP annual evidence layer.
+  Preserve frozen price source SHA256, source CC BY licence,
+  2026-04-09 dataset record publication and
+  2026-11-05 archived retrieval.
+- Source-supplied prices lack original 2020
+  participant-specific publication/award timestamps:
+  reject backdating and false bid-time data availability
+  claims, do not invent true price forecasts.
+- **Reuse without duplication** the v0.9.12 independently
+  audited 2012–2022 landfill-gas 0.44-MW CHP records,
+  their original source paper and published arithmetic
+  discrepancies; compare nameplate identity only.
+- Opt-in `market-provenance` CLI with detailed audit
+  only by explicit `--output`. Add strict
+  `contract-dispatch --require-operational-validation`
+  refusal until genuine same-plant high-frequency
+  measurements, metered export, as-of market data
+  and participant awards exist. A status flag cannot
+  override this gate.
+- No original 286 scientific inputs/results or
+  the inherited physical MILP, data and earlier
+  market experiments modified. Cross-platform
+  source manifest/tests/audits preserved.
+- No market trading, site calibration, real
+  economic return, human science review,
+  public GitHub Release or Zenodo DOI claimed.
+
+---
+
 # v0.9.12 — 2026-11-15 — Published annual CHP evidence with source-quality audit
 
 - Transcribed independently published 2012–2022 annual running hours,
