@@ -114,11 +114,20 @@ def _transition_audit(states, starts, stops, power, durations, limits) -> float:
         prior, prev_p = y, p
     return max(0.0, violation)
 
-def optimize_commitment_milp(config: dict, intervals: Sequence[Interval]) -> dict[str, Any]:
+def optimize_commitment_milp(
+    config: dict, intervals: Sequence[Interval], *,
+    contracted_delivery_mwh: Sequence[float] | None = None,
+) -> dict[str, Any]:
     """Finite-horizon commitment with *elapsed hours* and declared history.
 
     Initial residual dwell is enforced from the first slot boundary.
     New starts/stops must complete all operating hours within this horizon.
+
+    Optional v0.9.11 contract quantities are embedded as HARD MILP
+    equalities: eta_e * gas_use[t] * hours[t] == accepted_mwh[t].
+    No original price/gas/heat/dwell/ramp constraints are modified.
+    If absent, the legacy unconstrained solver and outputs are unchanged.
+    This models generation at the CHP terminals, NOT metered grid exports.
     """
     inp = prepare_heat_inputs(config, intervals)
     gas = inp.gas
@@ -129,6 +138,18 @@ def optimize_commitment_milp(config: dict, intervals: Sequence[Interval]) -> dic
     if terminal > gas.storage_capacity_mwh_lhv + TOL:
         raise ValueError("Terminal inventory target exceeds gas vessel storage capacity")
     dt = [interval.hours for interval in gas.price_intervals]
+    contract: list[float] | None = None
+    if contracted_delivery_mwh is not None:
+        if not isinstance(contracted_delivery_mwh, (list, tuple)) or len(contracted_delivery_mwh) != n:
+            raise ValueError("Contracted delivery must contain exactly one MWh amount per physical slot")
+        contract = []
+        for t, (raw, hours) in enumerate(zip(contracted_delivery_mwh, dt)):
+            if isinstance(raw, bool) or not isinstance(raw, (int, float)):
+                raise ValueError(f"Contract MWh[{t}] must be a finite number, not boolean")
+            amount = float(raw)
+            if not math.isfinite(amount) or amount < 0 or amount > gas.rating_mw_e * hours + TOL:
+                raise ValueError(f"Contract MWh[{t}] negative, nonfinite or beyond CHP MW times hours")
+            contract.append(amount)
     offsets = _hours(dt)
     # Blocks: [gas_use, stock_end, heat_use, backup, dumped, on, start, stop].
     u0,s0,h0,a0,w0,y0,z0,v0=(j*n for j in range(8))
@@ -167,6 +188,11 @@ def optimize_commitment_milp(config: dict, intervals: Sequence[Interval]) -> dic
             supply+(gas.initial_storage_mwh_lhv if t==0 else 0))
         row({u0+t:gas.eta_th,h0+t:-1,w0+t:-1},0,0)
         row({h0+t:1,a0+t:1},inp.demand_mw_th[t],inp.demand_mw_th[t])
+        if contract is not None:
+            # Hard acceptance equality in the ORIGINAL MILP and its
+            # identically constrained LP relaxation (not posthoc only).
+            # dt is mandatory: MWh != MW, particularly for 15-min slots.
+            row({u0+t:gas.eta_e * dt[t]},contract[t],contract[t])
         # The binary switch ties power to the on-band with no positive
         # generation in an off interval.
         row({u0+t:gas.eta_e,y0+t:-gas.rating_mw_e},hi=0)
@@ -256,6 +282,14 @@ def optimize_commitment_milp(config: dict, intervals: Sequence[Interval]) -> dic
     ledger["terminal_inventory_residual_mwh"]=stock[-1]-terminal
     _audit_ledger(inp,ledger)
     power=[gas.eta_e*u for u in use]
+    contract_residual = None
+    if contract is not None:
+        contract_residual = max(
+            abs(p * hours - accepted)
+            for p, hours, accepted in zip(power, dt, contract)
+        )
+        if contract_residual > 1e-7:
+            raise DispatchError("Solved CHP electricity violates hard contracted MWh equalities")
     ramp_violation=_transition_audit(states,starts,stops,power,dt,lim)
     if ramp_violation>TOL:
         raise DispatchError(f"Within-on-mode ramp violation: {ramp_violation}")
@@ -294,6 +328,13 @@ def optimize_commitment_milp(config: dict, intervals: Sequence[Interval]) -> dic
     if fixed_ledger is not None and abs(gas.initial_storage_mwh_lhv-terminal)<=TOL:
         try:
             feasible_ref=(_transition_audit(ref_on,ref_starts,ref_stops,ref_power,dt,lim)<=TOL)
+            if contract is not None:
+                # A physically feasible *uncontracted* reference is not
+                # a feasible competitor to a different awarded schedule.
+                feasible_ref = feasible_ref and all(
+                    abs(p * hours - accepted) <= 1e-7
+                    for p, hours, accepted in zip(ref_power, dt, contract)
+                )
         except DispatchError:
             feasible_ref=False
     ref_total=(fixed_ledger["economic_contribution_proxy_eur"]
@@ -311,7 +352,7 @@ def optimize_commitment_milp(config: dict, intervals: Sequence[Interval]) -> dic
     relaxed_bound=-float(relaxed.fun)
     if value>relaxed_bound+COST_TOL:
         raise DispatchError("Committed value exceeds matched-boundary LP relaxation")
-    return {
+    result = {
         "version":"0.9.8.1","case_id":gas.case_id,"model_type":MODEL,
         "boundary":("Price-only synthetic rolling commitment, explicit gas terminal "
                     "target, elapsed-hour prior dwell and fixed heat/gas profile; "
@@ -337,7 +378,11 @@ def optimize_commitment_milp(config: dict, intervals: Sequence[Interval]) -> dic
             "PHYSICALLY_INFEASIBLE" if fixed_ledger is None else
             "DIFFERENT_TERMINAL_INVENTORY"
             if abs(gas.initial_storage_mwh_lhv-terminal)>TOL else
-            "COMMITMENT_INFEASIBLE"
+            "DIFFERENT_CONTRACTED_DELIVERY"
+            if contract is not None and any(
+                abs(p * hours - accepted)>1e-7
+                for p, hours, accepted in zip(ref_power, dt, contract)
+            ) else "COMMITMENT_INFEASIBLE"
         ),
         "increment_over_feasible_fixed_eur":value-ref_total if feasible_ref and ref_total is not None else None,
         "same_boundary_LP_relaxation_upper_bound_eur":relaxed_bound,
@@ -353,6 +398,20 @@ def optimize_commitment_milp(config: dict, intervals: Sequence[Interval]) -> dic
             for t,row in enumerate(gas.price_intervals)
         ],
     }
+    if contract is not None:
+        result.update({
+            "hard_contract_equalities_embedded_in_milp": True,
+            "contracted_delivery_mwh": contract,
+            "simulated_delivery_mwh": [p*hours for p,hours in zip(power,dt)],
+            "max_contract_delivery_residual_mwh": contract_residual,
+            "matched_contract_LP_relaxation_bound_eur": relaxed_bound,
+            "physical_boundary": (
+                "Exact CHP terminal-generation MWh contract; no electrical export "
+                "meter, self-consumption, market acceptance, nominations, balancing "
+                "settlement or measured physical equipment validation."
+            ),
+        })
+    return result
 
 
 def _slice_config(config: dict, first: int, total: int) -> dict:
