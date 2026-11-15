@@ -1,3 +1,52 @@
+# BiogasFlex v0.9.10 — Explicit day-ahead information and fictional award matching
+
+**Status:** independently tested research software, **not** a functioning
+Nord Pool auction/settlement integration or an operating power plant model.
+
+New opt-in `market-boundary` command separates two deliberately different
+information sets: (1) a pre-clearing submitted *hypothetical* sell-energy
+schedule based on dated invented forecasts, with no actual clearing prices
+or awards accessible, and (2) post-clearing *exogenous fictional*
+participant accepted energy, clearing prices and result-delivery times.
+
+Every accepted MWh must match the unchanged v0.9.8.1 physically audited
+CHP MILP delivery exactly, or the experiment fails closed with
+`UNMODELLED_IMBALANCE`. We **do not** silently assume intraday sales,
+balance settlement, nominations, metered export or market profits.
+The post-clearing diagnostic is only a gross
+`Σ(MWh_awarded × EUR/MWh_cleared)` fictional cashflow proxy.
+
+Two independent numerical oracles: two hourly deliveries
+`[0.4,0.4] MWh × [20,60] EUR/MWh = €32`; four 15-minute
+deliveries `[0.1,0.1,0.1,0.1] MWh × [20,40,60,80] EUR/MWh = €20`.
+The UTC gate/receipt/plan sequence, partial-award rejection, and
+23-/25-hour Stockholm DST days are explicitly tested.
+
+```bash
+python -m pip install -e .
+bash scripts/reproduce_v0910.sh
+python scripts/audit_v0910_market_boundary.py
+python -m biogasflex market-boundary
+python -m biogasflex market-boundary --manifest examples/v0910_market_quarterhour.json
+python -m biogasflex market-boundary --output market_report.json
+```
+
+On Windows: `./scripts/reproduce_v0910.ps1`.
+
+Read the [complete market information and contract
+boundary protocol](docs/V0910_MARKET_INFORMATION_PROTOCOL.md).
+The previous observed-price sequential experiment remains available
+and is still **counterfactual**; see the archived
+[v0.9.9 numerical audit](reports/V099_INTERNAL_AUDIT.md).
+
+**Scientific release gate remains open** under
+[issue #3](https://github.com/Open-Energy-Methods/biogasflex/issues/3).
+No real auction awards, observed grid exports, true price forecast
+performance, physical CHP calibration, external peer review, public
+GitHub Release or DOI are claimed.
+
+---
+
 # BiogasFlex v0.9.9 — Observed-price chronological replay, hypothetical CHP
 
 **Research software only.** This opt-in experiment combines **actual
