@@ -72,7 +72,8 @@ class HardContractMILPTests(unittest.TestCase):
         self.assertAlmostEqual(result["total_accepted_mwh"],0.8)
         self.assertAlmostEqual(result["synthetic_chp_operating_contribution_eur"],20.0)
         self.assertAlmostEqual(result["maximum_contract_vs_simulated_delivery_mwh"],0.0)
-        self.assertEqual(result["simulated_delivered_mwh"],[0.2,0.6])
+        for observed, expected in zip(result["simulated_delivered_mwh"],[0.2,0.6]):
+            self.assertAlmostEqual(observed,expected,places=9)
         solver=result["physical_solver_and_hourly"]
         self.assertEqual([round(x["gas_use_mw_lhv"],6) for x in solver["hourly"]],[0.5,1.5])
         self.assertEqual([round(x["stock_end_mwh_lhv"],6) for x in solver["hourly"]],[0.5,0.0])
