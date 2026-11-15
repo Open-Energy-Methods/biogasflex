@@ -8,6 +8,18 @@ capacities × 2 startup-cost assumptions), **nine 96-quarter-hour
 continuously-on ramp LPs**, and one 8-quarter-hour exhaustive binary
 global-optimum comparison.
 
+The [executed study](reports/V0919_EXECUTED_ENDOGENOUS_FLEXIBILITY_KKT.md)
+found **six optimized shutdown/restart cases**, up to
+**two modeled starts per six-hour experiment**. All **46 cases**
+and **1,736 quarter-hour rows** passed the independent
+source-reconstructed LP/KKT audit. The non-dominated
+configurations exhibit a real **mathematical trade-off**:
+the 1.5-MWh hypothetical buffer + 0.15-MWth external backup
+earned approximately **€249–251 in synthetic six-hour operating
+contribution**, but relied on backup heat for **37.5%**
+of demand and modeled two starts. Neither a reliability
+percentage nor a financial investment result is implied.
+
 The independent source-free auditor reassembles the five-block gas,
 electricity and heat LP, directly checks its **primal and dual KKT
 conditions** (stationarity, signs, complementarity, duality gap),
