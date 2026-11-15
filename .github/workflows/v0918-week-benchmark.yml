@@ -1,0 +1,55 @@
+name: v0.9.18 synthetic 672-quarter-hour CHP MILP/LP scaling and independent witness
+
+on:
+  push:
+    paths:
+      - '.github/workflows/v0918-week-benchmark.yml'
+      - 'src/biogasflex/benchmark_v0918.py'
+      - 'scripts/audit_v0918_independent.py'
+      - 'tests/test_v0918_week_verification.py'
+      - 'src/biogasflex/experimental_v097.py'
+      - 'src/biogasflex/experimental_v095.py'
+  pull_request:
+    paths:
+      - '.github/workflows/v0918-week-benchmark.yml'
+      - 'src/biogasflex/benchmark_v0918.py'
+      - 'scripts/audit_v0918_independent.py'
+      - 'tests/test_v0918_week_verification.py'
+      - 'src/biogasflex/experimental_v097.py'
+      - 'src/biogasflex/experimental_v095.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-synthetic-week:
+    name: 96 / 192 / 672 15-minute MILP + LP + algebraic / primal audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install research package
+        run: python -m pip install -e .
+      - name: Execute full synthetic scaling benchmark in isolated artifact path
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m biogasflex benchmark-v0918 --output "$RUNNER_TEMP/v0918_15min_week_full_rows.json"
+      - name: Independently recompute physical ledgers, algebraic optimum and feasibility claims
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/audit_v0918_independent.py --input "$RUNNER_TEMP/v0918_15min_week_full_rows.json" --output "$RUNNER_TEMP/v0918_15min_independent_witness.json"
+      - name: Retain complete synthetic benchmark and independent witness reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: biogasflex-v0918-672-quarter-hour-synthetic-benchmark-and-stdlib-audit
+          path: |
+            ${{ runner.temp }}/v0918_15min_week_full_rows.json
+            ${{ runner.temp }}/v0918_15min_independent_witness.json
+          if-no-files-found: error
+          retention-days: 60
