@@ -1,0 +1,20 @@
+{
+  "schema": "biogasflex_market_provenance_v0913",
+  "market_archive": {
+    "source_provider": "Svenska kraftnät",
+    "bidding_zone": "SE3",
+    "delivery_local_date": "2020-04-01",
+    "price_unit": "EUR-MWh",
+    "path": "data/observed/svk_se3_2020_april_01_CC-BY-4.0.csv",
+    "sha256": "560415b0b38fd764c64bf40c182737d60b94838a39db677da96f7649ba4661b0",
+    "resource_id": "cf392ef3-7345-4e98-970e-83088c185570",
+    "source_url": "https://data.svk.se/sv/dataset/market_data_day_ahead_area_prices/resource/cf392ef3-7345-4e98-970e-83088c185570",
+    "source_dataset_first_publication_date": "2026-04-09",
+    "snapshot_retrieval_date": "2026-11-05",
+    "preauction_decision_utc": "2020-03-31T09:00:00+00:00",
+    "original_per_interval_publication_proof": "NOT_ARCHIVED",
+    "permitted_claim": "OBSERVED_EX_POST_ONLY"
+  },
+  "published_chp_reference_path": "data/observed/ciula_2023_landfill_chp_annual.csv",
+  "hypothetical_chp_config": "examples/v0911_synthetic_chp.json"
+}
