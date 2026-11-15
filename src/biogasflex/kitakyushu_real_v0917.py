@@ -156,6 +156,7 @@ def analyse_frames(frames:dict[str,dict[datetime,tuple]])->dict:
        "gas1_recovery_gj_per_hour","gas2_recovery_gj_per_hour",
        "combined_gas_1_2_recovery_gj_per_hour")}
     examples=[]
+    by_month={str(i).zfill(2):Counter() for i in range(1,13)}
     for dt in expected:
         p,g,h=frames["Power.zip"][dt],frames["Gas usage.zip"][dt],frames["Heat recovery.zip"][dt]
         electric=p[2];fuel=g[2];heat1=h[0];heat2=h[1]
@@ -163,18 +164,30 @@ def analyse_frames(frames:dict[str,dict[datetime,tuple]])->dict:
               "gas1_recovery_gj_per_hour":heat1,"gas2_recovery_gj_per_hour":heat2,
               "combined_gas_1_2_recovery_gj_per_hour":
                 heat1+heat2 if heat1 is not None and heat2 is not None else None}
+        bucket=by_month[str(dt.month).zfill(2)]
+        bucket["source_hourly_records"]+=1
+        if electric is not None:
+            bucket["observed_engine_electric_hours"]+=1
+            bucket["generator_electric_kwh"]+=electric
+        if fuel is not None:
+            bucket["observed_engine_fuel_hours"]+=1
+            bucket["source_engine_gas_m3"]+=fuel
         if electric is not None and electric>0: counts["engine_electric_positive_hours"]+=1
         if fuel is not None and fuel>0: counts["engine_gas_positive_hours"]+=1
         if electric is not None and fuel is not None:
             counts["paired_electric_gas_hours"]+=1
+            bucket["paired_electric_gas_hours"]+=1
             if electric>0 and fuel>0:
                 counts["both_electric_and_gas_positive_hours"]+=1
+                bucket["electric_and_gas_positive_hours"]+=1
             if electric>0 and fuel==0:
                 counts["electric_positive_gas_zero_hours"]+=1
+                bucket["generator_positive_gas_zero_hours"]+=1
                 if len(examples)<6:examples.append({"timestamp_local_unspecified":dt.isoformat(),
                     "issue":"GENERATOR_POWER_POSITIVE_BUT_GAS_ZERO"})
             if electric==0 and fuel>0:
                 counts["electric_zero_gas_positive_hours"]+=1
+                bucket["generator_zero_gas_positive_hours"]+=1
         if all(x is not None for x in (electric,fuel,heat1,heat2)):
             counts["complete_four_channel_hours"]+=1
         for key,value in vals.items():
@@ -205,6 +218,10 @@ def analyse_frames(frames:dict[str,dict[datetime,tuple]])->dict:
          "gas2_recovered_heat_gj_hourly_integral":round(sums["gas2_recovery_gj_per_hour"],6),
       },
       "observed_source_maxima":peaks,
+      "monthly_observed_source_totals":[{
+            "month":month,
+            **{k:round(v,6) if isinstance(v,float) else v for k,v in sorted(values.items())}
+        } for month,values in sorted(by_month.items())],
       "source_measurement_coverage":{
          "electric_hour_fraction":round(elec_hours/8760,8),
          "gas_hour_fraction":round(gas_hours/8760,8),
