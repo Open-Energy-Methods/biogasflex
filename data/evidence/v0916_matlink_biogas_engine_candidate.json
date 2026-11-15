@@ -1,0 +1,63 @@
+{
+  "protocol": "BIOGASFLEX_V0916_REAL_BIOGAS_RECIPROCATING_CANDIDATE_NOT_ACQUIRED",
+  "reviewed_at": "2026-11-15",
+  "source_id": "nyserda_matlink_farm_project_516",
+  "site_name": "Matlink Farm",
+  "country": "United States",
+  "technology": "145_KWE_WAUKESHA_RECIPROCATING_ENGINE",
+  "fuel": "ANAEROBIC_DIGESTER_GAS",
+  "source_authority": "New York State Energy Research and Development Authority (NYSERDA) DER Integrated Data System",
+  "source_primary_page": "https://der.nyserda.ny.gov/facilities/567/?project=516",
+  "source_performance_page": "https://der.nyserda.ny.gov/reports/view/performance/?project=516",
+  "source_instrument_notes": "https://dataint.s3.amazonaws.com/docs/proj_516/Database_Notes_-_Matlink_Farm.pdf",
+  "measured_period": "2004-10_to_2005-07",
+  "source_document_claims": {
+    "declared_generator_rating_kw_e": 145,
+    "reported_total_generated_electricity_kwh": 225083,
+    "reported_total_biogas_to_generator_Mcf": 13407,
+    "reported_total_electrical_efficiency_HHV_percent": 9.5,
+    "stated_original_15_minute_point_count": 91,
+    "stated_public_download_granularity": "HOUR_DAY_MONTH",
+    "source_time_zone": "AMERICA_NEW_YORK_DST_IN_RAW_15MIN_AND_EST_IN_PUBLISHED_GRAPHS",
+    "documentation_acknowledges_unknown_interval_aggregation": "Heat-recovery rates might be sampled, instantaneous or integrated; not established",
+    "obvious_published_efficiency_quality_flags": [
+      "Monthly displayed 2004-10 electric efficiency 2858.5% HHV",
+      "Monthly displayed 2004-12 electric efficiency 545.8% HHV",
+      "Monthly displayed 2004-11 gas input 0 Mcf despite nonzero electrical generation"
+    ]
+  },
+  "public_download_interface": "https://der.nyserda.ny.gov/reports/view/performance/?project=516",
+  "recommended_manual_source_export": {
+    "start_date": "2005-01-01",
+    "end_date": "2005-01-31",
+    "time_step": "HR",
+    "filtering_modes_to_export": [
+      "ON",
+      "OFF"
+    ],
+    "instructions": "Open Matlink Farm performance report -> Data tab -> choose selected dates -> HR -> download, preserve both filtered and unfiltered originals and the selected UI options.",
+    "automated_http_access": "BLOCKED_BY_WAF_CHALLENGE_IN_CURRENT_REMOTE_BROWSER_SESSION",
+    "access_method": "MANUAL_AUTHORIZED_BROWSER_EXPORT_OR_DATA_CUSTODIAN_REQUEST",
+    "request_raw_record_detail": "15-minute original CSV rather than hourly averaged downstream report, if permitted"
+  },
+  "license_status": "SOURCE_PORTAL_REUSE_RIGHTS_NOT_YET_VERIFIED",
+  "source_raw_csv_sha256": null,
+  "source_raw_csv_byte_count": null,
+  "published_site_specific_calibration_certificates_available": false,
+  "raw_data_downloaded_and_integrity_verified": false,
+  "instrument_uncertainty_model_verified": false,
+  "time_resolved_lhv_verified": false,
+  "high_frequency_startup_ramp_verified": false,
+  "approved_for_physical_biogas_engine_calibration": false,
+  "data_use_restrictions": [
+    "Do not convert volume reported in Mcf directly to dry normalized Nm3",
+    "Do not accept source-reported efficiency percent as validated without meter quality investigation",
+    "Do not synthesize missing gas volume from electric energy or vice versa",
+    "Do not assume all 91 monitored points are independent calibrated continuous energy meters",
+    "Do not assume timestamp local DST conversion is gap-free, one-to-one or equivalent to UTC",
+    "Do not transfer Matlink engine constraints to Swedish synthetic CHP or 440kWe Polish landfill installation",
+    "Do not commit raw material until licensing and permission are established",
+    "Do not treat published hourly outputs as seconds-scale ramp or safe minimum load tests"
+  ],
+  "next_evidence_gate": "Secure authorized raw CSV and usage rights, preserve source bytes/SHA256 and filter metadata, audit time zone/DST and exact energy meter definitions, review calibrations before model fitting."
+}
