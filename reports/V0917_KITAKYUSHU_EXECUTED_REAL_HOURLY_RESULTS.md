@@ -45,6 +45,38 @@ combined with the gas-engine electricity/fuel totals to calculate
 one CHP first-law efficiency. The source has fuel-cell and auxiliary
 equipment whose thermal flows must remain separate.
 
+## Monthly measured electricity, engine-gas volume and measurement conflicts
+
+These values were independently extracted from the original
+published 2005 source workbooks by
+[online measurement run 43712197151](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/43712197151),
+using monthly groups of the source's 8,760 hourly rows. They are
+**not hypothetical CHP model output**.
+
+| Month 2005 | Engine electricity (kWh) | Engine gas (source m³) | Both power and gas positive (h) | Power positive / gas zero (h) | Power zero / gas positive (h) |
+|---|---:|---:|---:|---:|---:|
+| Jan | 65,648 | 18,888.00 | 413 | 0 | 31 |
+| Feb | 66,837 | 18,835.60 | 410 | 6 | 29 |
+| Mar | 62,774 | 18,224.90 | 392 | 0 | 23 |
+| Apr | 54,351 | 15,658.90 | 342 | 0 | 25 |
+| May | 49,799 | 14,744.90 | 312 | 0 | 24 |
+| Jun | 58,132 | 17,452.10 | 362 | 0 | 27 |
+| Jul | 56,293 | 16,984.00 | 350 | 0 | 26 |
+| Aug | 58,481 | 16,687.40 | 343 | 21 | 29 |
+| Sep | 53,447 | 15,757.80 | 334 | 0 | 25 |
+| Oct | 55,368 | 16,138.20 | 346 | 0 | 26 |
+| Nov | 53,756 | 15,447.70 | 336 | 0 | 24 |
+| Dec | 51,494 | 14,690.85 | 323 | 0 | 27 |
+| **Year** | **686,380** | **199,510.35** | **4,263** | **27** | **316** |
+
+These anomalies are notably concentrated in **February and August**
+for positive electricity without reported gas; gas-positive
+power-zero readings occur across all months. Possible meter timing,
+cumulative-processing, quality rules, standby usage or different physical
+boundaries need independent investigation; the source alone cannot
+identify the cause. The variation also confirms why an annual aggregate
+cannot reveal actual starts, ramp speeds or gas-engine dynamic parameters.
+
 ## Calculation conventions
 
 - `kW` on hourly bins integrated as `kWh`, one hour per row.
