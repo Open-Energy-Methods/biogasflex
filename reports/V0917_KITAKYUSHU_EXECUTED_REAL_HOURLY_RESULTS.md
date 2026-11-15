@@ -1,0 +1,81 @@
+# BiogasFlex v0.9.17 — Executed real 2005 Kitakyushu CHP measurement audit
+
+**Source:** Liao, Jin & Li, [figshare dataset
+10.6084/m9.figshare.24978645.v2](https://doi.org/10.6084/m9.figshare.24978645.v2),
+published CC BY 4.0. **Technology/fuel:** original Japanese
+**city-gas reciprocating engine** (with separate fuel cells), not
+anaerobic-digestion biogas.
+
+**Execution:** Actual original three source archives downloaded,
+provider MD5 and byte count plus previously independently observed SHA-256
+verified, exact original `2005` workbooks decoded and all hourly
+records aligned successfully in
+[online source-audit run 43711923353](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/43711923353).
+This report summarizes real source measurements, **not test fixture values**.
+
+## Reported measured 2005 source statistics
+
+| Measured published channel or consistency metric | Recorded result | Scope |
+|---|---:|---|
+| Complete aligned source-local hourly timestamps | **8,760** | One full 2005 nonleap calendar year; source-local naive timestamps, UTC offset not independently authenticated |
+| `Gas engine (kW)`: annual 1h-bin electricity integral | **686,380 kWh** (686.38 MWh) | Engine-labelled electricity; **not** net exported electricity |
+| `Gas engine (m3)`: annual engine fuel source-volume sum | **199,510.35 m³** | Unit label from provider; **not** authenticated dry-normal `Nm³` and **not** fuel energy |
+| `Gas 1(GJ/h)`: heat-rate integral over 1h bins | **1,485.885 GJ** | Engine heat allocation and end-use metering **not verified** |
+| `Gas 2(GJ/h)`: heat-rate integral over 1h bins | **3,746.6145 GJ** | Independently retained source channel; not automatically useful delivered heat |
+| Electricity-positive hours | **4,290** | Source `Gas engine (kW)>0`; not verified engine ON controller |
+| Engine gas-volume-positive hours | **4,579** | Source `Gas engine (m3)>0` |
+| Both engine electricity and gas-volume positive | **4,263** | Two-channel overlap, not calibrated efficiency |
+| Electricity positive, gas volume **zero** | **27 hours** | **Potential source signal inconsistency** |
+| Electricity **zero**, gas volume positive | **316 hours** | Could reflect source timing, standby/fuel or metering; not inferred as starts |
+| Matched electricity/gas channel records | **8,760** | Complete in source without missing hour labels |
+| Maximum engine electrical power recorded | **166 kW** | Exceeds 160 kWe nominal article value; requires ratings/meter/normalization review |
+| Maximum engine gas input source reading | **50.5 m³/h** | Descriptive source rate only; measurement reference standard unknown |
+| Maximum Gas 1 source heat rate | **0.997 GJ/h** | Not physically calibrated |
+| Maximum Gas 2 source heat rate | **1.531 GJ/h** | Not physically calibrated |
+
+**Selected quality flag:** The first recorded power-positive/gas-zero
+hour is source-local **2005-02-28 08:00**. Subsequent hours on the same
+date also show this mismatch. The full original source should be
+reviewed for source meter delays, instrumentation or plant operation
+before interpreting these as genuine physical states.
+
+The two separate heat-recovery channels are *not proven to correspond
+exclusively to the single generator engine* and thus must **not** be
+combined with the gas-engine electricity/fuel totals to calculate
+one CHP first-law efficiency. The source has fuel-cell and auxiliary
+equipment whose thermal flows must remain separate.
+
+## Calculation conventions
+
+- `kW` on hourly bins integrated as `kWh`, one hour per row.
+- `m3` is **the provider's literal source-volume label**. No dry
+  normalization, chemical composition or gas LHV/HHV assumed.
+- `GJ/h` integrated over one-hour source bins yields GJ *only under
+  the source's nominal hourly-rate interpretation*. Actual sensor
+  integration conventions/heat allocation are not documented here.
+- Twelve monthly groups and counts are now produced to distinguish
+  patterns and source anomalies without inventing subhour ramps
+  or start/stop events.
+- Original source dates have no asserted time-zone offset.
+  No equivalent bid-time forecasting or market return is claimed.
+- All original source file hashes are recorded in code and the
+  v0.9.16 executed source report; they are re-verified in every online run.
+
+## Claims and blockers
+
+**Supported:** reproducible analysis of real externally published
+hourly gas-engine electrical source data, engine gas source-volume
+data and independently labelled recovered-heat channels; source
+provenance, exact year, record counts, per-channel totals and
+descriptive contradictions.
+
+**Not supported:** fuel-to-electric or total CHP efficiency on an
+authenticated LHV/HHV basis, measurement uncertainty covariance,
+independent engine commission/test curve, verified ramp/start/stop
+limits, measured Swedish anaerobic-digester biogas plant behavior,
+gas storage or heat demand, grid delivery, real market profit,
+independent generalizable model predictive accuracy.
+
+The physical biogas-engine data-access plan remains
+[Matlink Farm v0.9.16-C](../docs/V0916C_MATLINK_AUTHORIZED_DATA_HANDOFF.md).
+This result **does not close the scientific v1.0 field-validation gate**.
