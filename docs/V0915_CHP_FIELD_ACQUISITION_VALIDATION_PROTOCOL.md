@@ -137,7 +137,9 @@ The accepted real-data manifest format requires declared engine and
 nameplate provenance, source authorization, instrument tags,
 calibration references and validity times, plus at least 96
 contiguous quarter-hour observations (24 hours). The `--csv`
-path may point to authorized data **outside the checkout**.
+path must point to authorized data **outside the checkout**, and the
+real manifest must also reside outside the checkout. The CLI enforces
+both source-location restrictions.
 Even then the only possible success status is
 `PASS_REAL_DATA_SCHEMA_AND_BALANCE_SCREEN_PENDING_HUMAN_VERIFICATION`.
 The code never accepts a manually asserted "plant model validated" flag.
