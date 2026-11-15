@@ -167,7 +167,6 @@ def witness_case(item):
         demand(item["reported_lp_relaxation_upper_bound_eur"]+TOL>=objective,
                "LP published theoretical upper bound below primal")
         if kind=="zero_storage_ramp_lp":
-            close(objective,sum((p*.4-p*.4*cfg["chp_variable_cost_eur_per_mwh_e"]/(1))*.25 for p in []),"not applicable",1e9) if False else None
             demand(capacity==0,"No-buffer reference unexpectedly has buffer")
             close(total_gas,n*.25,"Fixed always-on gas use")
             demand(all(abs(r["gas_use_mw_lhv"]-1)<1e-6 for r in rows),
