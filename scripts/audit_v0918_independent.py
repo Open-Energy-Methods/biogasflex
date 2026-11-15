@@ -47,6 +47,61 @@ def witness_case(item):
     demand(cfg["price_zone"]=="SE3" and cfg["gas_storage_capacity_mwh_lhv"]>=0,
            "Invalid zone/storage")
     capacity=cfg["gas_storage_capacity_mwh_lhv"]
+    # Reconstruct the entire fictional input *without* importing the
+    # optimizer or trusting reported scenario arrays. This is essential:
+    # a false input price/gas profile cannot pass by changing the JSON.
+    if kind=="forced_commitment_milp":
+        demand(capacity==0.0 and cfg["initial_gas_inventory_mwh_lhv"]==0.0,
+               "Forced commitment source contract was changed")
+        demand(cfg["electric_rating_mw"]==.8
+               and cfg["heat_demand_mw_th"]==.15
+               and cfg["aux_heat_capacity_mw_th"]==.2
+               and cfg["heat_dump_capacity_mw_th"]==.3
+               and cfg["aux_heat_cost_eur_per_mwh_th"]==3.
+               and cfg["heat_dump_penalty_eur_per_mwh_th"]==1.
+               and cfg["chp_variable_cost_eur_per_mwh_e"]==1.,
+               "Forced commitment base assumptions changed")
+        demand(limit["minimum_on_power_mw_e"]==.2
+               and limit["minimum_up_hours"]==.5
+               and limit["minimum_down_hours"]==.5
+               and limit["initial_on"] is False
+               and limit["initial_power_mw_e"]==0.
+               and limit["startup_cost_eur"]==5.
+               and limit["shutdown_cost_eur"]==2.,
+               "Forced commitment startup/shutdown/dwell assumptions changed")
+        period=min(96,n)
+        expected_gas=[0. if i%period < period//2 else 2. for i in range(n)]
+    else:
+        demand(cfg["electric_rating_mw"]==.8
+               and cfg["heat_demand_mw_th"]==.2
+               and cfg["aux_heat_capacity_mw_th"]==.25
+               and cfg["heat_dump_capacity_mw_th"]==.5
+               and cfg["aux_heat_cost_eur_per_mwh_th"]==4.
+               and cfg["heat_dump_penalty_eur_per_mwh_th"]==1.
+               and cfg["chp_variable_cost_eur_per_mwh_e"]==.5,
+               "Buffered LP base assumptions changed")
+        demand(limit["minimum_power_mw_e"]==.1
+               and limit["ramp_up_mw_e_per_hour"]==.4
+               and limit["ramp_down_mw_e_per_hour"]==.4
+               and limit["initial_power_mw_e"]==.4,
+               "Buffered LP ramp/minimum output assumptions changed")
+        if kind=="storage_ramp_lp":
+            demand(capacity==.75
+                   and cfg["initial_gas_inventory_mwh_lhv"]==.375,
+                   "Buffered scenario store assumptions changed")
+        else:
+            demand(capacity==0.
+                   and cfg["initial_gas_inventory_mwh_lhv"]==0.,
+                   "No-storage LP assumptions changed")
+        expected_gas=[1.]*n
+    demand(len(gas)==len(expected_gas)
+           and all(abs(actual-expected)<1e-12
+                   for actual,expected in zip(gas,expected_gas)),
+           "Synthetic gas-source pattern altered")
+    expected_prices=(20.,95.,35.,110.,25.,85.)
+    demand(all(abs(p-expected_prices[(i//16)%6])<1e-12
+               for i,p in enumerate(prices)),
+           "Synthetic price scenario altered")
     previous_stock=cfg["initial_gas_inventory_mwh_lhv"]
     first_stock=previous_stock
     prior_on=int(limit["initial_on"]) if kind=="forced_commitment_milp" else 1
@@ -62,6 +117,8 @@ def witness_case(item):
         close(row["dt_h"],.25,"hour fraction")
         price=prices[i]
         demand(math.isfinite(price),"Nonfinite invented price")
+        published_row_price=row["price_eur_mwh"] if kind=="forced_commitment_milp" else row["market_price_eur_mwh"]
+        close(published_row_price,price,"Original solver row price and source scenario",1e-10)
         p=float(row["power_mw_e"] if kind=="forced_commitment_milp"
                 else row["electric_power_mw_e"])
         u=float(row["gas_use_mw_lhv"])
@@ -171,7 +228,11 @@ def witness_case(item):
             close(total_gas,n*.25,"Fixed always-on gas use")
             demand(all(abs(r["gas_use_mw_lhv"]-1)<1e-6 for r in rows),
                    "No-storage flexible LP invented gas shifting")
-        optimum_scope="PRIMAL_CONSERVATION_AND_SOLVER_REPORTED_LOOSE_LP_BOUND_NOT_INDEPENDENT_DUAL_PROOF"
+        optimum_scope=(
+            "EXACT_ALGEBRAIC_ZERO_BUFFER_LP_SOLUTION_FROM_GAS_CONSERVATION"
+            if kind=="zero_storage_ramp_lp" else
+            "PRIMAL_CONSERVATION_AND_SOLVER_REPORTED_LOOSE_LP_BOUND_NOT_INDEPENDENT_DUAL_PROOF"
+        )
     close(item["reported_net_contribution_eur"],objective,"independent monetary objective",1e-5)
     return {
       "case":item["case"],"kind":kind,"intervals":n,
