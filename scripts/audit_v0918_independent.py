@@ -136,6 +136,12 @@ def witness_case(item):
         close(p,.4*u,"independent electric conversion")
         close(.2*u,heat+dump,"independent CHP heat generation balance")
         close(cfg["heat_demand_mw_th"],heat+aux,"independent heat service balance")
+        # If gas/power are fixed, positive auxiliary and dump penalties
+        # independently prove maximal direct useful heat is cost optimal.
+        # Other heat splits may be FEASIBLE but have strictly worse costs.
+        if kind=="forced_commitment_milp":
+            close(heat,min(.2*u,cfg["heat_demand_mw_th"]),
+                  "cost-minimal direct heat allocation",1e-7)
         residual=stock-previous_stock-(gas[i]-u)*.25
         max_gas=max(max_gas,abs(residual))
         max_heat=max(max_heat,abs((heat+dump-.2*u)*.25),
