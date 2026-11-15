@@ -118,8 +118,6 @@ def audit_register(payload: dict[str, Any]) -> dict[str, Any]:
         == "data/observed/ciula_2023_landfill_chp_annual.csv",
         "Published original annual source cannot be replaced",
     )
-    _check(payload.get("allowed_uses") == sorted(ALLOWED_ADMISSIBILITY),
-           "Unknown permitted parameter use") if False else None
     _check(
         payload.get("allowed_uses") == [
             "SOURCE_SITE_STATIC_SCREEN", "REFERENCE_ONLY", "BLOCKED"
