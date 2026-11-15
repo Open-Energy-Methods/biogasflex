@@ -18,10 +18,11 @@ from .bounded_sensitivity_v0914b import run_manifest as run_bounded_sensitivity
 from .telemetry_acquisition_v0915 import audit_telemetry
 from .public_chp_sources_v0916 import run as run_public_chp_sources
 from .kitakyushu_real_v0917 import run as run_kitakyushu_real_v0917
+from .benchmark_v0918 import run as run_v0918_benchmark, write_out as write_v0918_benchmark, SCALES as V0918_SCALES
 from .market_provenance_v0913 import run_market_source_audit, require_operational_validation
 from .svk import fetch_local_day
 
-parser = argparse.ArgumentParser(description='BiogasFlex 0.9.17: source-provenance auditable research CHP and strict market bid-time validation gate')
+parser = argparse.ArgumentParser(description='BiogasFlex 0.9.18: source-provenance auditable research CHP and strict market bid-time validation gate')
 sub = parser.add_subparsers(dest='command', required=True)
 p = sub.add_parser('fetch-svk', help='Retrieve a licensed day of historical SE3 prices')
 p.add_argument('--output', type=Path, default=Path('data/external/svk_se3_20200101.csv'))
@@ -106,8 +107,16 @@ p=sub.add_parser('real-chp-analysis',
     help='v0.9.17 measured Kitakyushu city-gas engine hourly 2005 3-channel source analysis, opt-in --fetch')
 p.add_argument('--fetch',action='store_true',help='Download and integrity-check 3 original CC-BY archives before numerical source analysis')
 p.add_argument('--report',type=Path,default=None,help='Write real-source research report outside git source checkout')
+p=sub.add_parser('benchmark-v0918',
+    help='v0.9.18: synthetic 15-min 96/192/672-slot MILP and ramp-LP math verification; NOT calibrated CHP')
+p.add_argument('--smoke',action='store_true',help='Short 4/8-slot analytical oracle checks, no real week performance claim')
+p.add_argument('--output',type=Path,default=None,help='Save complete benchmark rows OUTSIDE repository for independent stdlib witness')
 args=parser.parse_args()
-if args.command == 'real-chp-analysis':
+if args.command == 'benchmark-v0918':
+    result=run_v0918_benchmark((4,8) if args.smoke else V0918_SCALES)
+    if args.output is not None:
+        write_v0918_benchmark(result,args.output)
+elif args.command == 'real-chp-analysis':
     result=run_kitakyushu_real_v0917(args.fetch,args.report)
 elif args.command == 'public-chp-sources':
     result=run_public_chp_sources(args.source,args.fetch,args.report)
@@ -216,7 +225,26 @@ elif args.command == 'dispatch':
     result=run_dispatch(args.config,args.prices,args.output,capacity_mwh_lhv=args.capacity_mwh_lhv)
 else:
     result=run_sweep(args.config,args.prices,args.output)
-if args.command == 'real-chp-analysis':
+if args.command == 'benchmark-v0918':
+    print(json.dumps({
+      'protocol':result['protocol'],
+      'status':result['status'],
+      'scales':result['scales'],
+      'solved_case_count':len(result['cases']),
+      'case_summary':[{
+         'kind':case['kind'],
+         'intervals':case['interval_count'],
+         'net_synthetic_objective_eur':case['reported_net_contribution_eur'],
+         'runtime_seconds_host_specific':case['solve_seconds_total_python_scipy_highs'],
+         'reported_mip_gap':case['solver_mip_gap'],
+         'start_count':case['reported_start_count'],
+         'stop_count':case['reported_stop_count'],
+      } for case in result['cases']],
+      'analytically_infeasible_controls_rejected':len(result['infeasible_synthetic_controls']),
+      'full_row_output':str(args.output) if args.output is not None else None,
+      'real_biogas_engine_calibrated':False,
+    },indent=2,allow_nan=False))
+elif args.command == 'real-chp-analysis':
     print(json.dumps(result,indent=2,allow_nan=False,ensure_ascii=False))
 elif args.command == 'public-chp-sources':
     print(json.dumps(result,indent=2,allow_nan=False,ensure_ascii=False))
