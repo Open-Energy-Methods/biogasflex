@@ -289,7 +289,7 @@ def audit_external_annual_chp(root: Path, chp: dict, hypothetical_config_path: A
     reported=_numeric(chp["originally_reported_2018_2022_gas_mean_m3_per_year"],
                       "source Table 3 reported mean",positive=True)
     if abs(reported-1291515)>1e-6:
-        raise EvidenceError("Reported Table 3 average differs from published source")
+        raise EvidenceError("reported Table 3 average differs from published source")
     root=root.resolve()
     if not isinstance(hypothetical_config_path,str):
         raise EvidenceError("Hypothetical config path required")
