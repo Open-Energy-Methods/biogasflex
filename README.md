@@ -33,6 +33,11 @@ verified. The report is derived from the original publisher-byte
 verified archives in [GitHub Actions real-source run 43711923353](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/43711923353).
 
 Full scientific [source-matched methodology](docs/V0917_KITAKYUSHU_REAL_HOURLY_ANALYSIS.md).
+The real-source job also produces three **vector SVG plots** of
+observed monthly engine electricity, engine gas source volume and
+power/gas disagreement hours, computed from the 12-month report
+without interpolating any readings.
+
 Independent real data execution lives in
 [the online source-analysis workflow](.github/workflows/v0917-kitakyushu-real.yml);
 full offline CI remains independent of the internet.
