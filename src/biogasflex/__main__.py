@@ -15,10 +15,11 @@ from .market_v0910 import run_manifest as run_market_boundary_manifest
 from .annual_chp_evidence import audit_annual_chp
 from .chp_parameter_evidence import run_register
 from .bounded_sensitivity_v0914b import run_manifest as run_bounded_sensitivity
+from .telemetry_acquisition_v0915 import audit_telemetry
 from .market_provenance_v0913 import run_market_source_audit, require_operational_validation
 from .svk import fetch_local_day
 
-parser = argparse.ArgumentParser(description='BiogasFlex 0.9.14: source-provenance auditable research CHP and strict market bid-time validation gate')
+parser = argparse.ArgumentParser(description='BiogasFlex 0.9.15: source-provenance auditable research CHP and strict market bid-time validation gate')
 sub = parser.add_subparsers(dest='command', required=True)
 p = sub.add_parser('fetch-svk', help='Retrieve a licensed day of historical SE3 prices')
 p.add_argument('--output', type=Path, default=Path('data/external/svk_se3_20200101.csv'))
@@ -89,8 +90,18 @@ p=sub.add_parser('bounded-sensitivity',
                  help='v0.9.14-B: EXPLICITLY SYNTHETIC 81-case factorial contract feasibility, OAT, and conditional box proofs')
 p.add_argument('--manifest',type=Path,default=Path('examples/v0914b_hypothetical_sensitivity.json'))
 p.add_argument('--output',type=Path,default=None,help='Optional full deterministic case table, no files written by default')
+p=sub.add_parser('telemetry-qa',
+    help='v0.9.15: fail-closed dry normalized gas/heat/electric 15-min raw-data QA; NOT calibrated CHP model')
+p.add_argument('--manifest',type=Path,default=Path('examples/v0915_synthetic_acquisition_manifest.json'))
+p.add_argument('--csv',type=Path,default=None,help='Optional private/authorized raw input CSV path outside repository')
+p.add_argument('--output',type=Path,default=None,help='Optional full QA report, never write raw telemetry')
 args=parser.parse_args()
-if args.command == 'bounded-sensitivity':
+if args.command == 'telemetry-qa':
+    result=audit_telemetry(args.manifest,args.csv)
+    if args.output is not None:
+        args.output.parent.mkdir(parents=True,exist_ok=True)
+        args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n',encoding='utf8')
+elif args.command == 'bounded-sensitivity':
     result=run_bounded_sensitivity(args.manifest)
     if args.output is not None:
         args.output.parent.mkdir(parents=True,exist_ok=True)
@@ -190,7 +201,22 @@ elif args.command == 'dispatch':
     result=run_dispatch(args.config,args.prices,args.output,capacity_mwh_lhv=args.capacity_mwh_lhv)
 else:
     result=run_sweep(args.config,args.prices,args.output)
-if args.command == 'bounded-sensitivity':
+if args.command == 'telemetry-qa':
+    print(json.dumps({
+        'version':'0.9.15',
+        'status':result['status'],
+        'source_class':result['source_class'],
+        'intervals_checked':result['interval_count'],
+        'measurement_channels':result['measurement_channels'],
+        'raw_sha256':result['raw_sha256'],
+        'data_quality_screen_passed':result['raw_data_quality_screen_passed'],
+        'physical_validation_performed':result['real_plant_model_validation_performed'],
+        'calibration_certificates_verified':result['calibration_certificates_cryptographically_verified'],
+        'high_rate_event_data_available':result['high_rate_startup_ramp_evidence_available'],
+        'output_path':str(args.output) if args.output is not None else None,
+        'claim_limit':'Source/balance screen only; no equipment calibration or actual model validation',
+    },indent=2,allow_nan=False))
+elif args.command == 'bounded-sensitivity':
     print(json.dumps({
         'version':'0.9.14-B',
         'status':result['status'],
