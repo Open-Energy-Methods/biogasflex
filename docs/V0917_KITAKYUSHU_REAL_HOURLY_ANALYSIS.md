@@ -77,6 +77,18 @@ Continuous source-retrieval/analysis is executed in the *separate*
 `.github/workflows/v0917-kitakyushu-real.yml` and retains only the
 aggregate research JSON, not multi-year original archives.
 
+[Executed real 2005 descriptive source audit](../reports/V0917_KITAKYUSHU_EXECUTED_REAL_HOURLY_RESULTS.md):
+8,760 full source-local hours; 686.38 MWh engine electric generation;
+199,510.35 m³ source gas input; 4,263 jointly active engine-hour
+records; 27 positive-power/zero-gas hours and 316 zero-power/positive-gas
+hours. These **343 discordant hours** require instrumentation and
+process context review before any physical parameter estimation.
+The maximum published engine power source record was 166 kW, slightly
+above a nominal 160 kWe engine article rating, which likewise needs
+measurement-definition review. Do not interpret either as a measured
+startup ramp, verified overrating or physical impossibility without
+independent technical evidence.
+
 ## Measured-data analysis and quality gates
 
 For each source hour, inspect the true engine-specific channels:
