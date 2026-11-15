@@ -1,3 +1,23 @@
+# v0.9.12 — 2026-11-15 — Published annual CHP evidence with source-quality audit
+
+- Transcribed independently published 2012–2022 annual running hours,
+  recovered landfill-gas volumes, electric and thermal generation
+  for a 440 kW_e / 520 kW_th Polish landfill CHP (Ciuła et al., 2023).
+- Validate 11 distinct chronological annual records, positivity,
+  finite numbers, rated energy output and leap-year 2020 hours.
+- Retain raw annual rows and independently recompute period aggregates.
+  Flag source Table 3/8 2018–2022 gas mean mismatch
+  (1,267,253.2 versus 1,291,515 m³/y), the claimed 29.5% gas
+  change and 42.78% electric change denominator discrepancy.
+- No imputed hourly plant time series, no empirical CHP ramp/minimum,
+  no inferred verified gas-storage vessel or dispatch profitability.
+- Opt-in `annual-chp-evidence` CLI; independent pure-Python arithmetic
+  witness, adversarial data rejection tests and full inherited CI gates.
+- v0.9.11 contract model and Swedish synthetic configurations retained;
+  external scientific review and real operating/market validation remain open.
+
+---
+
 # v0.9.11 — 2026-11-15 — Contracted electricity equality inside CHP MILP
 
 - Opt-in **hard accepted-volume** equality constraint:
