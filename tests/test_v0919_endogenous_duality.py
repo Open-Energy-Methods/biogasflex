@@ -111,6 +111,19 @@ class EndogenousCHPFrontierTests(unittest.TestCase):
         self.assertTrue(_dominates(a,b))
         self.assertFalse(_dominates(b,a))
 
+    def test_synthetic_pareto_svg_figures_reconcile_and_reject_checkout_path(self):
+        spec=importlib.util.spec_from_file_location(
+            "v0919_plot",ROOT/"scripts/plot_v0919_frontiers.py")
+        plot=importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(plot)
+        with self.assertRaisesRegex(ValueError,"outside repository"):
+            plot.draw(self.source,ROOT/"figures/v0919")
+        # The smoke design has only 3 cases: it must NOT be plotted
+        # as the complete 36-case full-factorial frontier.
+        with tempfile.TemporaryDirectory() as temp:
+            with self.assertRaisesRegex(ValueError,"Incomplete finite design"):
+                plot.draw(self.source,Path(temp))
+
     def test_cannot_write_full_synthetic_reports_into_checkout(self):
         with self.assertRaisesRegex(ValueError,"outside checked-out repository"):
             write_out(self.source,ROOT/"hidden_reports/v0919.json")
