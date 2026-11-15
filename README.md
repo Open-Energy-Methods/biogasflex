@@ -1,3 +1,44 @@
+# BiogasFlex v0.9.13-A — CHP manufacturer-source and identifiability evidence gate
+
+**Status: source-scoped, fail-closed evidence register; not plant-calibrated dispatch.**
+
+Three deliberately **unmatched** equipment identities are separately documented:
+Ciuła et al.'s published **440 kW_e / 520 kW_th Polish landfill-gas CHP**,
+the Caterpillar CG132B-8 **400 ekW** catalogue generator, and Jenbacher
+J312 **up-to-635 kW** catalogue engine. The vendor entries are **NOT**
+known to be the engine in the published Polish study or in a Swedish biogas
+plant. No vendor maximum efficiency is converted into an identified part-load
+curve or hourly ramp limit.
+
+A version-controlled [29-entry parameter evidence register](data/evidence/v0913_chp_parameter_register.json)
+classifies nominal static observations, manufacturer references and **14
+unidentified dynamic/site operating parameters**. Only the Polish plant's
+own published electrical/thermal ratings are admissible for *source-site
+static sanity screening*; no parameter is auto-loaded into v0.9.11 dispatch.
+The `chp-evidence-register` CLI refuses fictitious identification and promoted
+unknown ramp/minimum-load/heat/storage values.
+
+```bash
+python -m pip install -e .
+python -m biogasflex chp-evidence-register
+python -m biogasflex chp-evidence-register --output register_audit.json
+python scripts/audit_v0913_chp_sources.py
+bash scripts/reproduce_v0913.sh
+```
+
+Windows: `./scripts/reproduce_v0913.ps1`.
+
+Sources and precise admissibility limitations:
+[scientific protocol](docs/V0913_CHP_MANUFACTURER_EVIDENCE_PROTOCOL.md).
+The 2012–2022 published CHP annual records are preserved from v0.9.12;
+prior synthetic gas/heat dispatch, historical electricity prices and
+market-constrained MILP remain unchanged. **No physical load-curve validation,
+minimum power, startup, ramp, measured plant electricity sales or real
+profitability is established.** Full parameter-identifiability/sensitivity
+study, independent human review and v1.0 remain open.
+
+---
+
 # BiogasFlex v0.9.12 — Published CHP annual evidence audit (research)
 
 **New:** source-verifiable 2012–2022 annual operating observations for a
