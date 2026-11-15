@@ -215,6 +215,21 @@ def main()->None:
         "endogenous_MILP_cases":sum(x["model"]=="ENDOGENOUS_ON_OFF_MILP" for x in result["cases"]),
         "LP_cases":sum(x["model"]=="ALWAYS_ON_RAMP_LP" for x in result["cases"]),
         "finite_design_frontiers":len(result["frontiers"]),
+        "endogenous_schedule_diagnostics":{
+            "cases_with_at_least_one_start":sum(c["start_count"]>0 for c in result["cases"]
+                if c["model"]=="ENDOGENOUS_ON_OFF_MILP"),
+            "max_starts_in_one_case":max(
+                (c["start_count"] for c in result["cases"]
+                 if c["model"]=="ENDOGENOUS_ON_OFF_MILP"),default=0),
+            "number_of_MILP_cases_with_off_intervals":sum(
+                any(row["on"]==0 for row in c["rows"])
+                for c in result["cases"] if c["model"]=="ENDOGENOUS_ON_OFF_MILP"),
+            "storage_nondominated_count_by_seed":[{
+                "seed":f["seed"],"candidate_count":f["candidates"],
+                "nondominated_count":len(f["nondominated_candidates"]),
+                "frontier":f["nondominated_candidates"],
+            } for f in result["frontiers"]],
+        },
         "first_six_case_summaries":[{
             "seed":x["seed"],"slots":x["slots"],"storage":x["capacity_mwh_lhv"],
             "backup_capacity":x["auxiliary_capacity_mw_th"],
