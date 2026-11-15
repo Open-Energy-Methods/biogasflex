@@ -138,7 +138,7 @@ def run(*,smoke:bool=False)->dict:
                for backup in BACKUP for cost in START_COST]
         cases.extend(_solve(seed,96,cap,.15,5.,lp=True)
                      for seed in SEEDS for cap in (0.,.5,1.5))
-        cases.extend(_solve(11,8,.5,.15,5.),)
+        cases.append(_solve(11,8,.5,.15,5.))
     frontiers=[]
     for seed in (SEEDS[:1] if smoke else SEEDS):
         subset=[r for r in cases if r["model"]=="ENDOGENOUS_ON_OFF_MILP"
