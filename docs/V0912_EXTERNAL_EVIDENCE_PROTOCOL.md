@@ -135,7 +135,11 @@ It intentionally terminates with
 The gate is a *negative* scientific result on
 available evidence. It never self-certifies a
 self-reported `published_at` timestamp or author-
-claimed plant label as independent proof.
+claimed plant label as independent proof. **Even if all
+result flags are manually toggled to true, v0.9.12
+still refuses an operational certificate**; a future
+source-integrity and time-matched experimental
+validation protocol is required for any real pass.
 
 ## Reproduce offline, with inherited scientific freeze
 

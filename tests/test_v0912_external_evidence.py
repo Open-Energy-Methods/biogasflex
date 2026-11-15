@@ -231,6 +231,19 @@ class ExternalEvidenceTests(unittest.TestCase):
             })
         self.assertEqual(m["schema"],"biogasflex_external_evidence_v0912")
 
+    def test_forged_boolean_claims_never_turn_source_audit_into_operational_certificate(self):
+        r=run_evidence_audit(MANIFEST)
+        forged=dict(r)
+        forged.update({
+            "operational_price_asof_validated":True,
+            "plant_specific_hourly_chp_envelope_validated":True,
+            "real_contract_dispatch_eligible":True,
+        })
+        with self.assertRaisesRegex(EvidenceError,"REAL_OPERATIONAL_VALIDATION_BLOCKED"):
+            require_operational_validation(forged)
+        with self.assertRaisesRegex(EvidenceError,"REAL_OPERATIONAL_VALIDATION_BLOCKED"):
+            require_operational_validation({"version":"unknown","real_contract_dispatch_eligible":True})
+
     def test_cli_evidence_audit_and_real_mode_block(self):
         p=subprocess.run([sys.executable,"-m","biogasflex","evidence-audit"],
                          cwd=ROOT,capture_output=True,text=True,timeout=45)

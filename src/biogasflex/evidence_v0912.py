@@ -359,13 +359,14 @@ def run_evidence_audit(manifest_path: Path, root: Path = ROOT) -> dict:
 
 def require_operational_validation(evidence_result: dict) -> None:
     """Fail closed: synthetic samples cannot be escalated to operational validation."""
-    if not (
-        evidence_result.get("operational_price_asof_validated") is True
-        and evidence_result.get("plant_specific_hourly_chp_envelope_validated") is True
-        and evidence_result.get("real_contract_dispatch_eligible") is True
-    ):
-        raise EvidenceError(
-            "REAL_OPERATIONAL_VALIDATION_BLOCKED: no verified bid-time market "
-            "publication event plus plant-matched hourly CHP measurements "
-            "and grid export/accepted award data; synthetic dispatch only"
-        )
+    # v0.9.12 explicitly has NO independently verified bid-time market
+    # event or model-site high-frequency measurements. Boolean report fields
+    # are descriptive, not certificates. User-supplied 'True' values MUST
+    # NEVER turn this phase into an operational authorization mechanism.
+    if not isinstance(evidence_result, dict) or evidence_result.get("version") != "0.9.12":
+        raise EvidenceError("REAL_OPERATIONAL_VALIDATION_BLOCKED: unsupported evidence schema")
+    raise EvidenceError(
+        "REAL_OPERATIONAL_VALIDATION_BLOCKED: no verified bid-time market "
+        "publication event plus plant-matched hourly CHP measurements "
+        "and grid export/accepted award data; synthetic dispatch only"
+    )
