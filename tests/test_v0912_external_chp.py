@@ -47,7 +47,7 @@ class ExternalCHPEvidenceTests(unittest.TestCase):
         x = a["periods"]["2018-2022"]["arithmetic_annual_means"]
         self.assertAlmostEqual(x["landfill_gas_recovered_m3"], 1267253.2)
         self.assertEqual(a["published_reported_averages_unchanged"]["2018-2022"]["landfill_gas_recovered_m3"], 1291515)
-        self.assertEqual(
+        self.assertAlmostEqual(
             a["documented_source_discrepancies"][0]["difference_recomputed_minus_published_m3_per_year"], -24261.8
         )
         self.assertEqual(a["status"], "PASS_WITH_PUBLISHED_SOURCE_DISCREPANCIES")
