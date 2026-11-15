@@ -193,6 +193,16 @@ class CHPTimeResolvedAcquisitionQA(unittest.TestCase):
         self._expect_error(lambda m,r:r[0].update(fuel_lhv_mj_per_nm3_dry="0"),"nonpositive LHV")
         self._expect_error(lambda m,r:r[0].update(generator_electric_kwh="50"),"electricity balance")
 
+    def test_short_running_fraction_cannot_hide_over_nameplate_power(self):
+        self._expect_error(
+            lambda m,r:r[0].update(engine_running_fraction="0.1"),
+            "interval energy exceeds declared generator nameplate",
+        )
+        self._expect_error(
+            lambda m,r:r[0].update(engine_running_fraction="0"),
+            "generation with engine declared off",
+        )
+
     def test_data_digest_tamper_fails_and_no_interpolation(self):
         with tempfile.TemporaryDirectory(prefix="v0915-FAKE-") as tmp:
             m,c=self._make_real_tmp(Path(tmp))
