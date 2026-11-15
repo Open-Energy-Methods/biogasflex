@@ -54,6 +54,10 @@ class EndogenousCHPFrontierTests(unittest.TestCase):
         self.assertEqual([r.price_eur_per_mwh for r in left],
                          [r.price_eur_per_mwh for r in _intervals(SEEDS[0],24)])
         self.assertEqual(left[1].hours,.25)
+        distinct={tuple(row.price_eur_per_mwh for row in _intervals(seed,24))
+                  for seed in SEEDS}
+        self.assertEqual(len(distinct),len(SEEDS),
+                         "Modulo arithmetic produced duplicated supposedly distinct price scenarios")
 
     def test_primal_dual_auditor_rejects_forged_objective(self):
         fake=deepcopy(self.source["cases"][0])
