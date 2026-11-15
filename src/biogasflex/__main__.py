@@ -14,6 +14,7 @@ from .experimental_v099 import run_manifest
 from .market_v0910 import run_manifest as run_market_boundary_manifest
 from .annual_chp_evidence import audit_annual_chp
 from .chp_parameter_evidence import run_register
+from .bounded_sensitivity_v0914b import run_manifest as run_bounded_sensitivity
 from .market_provenance_v0913 import run_market_source_audit, require_operational_validation
 from .svk import fetch_local_day
 
@@ -84,8 +85,17 @@ p.add_argument('--output',type=Path,default=None,help='Optional full source audi
 p=sub.add_parser('chp-evidence-register',help='v0.9.14-A: independently source-scoped CHP manufacturer parameter audit (no equipment calibration)')
 p.add_argument('--register',type=Path,default=Path('data/evidence/v0914_chp_parameter_register.json'))
 p.add_argument('--output',type=Path,default=None,help='Optional JSON evidence report, no file by default')
+p=sub.add_parser('bounded-sensitivity',
+                 help='v0.9.14-B: EXPLICITLY SYNTHETIC 81-case factorial contract feasibility, OAT, and conditional box proofs')
+p.add_argument('--manifest',type=Path,default=Path('examples/v0914b_hypothetical_sensitivity.json'))
+p.add_argument('--output',type=Path,default=None,help='Optional full deterministic case table, no files written by default')
 args=parser.parse_args()
-if args.command == 'chp-evidence-register':
+if args.command == 'bounded-sensitivity':
+    result=run_bounded_sensitivity(args.manifest)
+    if args.output is not None:
+        args.output.parent.mkdir(parents=True,exist_ok=True)
+        args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n',encoding='utf8')
+elif args.command == 'chp-evidence-register':
     result=run_register(args.register)
     if args.output is not None:
         args.output.parent.mkdir(parents=True,exist_ok=True)
@@ -180,7 +190,21 @@ elif args.command == 'dispatch':
     result=run_dispatch(args.config,args.prices,args.output,capacity_mwh_lhv=args.capacity_mwh_lhv)
 else:
     result=run_sweep(args.config,args.prices,args.output)
-if args.command == 'chp-evidence-register':
+if args.command == 'bounded-sensitivity':
+    print(json.dumps({
+        'version':'0.9.14-B',
+        'status':result['status'],
+        'factorial_scenarios':result['summary']['factorial_case_count'],
+        'feasible_grid_scenarios':result['summary']['factorial_feasible_count'],
+        'infeasible_grid_scenarios':result['summary']['factorial_infeasible_count'],
+        'one_at_a_time_scenarios':result['summary']['oat_case_count'],
+        'continuous_box_certificates':len(result['continuous_box_certificates']),
+        'calibrated_plant':result['calibration_claim'],
+        'physical_market_participation_eligible':result['operational_market_eligibility_claim'],
+        'output_path':str(args.output) if args.output is not None else None,
+        'scope':'Fixed synthetic two-slot CHP terminal-generation model only; not an observed physical probability',
+    },indent=2,allow_nan=False))
+elif args.command == 'chp-evidence-register':
     print(json.dumps({
         'version':'0.9.14',
         'status':result['status'],
