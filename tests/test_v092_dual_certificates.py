@@ -77,10 +77,10 @@ class DualBoundTests(unittest.TestCase):
 
     def test_release_version_and_ci_include_new_gate(self):
         from biogasflex import __version__
-        self.assertEqual(__version__, "0.9.11")
-        self.assertIn('version = "0.9.11"', (ROOT/"pyproject.toml").read_text(encoding="utf-8"))
-        self.assertIn('version: "0.9.11"', (ROOT/"CITATION.cff").read_text(encoding="utf-8"))
-        for p in ("reproduce_v0911.sh","reproduce_v0911.ps1","verify_v0911_environment.py"):
+        self.assertEqual(__version__, "0.9.12")
+        self.assertIn('version = "0.9.12"', (ROOT/"pyproject.toml").read_text(encoding="utf-8"))
+        self.assertIn('version: "0.9.12"', (ROOT/"CITATION.cff").read_text(encoding="utf-8"))
+        for p in ("reproduce_v0912.sh","reproduce_v0912.ps1","verify_v0912_environment.py"):
             self.assertTrue((ROOT/"scripts"/p).is_file())
             self.assertIn(p,(ROOT/".github/workflows/ci.yml").read_text(encoding="utf-8"))
 
