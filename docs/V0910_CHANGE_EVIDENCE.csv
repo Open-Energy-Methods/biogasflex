@@ -1,0 +1,7 @@
+change_id,affected_scope,verification,scientific_claim_boundary
+V0910-A,Pre-clearing information,Exact-input schema + as-of and gate chronology adversarial tests,No actual market forecast or bids
+V0910-B,Post-clearing participant award,Explicit exogenous synthetic accepted MWh with publication and receipt gates,Not exchange acceptance or clearing algorithm
+V0910-C,Contracted volume and CHP energy,Independent 0.4 MW x hour and quarter-hour tests plus zero imbalance assertion,No metered grid export or imbalance settlements
+V0910-D,Delayed publication and DST,UTC Europe Stockholm civil day gate and 23h/25h tests,No assumed fixed result time
+V0910-E,Negative and malformed prices,NaN/boolean/zone/gap/negative/overaward rejection or acceptance,Only synthetic price arithmetic
+V0910-F,Inherited scientific preservation,Original science freeze and 216 duals 96 solver-free comparisons and historical study audits,No physical plant or real market validation

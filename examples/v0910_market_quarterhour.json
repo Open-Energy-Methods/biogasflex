@@ -1,0 +1,63 @@
+{
+  "model": "preclearing_postclearing_exogenous_award_synthetic_chp_v0910",
+  "market": {
+    "bidding_zone": "SE3",
+    "delivery_local_date": "2026-11-18",
+    "auction_gate_close_utc": "2026-11-17T11:00:00+00:00"
+  },
+  "delivery_slots": [
+    {
+      "start_utc": "2026-11-17T23:00:00+00:00",
+      "duration_hours": 0.25
+    },
+    {
+      "start_utc": "2026-11-17T23:15:00+00:00",
+      "duration_hours": 0.25
+    },
+    {
+      "start_utc": "2026-11-17T23:30:00+00:00",
+      "duration_hours": 0.25
+    },
+    {
+      "start_utc": "2026-11-17T23:45:00+00:00",
+      "duration_hours": 0.25
+    }
+  ],
+  "preclearing_offer": {
+    "forecast_issued_utc": "2026-11-17T09:00:00+00:00",
+    "bid_decided_utc": "2026-11-17T10:20:00+00:00",
+    "bid_submitted_utc": "2026-11-17T10:50:00+00:00",
+    "forecast_prices_eur_mwh": [
+      15,
+      25,
+      35,
+      45
+    ],
+    "offered_mwh": [
+      0.1,
+      0.1,
+      0.1,
+      0.1
+    ],
+    "forecast_provenance": "SYNTHETIC_PREAUCTION_ASSUMPTIONS"
+  },
+  "exogenous_award": {
+    "prices_published_utc": "2026-11-17T11:50:00+00:00",
+    "participant_result_received_utc": "2026-11-17T11:55:00+00:00",
+    "dispatch_plan_created_utc": "2026-11-17T12:00:00+00:00",
+    "accepted_mwh": [
+      0.1,
+      0.1,
+      0.1,
+      0.1
+    ],
+    "clearing_prices_eur_mwh": [
+      20,
+      40,
+      60,
+      80
+    ],
+    "award_provenance": "SYNTHETIC_EXOGENOUS_ACCEPTANCE"
+  },
+  "synthetic_chp_config": "v0910_synthetic_chp.json"
+}

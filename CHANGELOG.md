@@ -1,3 +1,33 @@
+# v0.9.10 — 2026-11-15 — Market-information staging and no-imbalance matching
+
+- Strictly separate pre-clearing **synthetic assumed forecasts/energy
+  offers** from post-clearing **fictional exogenous auction
+  acceptance/clearing-price reports**. No postgate information
+  enters the preclear API.
+- Reject missing or inconsistent forecast issuance, bid time,
+  gate closure, price publication, participant receipt or
+  dispatch-plan creation times. Use explicit UTC and verify
+  Europe/Stockholm D−1 vs local delivery day, with DST checks.
+- Compute only **gross contracted cashflow proxy**:
+  `Σ(accepted_MWh × clearing_price_EUR_per_MWh)`. No
+  real market fee/imbalance settlement, intraday trading,
+  grid export, accepted-volume optimizer or true profit.
+- Independently verify original CHP gas/heat/ramp/dwell and
+  explicit terminal-stock constraints, then fail closed unless
+  every exogenous accepted MWh equals modelled delivered MWh.
+  Contracted awards are **not** optimized as hard constraints.
+- Synthetic analytical oracles €32 (two one-hour deliveries)
+  and €20 (four quarter-hour deliveries) plus negative-award
+  and incomplete/ambiguous market-data rejection cases.
+- Preserve all original frozen scientific files, prior historical
+  data and results, source attribution, v0.9.5–v0.9.9 models,
+  independently verified dual/LP oracles and full offline
+  multi-platform reproduction.
+- No scientific v1.0/independent human review, real trading
+  claims, public GitHub Release or DOI.
+
+---
+
 # v0.9.9 — 2026-11-06 — Chronological historical-price/synthetic-CHP replay
 
 - New **opt-in** observed-market-price replay. Previously

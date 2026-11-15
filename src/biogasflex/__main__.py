@@ -11,9 +11,10 @@ from .experimental_v096 import optimize_commitment_milp
 from .experimental_v097 import optimize_commitment_milp as optimize_hourly_commitment
 from .experimental_v098 import evaluate_rolling_prices
 from .experimental_v099 import run_manifest
+from .market_v0910 import run_manifest as run_market_boundary_manifest
 from .svk import fetch_local_day
 
-parser = argparse.ArgumentParser(description='BiogasFlex 0.9.8.1: audited baseline, heat-aware dispatch and conditional service security')
+parser = argparse.ArgumentParser(description='BiogasFlex 0.9.10: auditable CHP research models and optional synthetic day-ahead information gates')
 sub = parser.add_subparsers(dest='command', required=True)
 p = sub.add_parser('fetch-svk', help='Retrieve a licensed day of historical SE3 prices')
 p.add_argument('--output', type=Path, default=Path('data/external/svk_se3_20200101.csv'))
@@ -62,6 +63,9 @@ p.add_argument('--output',type=Path,default=None,help='Opt-in full JSON report; 
 p=sub.add_parser('historical-replay',help='v0.9.9 observed 2020 SE3 prices + naive causal price replay against entirely hypothetical CHP')
 p.add_argument('--manifest',type=Path,default=Path('examples/v099_historical_backtest.json'))
 p.add_argument('--output',type=Path,default=None,help='Opt in to write full scientific provenance and per-step replay JSON')
+p=sub.add_parser('market-boundary',help='v0.9.10 EXPERIMENTAL pre/post day-ahead timing, exogenous award and exact matched synthetic CHP delivery')
+p.add_argument('--manifest',type=Path,default=Path('examples/v0910_market_hourly.json'))
+p.add_argument('--output',type=Path,default=None,help='Opt-in full data report; no output file created by default')
 args=parser.parse_args()
 if args.command == 'fetch-svk':
     result=fetch_local_day(local_date='2020-01-01',bidding_zone='SE3',output=args.output)
@@ -117,6 +121,11 @@ elif args.command == 'rolling-forecast':
     if args.output is not None:
         args.output.parent.mkdir(parents=True,exist_ok=True)
         args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n',encoding='utf-8')
+elif args.command == 'market-boundary':
+    result=run_market_boundary_manifest(args.manifest,include_solver_details=args.output is not None)
+    if args.output is not None:
+        args.output.parent.mkdir(parents=True,exist_ok=True)
+        args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n',encoding='utf-8')
 elif args.command == 'historical-replay':
     path=args.manifest.resolve()
     root=Path(__file__).resolve().parents[2]
@@ -128,7 +137,22 @@ elif args.command == 'dispatch':
     result=run_dispatch(args.config,args.prices,args.output,capacity_mwh_lhv=args.capacity_mwh_lhv)
 else:
     result=run_sweep(args.config,args.prices,args.output)
-if args.command == 'historical-replay':
+if args.command == 'market-boundary':
+    print(json.dumps({
+        "status":result["postclearing"]["phase"],
+        "version":"0.9.10",
+        "output_path":str(args.output) if args.output is not None else None,
+        "preclear_phase":result["preclearing"]["phase"],
+        "auction_gate_close_utc":result["preclearing"]["gate_close_utc"],
+        "publication_time_utc":result["postclearing"]["prices_published_utc"],
+        "accepted_mwh":result["postclearing"]["total_accepted_mwh"],
+        "gross_contract_cashflow_PROXY_not_settlement_eur":
+            result["postclearing"]["gross_contract_cashflow_proxy_eur"],
+        "maximum_contract_delivery_residual_mwh":
+            result["postclearing"]["maximum_contract_vs_simulated_delivery_mwh"],
+        "scientific_scope":"ALL MARKET ORDERS, FORECASTS, AWARDS AND CHP INPUTS FICTIONAL; no live settlement or profits",
+    },indent=2,allow_nan=False))
+elif args.command == 'historical-replay':
     print(json.dumps({
         'status':result['status'],
         'version':result['version'],
