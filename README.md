@@ -50,6 +50,11 @@ archive traversal/bomb protections. The separate
 uses ephemeral runners and stores only source-integrity reports;
 numerical/offline CI **does not depend on remote network services**.
 
+The [executed seven-file acquisition audit](reports/V0916_REAL_PUBLIC_CHP_SOURCE_ACQUISITION_AUDIT.md)
+records **all seven publisher MD5 checks and independently computed
+SHA256** from successful hosted retrieval run 43704165251. It also
+distinguishes the blocked NYSERDA matched biogas-engine candidate.
+
 The [full acquisition and transfer-boundary protocol](docs/V0916_PUBLIC_EXTERNAL_CHP_SOURCE_ACQUISITION.md)
 includes physical limitations and a prepared **unsent** request to
 acquire instrument-calibrated, high-frequency *biogas reciprocating
