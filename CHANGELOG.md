@@ -1,3 +1,32 @@
+## v0.9.18 — 2026-11-15 — Quarter-hour 168h optimization and independent verification
+
+- Dedicated 96/192/672 run 43719038048 **PASSED independent
+  2,880-row stdlib verification**: exact zero-buffer binary MILP
+  objective €681/€1,360/€4,755 for 24/48/168h; paired zero-buffer
+  vs 0.75-MWh-buffer always-ON ramp LP values
+  €4,110.40 vs €4,526.275 (168h). No actual plant revenue claims.
+  Full results in `reports/V0918_EXECUTED_QUARTER_HOUR_WEEK_BENCHMARK.md`.
+- Introduced 96/192/672 15-minute synthetic research benchmark for
+  inherited v0.9.7 binary commitment and v0.9.5 buffered ramp LP.
+- Validated forcing and globally unique algebraic solution in a
+  **zero-buffer** periodic gas-arrival case, with explicitly fictional
+  CHP efficiency, heat service, gas input, startup/dwell and prices.
+- Added paired flexible LP with/no storage, identical gas and service,
+  cyclic inventory and independent per-interval gas/heat/electric ledger.
+  LP global optimum **not independently dual certified**.
+- Three 96-slot independently motivated infeasibility controls:
+  insufficient backup heat, too-low electrical rating and mandatory
+  uptime passing the terminal horizon.
+- Dedicated full-week CI job, synthetic-only complete solver report
+  and standard-library independent JSON auditor plus adversarial tests.
+- Existing v0.9.17 measured **Japanese city-gas** CHP audit retained
+  strictly apart from synthetic Swedish-price-zone cases; no real
+  biogas-engine calibration, actual price forecast or contract revenue.
+- Full prior source-provenance, 533-file original research tree, CI
+  numerical/LP/MILP witnesses and 2005 measured data unaffected.
+
+---
+
 ## v0.9.17 — 2026-11-15 — Measured external CHP hourly channel study
 
 - Actual published Kitakyushu 2005 source results from independent online
