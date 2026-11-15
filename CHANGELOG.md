@@ -1,3 +1,37 @@
+# v0.9.11 — 2026-11-15 — Contracted electricity equality inside CHP MILP
+
+- Opt-in **hard accepted-volume** equality constraint:
+  per slot `η_e × fuel_MW_LHV × duration_h = awarded_MWh_e`;
+  included in the original gas/heat/commitment MILP
+  matrix AND its identically constrained LP relaxation.
+- Previously v0.9.10 postclear required the
+  *uncontracted optimal* schedule to coincide with
+  an accepted award; valid nonoptimal physical
+  schedules were rejected. New mode can solve them.
+- Distinct explicit model and `contract-dispatch`
+  CLI; preserve all prior v0.9.10 API default behavior.
+  Keep source-of-information and participant receipt
+  boundaries strict, no assumed auction clear.
+- Conditional reference feasible only when it
+  satisfies the **same award**; unawarded fixed
+  operation cannot invalidate the contracted optimum.
+- Independent synthetic hour/quarter-hour MWh, gas
+  inventory and heat-service/LP checks, plus
+  intentionally infeasible storage, gas, ramp, heat,
+  terminal-stock and zero-award cases. No invented
+  imbalance volume or revenue.
+- Full historical data/source preservation, earlier
+  experimental study results, original 216 duals,
+  96 solver-free LP oracles, all prior adversarial
+  tests, cross-OS reproduction, and strict SHA256
+  package manifest inherited.
+- No real bid acceptance, forecast validation,
+  electrically metered export, balancing fees,
+  calibrated physical plant, real profit, externally
+  reviewed research release or DOI.
+
+---
+
 # v0.9.10 — 2026-11-15 — Market-information staging and no-imbalance matching
 
 - Strictly separate pre-clearing **synthetic assumed forecasts/energy

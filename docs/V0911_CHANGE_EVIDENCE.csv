@@ -1,0 +1,8 @@
+change_id,scope,verification,claim_boundary
+V0911-A,Per-slot hard accepted award equality,Analytical MWh=eta_e gasuse MW_LHV duration_h + independent output tests,CHP terminals not grid meter
+V0911-B,Constrained LP bound,Same MILP matrix for integer and relaxed solves + bound comparison,No operational unit commitment calibration
+V0911-C,Fixed-reference comparator,Prevent dominance against an unawarded physically feasible fixed schedule,No erroneous gross uplift
+V0911-D,Hourly feasible alternate schedule,Two-hour synthetic award [0.2 0.6] MWh gas stock [0.5 0] and EUR20,No real award or profit
+V0911-E,Quarter-hour dimensionality,Four 15-minute awarded volumes [0.05 0.15 0.1 0.1] MWh and EUR9,No real trades or metered export
+V0911-F,Truly infeasible contracts,Storage ramp heat and terminal stock adversarial tests + no balancing,No imputed energy or settlement
+V0911-G,Legacy behavior and frozen research,All inherited historical LP and dual certificates and previous market tool oracles,No changes to 286 science files

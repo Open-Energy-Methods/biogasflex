@@ -29,6 +29,7 @@ from .dispatch import DispatchError
 from .experimental_v098 import optimize_commitment_milp
 
 MODEL = "preclearing_postclearing_exogenous_award_synthetic_chp_v0910"
+HARD_CONTRACT_MODEL = "exogenous_award_hard_delivery_milp_v0911"
 LOCAL_ZONE = ZoneInfo("Europe/Stockholm")
 TOL_MWH = 1e-7
 PRE_FIELDS = frozenset({
@@ -192,12 +193,20 @@ def validate_preclearing_offer(
 def audit_postclearing_delivery(
     market: dict, declared_slots: list[dict], pre_receipt: dict,
     award: dict, chp_config: dict, *, include_solver_details: bool = False,
+    hard_contract: bool = False,
 ) -> dict[str, Any]:
     """Compare exogenous auction award to exact validated synthetic CHP delivery.
 
     Every delivery interval must exactly meet the accepted volume.
     Any nonzero mismatch is an *unmodelled imbalance* and fails closed.
+
+    v0.9.10 default: reject awards that differ from an *unconstrained*
+    physical optimum (unchanged).
+    v0.9.11 opt-in: embed accepted MWh as exact per-slot hard constraints
+    inside the existing gas/heat/commitment MILP AND its LP relaxation.
     """
+    if type(hard_contract) is not bool:
+        raise MarketBoundaryError("hard_contract must be an explicit boolean")
     slots = _slots(market, declared_slots)
     _, _, gate = _market(market)
     if not isinstance(pre_receipt, dict):
@@ -243,8 +252,18 @@ def audit_postclearing_delivery(
     # Existing solver independently checks gas/heat, terminal stock, binary
     # commitment, dwell, elapsed-hour ramps and matched LP-relaxation bound.
     try:
-        modelled = optimize_commitment_milp(chp_config, market_prices)
+        if hard_contract:
+            modelled = optimize_commitment_milp(
+                chp_config, market_prices, contracted_delivery_mwh=accepted
+            )
+        else:
+            modelled = optimize_commitment_milp(chp_config, market_prices)
     except (DispatchError, ValueError) as exc:
+        if hard_contract:
+            raise MarketBoundaryError(
+                "CONTRACT_INFEASIBLE: no CHP schedule satisfies accepted per-slot "
+                "electricity alongside gas/heat/ramp/dwell/terminal constraints"
+            ) from exc
         raise MarketBoundaryError("Postclear CHP dispatch could not satisfy physical model") from exc
     delivered = [float(x["power_mw_e"])*hours
                  for x, (_, hours) in zip(modelled["hourly"], slots)]
@@ -253,6 +272,11 @@ def audit_postclearing_delivery(
         raise MarketBoundaryError(
             f"UNMODELLED_IMBALANCE: contracted vs synthetic power differs by {max_error:.9g} MWh"
         )
+    if hard_contract and (
+        not modelled.get("hard_contract_equalities_embedded_in_milp")
+        or modelled.get("max_contract_delivery_residual_mwh",float("inf"))>TOL_MWH
+    ):
+        raise MarketBoundaryError("Hard contract equalities not independently certified in MILP output")
     if any(abs(x["dt_h"]-hours)>1e-12
            or _utc(x["start_utc"], "solver.start_utc")!=start
            for x,(start,hours) in zip(modelled["hourly"],slots)):
@@ -267,9 +291,10 @@ def audit_postclearing_delivery(
         raise MarketBoundaryError("Solver/ramp physical certification failed")
     gross = math.fsum(a*p for a,p in zip(accepted,prices))
     answer = {
-        "version": "0.9.10",
-        "model_type": MODEL,
-        "phase": "POST_CLEARING_EXOGENOUS_AWARD_MATCHED",
+        "version": "0.9.11" if hard_contract else "0.9.10",
+        "model_type": HARD_CONTRACT_MODEL if hard_contract else MODEL,
+        "phase": ("POST_CLEARING_EXOGENOUS_AWARD_HARD_CONTRACT_MATCHED"
+                  if hard_contract else "POST_CLEARING_EXOGENOUS_AWARD_MATCHED"),
         "bidding_zone": market["bidding_zone"],
         "delivery_local_date": market["delivery_local_date"],
         "preclearing_receipt_sha256": pre_receipt["sha256"],
@@ -296,19 +321,42 @@ def audit_postclearing_delivery(
         "heat_service_max_residual_mwh": ledger["max_heat_service_residual_mwh"],
         "claim_limit": "Matched fictional exogenous award and synthetic CHP production; no operational market settlement, grid export, plant profit or true price forecasting",
     }
+    if hard_contract:
+        answer.update({
+            "accepted_delivery_enforced_inside_milp": True,
+            "hard_award_equality_count": n,
+            "matched_contract_LP_relaxation_upper_bound_eur":
+                modelled["matched_contract_LP_relaxation_bound_eur"],
+            "uncontracted_fixed_reference_feasible_in_awarded_model":
+                modelled["fixed_reference_feasible"],
+            "uncontracted_fixed_reference_status":
+                modelled["fixed_reference_status"],
+            "physical_solver_version": modelled["version"],
+            "contract_boundary": (
+                "Exact synthetic CHP terminal generation matched to entirely "
+                "hypothetical auction award. No metered net electricity export, "
+                "intraday or balancing, fees or genuine auction acceptance."
+            ),
+        })
     if include_solver_details:
         answer["physical_solver_and_hourly"] = modelled
     return answer
 
 
-def run_manifest(manifest_path: Path, *, include_solver_details: bool = False) -> dict:
+def run_manifest(
+    manifest_path: Path, *, include_solver_details: bool = False,
+    hard_contract: bool = False,
+) -> dict:
     """Offline, explicit two-stage scenario. Does not download data."""
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     required = frozenset({"model", "market", "delivery_slots", "preclearing_offer",
                           "exogenous_award", "synthetic_chp_config"})
     _fields(manifest, required, "market scenario")
-    if manifest["model"] != MODEL:
-        raise MarketBoundaryError("Unknown market-boundary protocol")
+    if type(hard_contract) is not bool:
+        raise MarketBoundaryError("Hard contract model selector must be boolean")
+    expected_model = HARD_CONTRACT_MODEL if hard_contract else MODEL
+    if manifest["model"] != expected_model:
+        raise MarketBoundaryError("Unknown market-boundary protocol or mismatched contract model")
     config_path = manifest_path.parent/manifest["synthetic_chp_config"]
     config = json.loads(config_path.read_text(encoding="utf-8"))
     market, slots = manifest["market"], manifest["delivery_slots"]
@@ -316,10 +364,16 @@ def run_manifest(manifest_path: Path, *, include_solver_details: bool = False) -
                                       config["electric_rating_mw"])
     post = audit_postclearing_delivery(
         market, slots, pre, manifest["exogenous_award"], config,
-        include_solver_details=include_solver_details)
+        include_solver_details=include_solver_details,
+        hard_contract=hard_contract)
     return {
-        "model_type": MODEL,
+        "model_type": expected_model,
         "preclearing": pre,
         "postclearing": post,
-        "study_boundary": "Synthetic awards, synthetic CHP and modelled electricity; explicit market information staging, not bidding, balancing, settlement or measured exports",
+        "study_boundary": (
+            "Synthetic awards, synthetic CHP and modelled terminal electricity; "
+            + ("exact awarded per-slot MWh hard-constrained inside MILP; "
+               if hard_contract else "original posthoc match of unconstrained preferred MILP; ")
+            + "no exchange bidding, balancing, settlement or measured grid export"
+        ),
     }

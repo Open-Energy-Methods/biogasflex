@@ -1,3 +1,65 @@
+# BiogasFlex v0.9.11 — Hard-contracted CHP electricity delivery (experimental)
+
+**Status:** scientifically auditable numerical software, **not** an
+operational market-bidding system or validated CHP/site profit model.
+
+The new opt-in `contract-dispatch` interface fixes a
+v0.9.10 limitation: a day-ahead auction's **fictional
+accepted energy volumes** are now embedded as exact
+equality constraints in the gas/heat/binary CHP mixed-integer
+optimizer, rather than rejected merely because the
+uncontracted optimizer would prefer a different
+physical schedule.
+
+For each slot, `η_e × gas_use_MW_LHV × Δt_hours = accepted_MWh_e`
+inside the MILP *and* its matching continuous relaxation.
+Pre-/postauction information times and participant receipt
+checks are inherited from v0.9.10. No accepted MWh may
+exceed offered MWh; a true physical infeasibility fails closed
+as `CONTRACT_INFEASIBLE`.
+
+The independent synthetic **hourly** award
+`[0.2,0.6]` MWh generates €20 gross cashflow
+at invented prices `[100,0]` versus an
+uncontracted preferable `[0.4,0.4]` MWh schedule
+worth €40. Both are physically feasible, but
+only the first matches the hypothetical award.
+A **15-minute** contract
+`[0.05,0.15,0.1,0.1]` MWh is also feasible
+and yields €9 fictional gross cashflow. Exact
+gas inventory, heat, ramp, dwell and LP bounds
+are checked; insufficient storage, ramp or heat
+resources must reject the award.
+
+```bash
+python -m pip install -e .
+bash scripts/reproduce_v0911.sh
+python scripts/audit_v0911_hard_contract.py
+python -m biogasflex contract-dispatch
+python -m biogasflex contract-dispatch --manifest examples/v0911_contract_quarterhour.json
+python -m biogasflex contract-dispatch --output contracted_report.json
+```
+
+On Windows: `./scripts/reproduce_v0911.ps1`.
+
+This is **generator-terminal modelled MWh**, not
+measured electricity sold to the grid. All prices,
+awards, forecasts, gas input, heat/costs and CHP
+physics in v0.9.11 are **invented**. There is no
+actual auction, balancing settlement, intraday
+trading, grid metering, revenue, profit or price
+prediction claim.
+
+Read the [complete methodology and limitations](docs/V0911_HARD_CONTRACT_PROTOCOL.md),
+[v0.9.10 market information boundary](docs/V0910_MARKET_INFORMATION_PROTOCOL.md)
+and the [v0.9.9 negative historical-price study](reports/V099_INTERNAL_AUDIT.md).
+The original scientific source/results remain frozen.
+Human review is still required under
+[issue #3](https://github.com/Open-Energy-Methods/biogasflex/issues/3);
+no public Release/DOI or scientifically reviewed v1.0 exists.
+
+---
+
 # BiogasFlex v0.9.10 — Explicit day-ahead information and fictional award matching
 
 **Status:** independently tested research software, **not** a functioning
