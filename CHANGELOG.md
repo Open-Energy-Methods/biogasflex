@@ -1,3 +1,24 @@
+# v0.9.13-A — 2026-11-15 — Manufacturer/plant identity and operating evidence register
+
+- Introduce 29 parameter/source entries and three **distinct** CHP identities:
+  published 440/520 kW Polish landfill site, Caterpillar CG132B-8 example,
+  and INNIO Jenbacher J312 example. **No verified manufacturer match**.
+- Curate authoritative manufacturer source URLs and full-load/model/fuel
+  qualifications, with an explicit source revision archival limitation.
+- Mark 14 dynamic operating parameters unidentified: no derived minimum
+  stable load, ramp limits, part-load efficiencies, gas storage, heat load,
+  start/dwell costs, hourly engine fuel consumption or net grid export.
+- Source-scoped fail-closed Python validator, independent standard-library
+  witness, adversarial tests against false source/model attribution.
+- New opt-in `chp-evidence-register` CLI and multi-platform offline gates.
+  No automatic import into v0.9.11 contract solver. No changed numerical
+  dispatch results or inferred physical feasibility from annual aggregates.
+- Scientific identifiability and bounded sensitivity analysis remain for
+  v0.9.13-B; actual engine commissioning/SCADA data remain unavailable.
+- No independent human review or public v1.0 research release.
+
+---
+
 # v0.9.12 — 2026-11-15 — Published annual CHP evidence with source-quality audit
 
 - Transcribed independently published 2012–2022 annual running hours,
