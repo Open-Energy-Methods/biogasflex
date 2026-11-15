@@ -58,7 +58,14 @@ and time-resolved LHV/fuel composition.
 `E = integral(P(t) dt)`. A running-hours total gives
 `H_on = integral(1[P(t)>0] dt)`. Different physically possible power
 sequences, with different ramps, starts, downtime and heat demand,
-can produce the same `E` and `H_on`. Neither a unique intraday power
+can produce the same `E` and `H_on`. An independent constructive witness
+compares [0.20, 0.20, 0.20, 0.20] MW with
+[0.10, 0.30, 0.10, 0.30] MW in four equal-hour slots: both deliver
+0.8 MWh with four running hours under the 0.44 MW nameplate, but
+only the second has 0.20 MW/h adjacent changes. A separate example
+has identical energy/running hours with one versus two starts.
+These are mathematical non-identifiability counterexamples, **not
+empirically feasible engine trajectories**. Neither a unique intraday power
 trace nor a unique minimum-load/ramp envelope follows. The paper's
 nominal efficiencies do not supply fuel-flow vs power calibration.
 Published *recovered* landfill-gas volume need not be all engine fuel.
