@@ -6,14 +6,18 @@ never an unreported correction to a published value.
 """
 from __future__ import annotations
 import csv
+import hashlib
 from pathlib import Path
 from statistics import mean
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "data/observed/ciula_2023_landfill_chp_annual.csv"
+PUBLISHED_CSV_SHA256 = "ce018fd8ca3746a393c6a73c30321e8deb5c09ae8bef0497ab59b15bcbc33d10"
 
 
 def run(path: Path = SOURCE) -> dict:
+    if hashlib.sha256(path.read_bytes()).hexdigest() != PUBLISHED_CSV_SHA256:
+        raise AssertionError("Independent source CSV digest does not match pinned publication transcription")
     with path.open(newline="", encoding="utf8") as handle:
         records = list(csv.DictReader(handle))
     if len(records) != 11 or [int(x["year"]) for x in records] != list(range(2012, 2023)):
