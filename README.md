@@ -1,3 +1,58 @@
+# BiogasFlex v0.9.16 — Real published CHP source acquisition
+
+This release extends **v0.9.15 telemetry QA** to independently published,
+CC BY 4.0 **real measurement sources** without declaring that a biogas
+reciprocating engine is physically calibrated.
+
+- **RISE WEDISTRICT Luleå (Sweden)** — biogas-fired **solid oxide fuel
+  cells**, January–June 2023. Four source Excel workbooks measure fuel-cell
+  gas use, electricity, grid metering, transferred and delivered heat.
+  **Not a reciprocating gas engine.**
+- **Kitakyushu campus (Japan)** — operational **city-gas** reciprocating
+  engine CHP and separate fuel cell. Three publicly available source ZIP
+  archives cover hourly electrical generation, gas use and recovered heat.
+  **Not biogas, not sub-hour ramp/event metering.**
+
+Source DOI, CC BY 4.0 license, technology/fuel boundary, author-attributed
+original file sizes and MD5 references are pinned in
+[data/evidence/v0916_public_chp_source_registry.json](data/evidence/v0916_public_chp_source_registry.json).
+No values from either installation enter the existing v0.9.11/14
+synthetic CHP MILP or the v0.9.12 Polish landfill CHP paper case.
+
+Offline source registry only:
+```powershell
+git pull origin main
+python -m pip install -e .
+python -m biogasflex public-chp-sources
+.\scripts\reproduce_v0916.ps1
+```
+
+Optional network retrieval of **actual published original source bytes**:
+```powershell
+$report = Join-Path $env:TEMP 'biogasflex_v0916_public_sources.json'
+python -m biogasflex public-chp-sources --source all --fetch --report $report
+```
+
+The explicit `--fetch` operation compares provider MD5/byte counts,
+computes fresh SHA256 and checks archive/workbook structures with
+archive traversal/bomb protections. The separate
+[online GitHub Actions retrieval workflow](.github/workflows/public-chp-source-acquisition.yml)
+uses ephemeral runners and stores only source-integrity reports;
+numerical/offline CI **does not depend on remote network services**.
+
+The [full acquisition and transfer-boundary protocol](docs/V0916_PUBLIC_EXTERNAL_CHP_SOURCE_ACQUISITION.md)
+includes physical limitations and a prepared **unsent** request to
+acquire instrument-calibrated, high-frequency *biogas reciprocating
+gas-engine CHP* measurements from an authorized operator.
+
+**No full gas-engine biogas calibration, independent source certificate
+authentication, real start/stop/ramp engineering limits, real electricity
+sales or signed operator data-sharing agreement have been established.**
+The next validated milestone must be restricted to the evidence actually
+available. Scientific v1.0 remains outstanding.
+
+---
+
 # BiogasFlex v0.9.15 — CHP telemetry acquisition-readiness and data QA
 
 **No real CHP telemetry has been acquired. No source calibration
