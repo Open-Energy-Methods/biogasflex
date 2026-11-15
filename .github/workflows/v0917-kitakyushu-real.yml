@@ -36,6 +36,18 @@ jobs:
         run: |
           set -euo pipefail
           python -m biogasflex real-chp-analysis --fetch --report "$RUNNER_TEMP/kitakyushu_measured_2005_analysis.json"
+      - name: Generate reproducible vector plots from verified real report
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/plot_v0917_real.py --report "$RUNNER_TEMP/kitakyushu_measured_2005_analysis.json" --out-dir "$RUNNER_TEMP/kitakyushu_real_plots"
+      - name: Upload derived source-measurement SVG plots
+        uses: actions/upload-artifact@v4
+        with:
+          name: kitakyushu-2005-measured-monthly-figures
+          path: ${{ runner.temp }}/kitakyushu_real_plots/*.svg
+          if-no-files-found: error
+          retention-days: 60
       - name: Save real source measurements aggregated report (no private raw data)
         uses: actions/upload-artifact@v4
         with:
