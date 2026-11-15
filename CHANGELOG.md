@@ -1,5 +1,22 @@
 ## v0.9.19 — 2026-11-15 — Endogenous CHP on/off flexibility and independent primal–dual verification
 
+- Executed **46 actual mathematical optimization cases** in
+  the dedicated research workflow, with **1,736 quarter-hour
+  observations**, 46 independently reconstructed LP KKT
+  tests and an exhaustive 2^8=256 binary-pattern global
+  case witness. **Six** solver-optimal MILP schedules actually
+  chose OFF/restart; the maximum was 2 starts per 6h case.
+  Full source-derived results and three distinct price-path
+  Pareto tables in
+  `reports/V0919_EXECUTED_ENDOGENOUS_FLEXIBILITY_KKT.md`.
+- A reproducible `scripts/plot_v0919_frontiers.py` produces
+  three separate, source-attested **SVG** visualizations of
+  synthetic backup-heat fraction versus operating objective.
+  Marker radius encodes modeled start count; non-dominated
+  options marked. No plant-reliability figure asserted.
+- Eliminated a duplicate scenario seed from a modular arithmetic
+  collision (seed 83 duplicated seed 11); now **11, 37, 59**
+  give three distinct validated synthetic price paths.
 - Introduced finite **36-case** (3 seeds × 3 buffer capacities ×
   2 backup-heat capacities × 2 startup-cost coefficients)
   15-minute commitment study with endogenous on/off/heat and
