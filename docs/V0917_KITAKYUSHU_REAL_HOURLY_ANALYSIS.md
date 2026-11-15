@@ -62,6 +62,14 @@ python -m unittest tests.test_v0917_kitakyushu_real -v
 .\scripts\reproduce_v0917.ps1
 ```
 
+The source-attested online workflow additionally generates three
+portable, publication-ready **SVG figures** from the real twelve-month
+aggregate report (engine electric MWh, engine gas source m³ and
+gas-positive/power-zero measurement conflicts), using only the Python
+standard library. The generated figures and aggregate JSON are attached
+as distinct GitHub Actions research artifacts; neither original raw
+archive nor a fabricated figure is version-controlled.
+
 The actual published observational analysis requires **opt-in source
 download** and checks *all three* original publisher MD5/byte
 counts **and independently computed SHA256**, recorded in the
