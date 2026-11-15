@@ -71,6 +71,16 @@ class ExternalCHPEvidenceTests(unittest.TestCase):
         self.assertIn("gas_buffer_volume", a["no_direct_validation_of"])
         self.assertIn("net_grid_export", a["no_direct_validation_of"])
 
+    def test_plausible_but_unattributed_row_change_is_rejected(self):
+        f = self.with_tamper("2012,7614,926732,1135.25", "2012,7614,926733,1135.25")
+        try:
+            rows, _ = load_rows(f)
+            self.assertEqual(rows[0]["landfill_gas_recovered_m3"], 926733)
+            with self.assertRaisesRegex(EvidenceError, "SHA256"):
+                audit_annual_chp(f)
+        finally:
+            f.unlink(missing_ok=True)
+
     def test_missing_year_rejected(self):
         f = self.with_tamper("2018,7876,1306298,2327.82,2788.38\n", "")
         try:
