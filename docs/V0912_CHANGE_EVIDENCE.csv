@@ -1,0 +1,8 @@
+change_id,scientific_layer,verification,claim_limit
+V0912-01,Svk 2020 SE3 immutable source,Original 24 hourly UTC observed price rows SHA256 manifest resource ID and source date,Not original 2020 price publication timestamp or preauction forecast
+V0912-02,Archive temporal provenance gate,Rejection of backdated 2026 metadata forged per-slot publication and non-UTC decision,No verified as-of market information
+V0912-03,Independent published CHP annual operating records,11 source table years 2012-2022 and rated power gas electric heat checks,Annual different-plant observations not high-frequency control limits
+V0912-04,Source-reported gas mean discrepancy,Independently recompute post period 1267253.2 vs published 1291515,Preserve discrepancy rather than silently change source
+V0912-05,Existing arbitrary CHP model versus independent reference,0.8 MW hypothetical model != 0.44 MW published external reference,Do not claim external model calibration
+V0912-06,Operational validation blocking,Opt-in hard-contract require-operational-validation always blocks lacking real source and site data,Original fictional contract-dispatch remains available
+V0912-07,All inherited science preserved,286 original source/result pins 216 duals 96 solver-free oracle comparisons across 3OS,No new real field performance or economic return claims

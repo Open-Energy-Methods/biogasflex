@@ -1,3 +1,67 @@
+# BiogasFlex v0.9.12 — Source-audited market history and independent published CHP annual evidence
+
+**Research software.** v0.9.12 adds a source-traceable
+evidence layer, **not** a field-validated CHP controller,
+live auction participant or historical bid-time price predictor.
+
+We now audit **two different evidence classes**, keeping
+their limitations explicit:
+
+- **Observed Svenska kraftnät 2020 SE3 prices:** existing
+  24-hour April 1 snapshot unchanged, source CC BY 4.0,
+  exact SHA256, zone and UTC grid checked. The frozen
+  resource's 2026 publication/retrieval metadata is
+  documented; this archive does **not** prove what
+  individual 2020 auction prices were available at
+  the historical preauction decision cutoff.
+- **Independent published CHP operating observations:**
+  11 annual 2012–2022 landfill-gas CHP records from
+  Ciuła et al., Energies (2023), DOI
+  [10.3390/en16052180](https://doi.org/10.3390/en16052180)
+  (CC BY 4.0). Annual meter/operation summaries are
+  compared with a **440-kW_e / 520-kW_th rated** reference
+  and audited for unit and arithmetic consistency.
+
+A scientifically important source discrepancy is
+documented: five annual gas volumes for 2018–2022
+average **1,267,253.2 m³/year**, not the article's
+reported **1,291,515 m³/year**. Both figures are
+preserved with provenance, and no missing raw meters
+are fabricated.
+
+**The annual landfill-gas CHP reference is a different
+plant from the 0.8-MW hypothetical BiogasFlex model.**
+No hourly ramp, startup, minimum stable load,
+physical fuel-to-electric efficiency or actual grid
+export is calibrated from these annual aggregates.
+
+```bash
+python -m pip install -e .
+bash scripts/reproduce_v0912.sh
+python scripts/audit_v0912_external_evidence.py
+python -m biogasflex evidence-audit
+# Detailed report only by opt-in:
+python -m biogasflex evidence-audit --output evidence_report.json
+# The following fails CLOSED because actual operational evidence is absent:
+python -m biogasflex contract-dispatch --require-operational-validation
+```
+
+Windows: `./scripts/reproduce_v0912.ps1`.
+
+Read the [complete source and scientific methodology](docs/V0912_EXTERNAL_EVIDENCE_PROTOCOL.md),
+[the external CHP source transcription](data/external_validation/README.md),
+[the v0.9.11 contract-constrained solver](docs/V0911_HARD_CONTRACT_PROTOCOL.md)
+and the [historical price study audit](reports/V099_INTERNAL_AUDIT.md).
+
+All original historical research inputs/models remain
+frozen. Independent methodological review
+[issue #3](https://github.com/Open-Energy-Methods/biogasflex/issues/3)
+remains open. No real market revenue, plant-calibrated
+dispatch, public GitHub Release, Zenodo DOI or
+scientifically reviewed v1.0 is claimed.
+
+---
+
 # BiogasFlex v0.9.11 — Hard-contracted CHP electricity delivery (experimental)
 
 **Status:** scientifically auditable numerical software, **not** an

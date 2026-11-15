@@ -1,3 +1,42 @@
+# v0.9.12 — 2026-11-15 — Source-pinned retrospective market data + independent published CHP operating aggregates
+
+- New `evidence-audit` command with opt-in complete JSON output.
+  No fetched network data, live credentials, changes to original
+  286 research source/results or real financial claims.
+- Freeze/verify the original Svk SE3 2020 observed
+  snapshot, actual source metadata, 24 hourly UTC
+  entries and independent EUR/MWh average oracle.
+  **No original 2020 price-publication event** in the
+  archive: reject invented historical as-of information.
+- Add separate attributed **CC BY 4.0**, DOI-cited
+  11-year meter/operation-derived **annual** CHP
+  reference from a 440-kW_e/520-kW_th landfill-gas
+  plant (Ciuła et al., 2023, Tables 1–3).
+  Validate records and annual running-time-weighted
+  electrical/thermal mean powers; **not** hourly ramps
+  or start/stop operating constraints.
+- Identify/retain source Table 3 arithmetic conflict:
+  annual 2018–2022 gas volumes average 1,267,253.2,
+  against the published 1,291,515 m³/year. Neither
+  source row nor original author's average rewritten.
+- Direct `contract-dispatch --require-operational-validation`
+  into fail-closed external evidence gate. Without
+  site-matched high-frequency plant records and
+  source-verifiable bid-time price/award publication
+  logs, it refuses operational-science claims.
+  Existing synthetic contract-dispatch unchanged.
+- Preserve inherited 216 exact LP dual checks, 96
+  independent solver-free LP comparisons, 216+5
+  historic/hypothetical cases, previous opt-in
+  optimization/regression tests, cross-OS and
+  SHA256 source-integrity checks.
+- Independent human methodological review, actual
+  grid export/market participant awards, calibrated
+  operating limits and field profitability remain
+  **outstanding**; no v1.0 scientific release/DOI.
+
+---
+
 # v0.9.11 — 2026-11-15 — Contracted electricity equality inside CHP MILP
 
 - Opt-in **hard accepted-volume** equality constraint:
