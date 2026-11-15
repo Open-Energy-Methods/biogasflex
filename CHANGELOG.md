@@ -1,3 +1,26 @@
+# v0.9.14-A — 2026-11-15 — Source-scoped manufacturer / plant CHP evidence
+
+- Extend (do **not replace**) merged v0.9.13 dated market provenance and
+  v0.9.12 source-verified annual landfill CHP records.
+- Introduce 29 traceable parameter records and three explicitly unmatched
+  engine identities: Ciuła published Polish landfill CHP, Caterpillar
+  CG132B-8 catalogue, and Jenbacher J312 catalogue.
+- Declare 14 site-specific dynamic/operational parameters unidentified:
+  minimum load, upward/downward ramps, min up/down times, startup costs,
+  part-load electricity/heat, storage, heat demand, time-resolved engine
+  fuel consumption, net export, outages and fuel calorific variability.
+- Fail-closed source/scope validation; independent standard-library oracle
+  and mathematical examples proving annual integrals cannot identify
+  ramps or start counts. Manufacturer maxima never installed as site
+  parameters; no automatic solver import or new equipment validation claim.
+- Opt-in `chp-evidence-register` CLI, cross-platform 10-job CI matrix,
+  existing v0.9.13 market audit retained in full offline reproduction,
+  and strict SHA256 coverage extended to all new source files.
+- v0.9.14-B bounded sensitivity, actual site calibration and independent
+  human methodological review remain pending.
+
+---
+
 # v0.9.13 — 2026-11-15 — Historical market as-of provenance with existing published CHP annual evidence
 
 - Add immutable Svk day-ahead 2020-04-01 SE3

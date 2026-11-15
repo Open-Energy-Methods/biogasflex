@@ -1,3 +1,44 @@
+# BiogasFlex v0.9.14-A — CHP operating-parameter source and identity audit
+
+This milestone builds **on top of** the merged v0.9.13 historical
+market-provenance work, without changing its market source files,
+read-only audits, contract-dispatch fail-closed guard or synthetic solver.
+It adds a reproducible register for CHP parameters whose actual equipment
+identity, time resolution and operating conditions are known or unknown.
+
+**Three unmatched equipment identities:** published 440 kW electrical /
+520 kW thermal Polish landfill CHP (engine make/model unknown), Caterpillar
+CG132B-8 400 ekW catalogue example, and Jenbacher J312 **up to 635 kW**
+catalogue example. Manufacturer examples **are not** identified as the
+Polish engine or a Swedish site installation. Vendor maximum efficiency
+claims are not inferred part-load performance.
+
+A [29-row source register](data/evidence/v0914_chp_parameter_register.json) with
+three attributed source pages identifies **14 unmeasured/unidentifiable
+site dynamic parameters**, blocked from operational inference or automatic
+MILP import. Only the Polish source site's own published electric/thermal
+ratings can be used for static sanity screening of that same installation.
+The source-scope audit rejects manufacturer/plant swaps and invented
+ramp, minimum load, storage, fuel/heat or net-export data.
+
+```bash
+python -m pip install -e .
+python -m biogasflex chp-evidence-register
+python -m biogasflex chp-evidence-register --output chp_register_audit.json
+python scripts/audit_v0914_chp_sources.py
+bash scripts/reproduce_v0914.sh
+```
+
+Windows: `./scripts/reproduce_v0914.ps1`.
+
+See the [complete manufacturer evidence and identifiability protocol](docs/V0914_CHP_MANUFACTURER_EVIDENCE_PROTOCOL.md).
+**No time-resolved plant validation, commissioned part-load curves, actual
+market trades, real revenue or independent human review are claimed.**
+Scientific bounded-sensitivity/identifiability work remains open for
+v0.9.14-B, and a peer-reviewed v1.0 release remains outstanding.
+
+---
+
 # BiogasFlex v0.9.13 — Source-pinned historical market evidence and operational validation refusal
 
 **Research development candidate, not field-validated operations.**

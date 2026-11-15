@@ -13,10 +13,11 @@ from .experimental_v098 import evaluate_rolling_prices
 from .experimental_v099 import run_manifest
 from .market_v0910 import run_manifest as run_market_boundary_manifest
 from .annual_chp_evidence import audit_annual_chp
+from .chp_parameter_evidence import run_register
 from .market_provenance_v0913 import run_market_source_audit, require_operational_validation
 from .svk import fetch_local_day
 
-parser = argparse.ArgumentParser(description='BiogasFlex 0.9.13: source-provenance auditable research CHP and strict market bid-time validation gate')
+parser = argparse.ArgumentParser(description='BiogasFlex 0.9.14: source-provenance auditable research CHP and strict market bid-time validation gate')
 sub = parser.add_subparsers(dest='command', required=True)
 p = sub.add_parser('fetch-svk', help='Retrieve a licensed day of historical SE3 prices')
 p.add_argument('--output', type=Path, default=Path('data/external/svk_se3_20200101.csv'))
@@ -80,8 +81,16 @@ p.add_argument('--output',type=Path,default=None,help='Opt-in full source/market
 p=sub.add_parser('annual-chp-evidence',help='v0.9.12: audit published 2012-2022 annual landfill-CHP records; no dispatch calibration')
 p.add_argument('--csv',type=Path,default=Path('data/observed/ciula_2023_landfill_chp_annual.csv'))
 p.add_argument('--output',type=Path,default=None,help='Optional full source audit JSON; otherwise summary on stdout')
+p=sub.add_parser('chp-evidence-register',help='v0.9.14-A: independently source-scoped CHP manufacturer parameter audit (no equipment calibration)')
+p.add_argument('--register',type=Path,default=Path('data/evidence/v0914_chp_parameter_register.json'))
+p.add_argument('--output',type=Path,default=None,help='Optional JSON evidence report, no file by default')
 args=parser.parse_args()
-if args.command == 'market-provenance':
+if args.command == 'chp-evidence-register':
+    result=run_register(args.register)
+    if args.output is not None:
+        args.output.parent.mkdir(parents=True,exist_ok=True)
+        args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n',encoding='utf-8')
+elif args.command == 'market-provenance':
     result=run_market_source_audit(args.manifest)
     if args.output is not None:
         args.output.parent.mkdir(parents=True,exist_ok=True)
@@ -171,7 +180,20 @@ elif args.command == 'dispatch':
     result=run_dispatch(args.config,args.prices,args.output,capacity_mwh_lhv=args.capacity_mwh_lhv)
 else:
     result=run_sweep(args.config,args.prices,args.output)
-if args.command == 'market-provenance':
+if args.command == 'chp-evidence-register':
+    print(json.dumps({
+        'version':'0.9.14',
+        'status':result['status'],
+        'evidence_level':'SOURCE_SCOPED_CATALOGUE_AND_ANNUAL_PAPER',
+        'sources_checked':result['sources_checked_against_curated_source_catalogue'],
+        'parameters_reviewed':result['parameters_reviewed'],
+        'unidentified_dynamic_parameters':result['unidentified_count'],
+        'physical_dispatch_calibrated':result['physical_validation_of_v0911_contracts'],
+        'auto_import_into_dispatch':result['auto_import_into_dispatch'],
+        'output_path':str(args.output) if args.output is not None else None,
+        'claim_limit':'Manufacturer catalogue examples do not identify Polish site or validate dispatch dynamics',
+    },indent=2,allow_nan=False))
+elif args.command == 'market-provenance':
     print(json.dumps({
         "version":"0.9.13",
         "status":result["status"],
