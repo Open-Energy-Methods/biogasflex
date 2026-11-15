@@ -1,0 +1,118 @@
+{
+  "protocol": "BIOGASFLEX_V0916C_MATLINK_DATA_ACCESS_EVIDENCE_GATE_V1",
+  "reviewed_at": "2026-11-15",
+  "milestone": "Matlink authorized data-access preparation; NO actual raw source acquisition",
+  "source_id": "nyserda_matlink_farm_project_516",
+  "original_source_technology": "145_kWe_Waukesha_recprocating_gas_engine",
+  "fuel_type": "ANAEROBIC_DIGESTER_BIOGAS",
+  "primary_site": "https://der.nyserda.ny.gov/facilities/567/?project=516",
+  "source_data_portal": "https://der.nyserda.ny.gov/reports/view/performance/?project=516",
+  "source_notes": "https://dataint.s3.amazonaws.com/docs/proj_516/Database_Notes_-_Matlink_Farm.pdf",
+  "source_scope": {
+    "channel_count_described_in_2006_notes": 91,
+    "logger_interval_minutes": 15,
+    "source_format": "DAILY_CSV_LOGGED_15MIN",
+    "derived_public_format": "HOUR_DAY_MONTH_REPORTS",
+    "reported_raw_time_basis": "EASTERN_LOCAL_CLOCK",
+    "published_fixed_time_basis": "EASTERN_STANDARD_TIME",
+    "time_zone_review": "DST_CONVERSION_NOT_VERIFIED",
+    "gas_engine_fuel_volume_basis": "SOURCE_VOLUMETRIC_UNITS_NOT_AUTHENTICATED_AS_DRY_NM3",
+    "gas_energy_conversion": "HISTORICAL_NOMINAL_BTU_CONVERSION_NEEDS_VERIFICATION",
+    "useful_heat_meter_integration": "UNVERIFIED_SAMPLE_VS_RATE_VS_TOTAL",
+    "energy_meter_reset_and_rollover_handling": "UNVERIFIED",
+    "reported_source_month_efficiency_anomalies": [
+      {
+        "month": "2004-10",
+        "reported_electric_efficiency_hhv_pct": 2858.5,
+        "screen": "PHYSICALLY_IMPOSSIBLE_POINT"
+      },
+      {
+        "month": "2004-12",
+        "reported_electric_efficiency_hhv_pct": 545.8,
+        "screen": "PHYSICALLY_IMPOSSIBLE_POINT"
+      }
+    ]
+  },
+  "official_access": {
+    "source_responsible_org": "NYSERDA DER Integrated Data System",
+    "data_program_service_provider": "Frontier Energy",
+    "contact_address": "der@frontierenergy.com",
+    "contact_reference": "https://der.nyserda.ny.gov/resources/data-submissions/",
+    "email_status": "USER_GMAIL_DRAFT_PREPARED_NOT_SENT",
+    "contact_attempt_sent": false,
+    "user_permission_to_share_data": false,
+    "public_raw_csv_direct_programmatic_access": "BLOCKED_BY_ACCESS_CONTROL",
+    "explicitly_forbidden_actions": [
+      "BYPASS_ACCESS_CONTROL",
+      "INVENT_RAW_CSV",
+      "REPUBLISH_SOURCE_WITHOUT_RIGHTS"
+    ]
+  },
+  "requested_evidence": [
+    {
+      "id": "M1",
+      "requested": "Original source 15-minute daily CSV files (Jan 2005 sample + Oct 2004 to Jul 2005 history) or authorized verified source export",
+      "requires": "RAW_BYTES_AND_RETRIEVAL_METADATA"
+    },
+    {
+      "id": "M2",
+      "requested": "Instrument tag dictionary, channel names/units, meter locations and generator vs PCC boundaries",
+      "requires": "SENSOR_DICTIONARY"
+    },
+    {
+      "id": "M3",
+      "requested": "Cumulative energy/gas totalizer reset/rollover, integration versus sampling semantics and missing/quality flags",
+      "requires": "INTERVAL_MEASUREMENT_CONVENTION"
+    },
+    {
+      "id": "M4",
+      "requested": "Original timezone and DST treatment, reporting clock alignment and source sampling interval",
+      "requires": "SOURCE_UTC_MAPPING"
+    },
+    {
+      "id": "M5",
+      "requested": "Gas standard-state, dry/wet basis, composition and independently documented LHV or HHV factor (clarify historical 0.600 MBtu/cubic-foot wording)",
+      "requires": "FUEL_THERMOCHEMISTRY"
+    },
+    {
+      "id": "M6",
+      "requested": "Useful heat meter flow/enthalpy boundary, auxiliary load and any gas storage and flare measurements",
+      "requires": "PLANT_BOUNDARY"
+    },
+    {
+      "id": "M7",
+      "requested": "Instrument calibration, commissioning and uncertainty history/measurement and verification notes",
+      "requires": "METROLOGY_TRACEABILITY"
+    },
+    {
+      "id": "M8",
+      "requested": "Data reuse, raw preservation, derived publication, redaction and licensing permissions",
+      "requires": "PERMITTED_USE"
+    },
+    {
+      "id": "M9",
+      "requested": "Second-resolution high-rate start, stop and ramp/controller logs (only if they exist)",
+      "requires": "HIGH_RATE_DYNAMIC_EVIDENCE"
+    }
+  ],
+  "immutable_data_provenance_template": {
+    "original_source_sha256": null,
+    "original_source_md5": null,
+    "original_source_bytes": null,
+    "original_source_filename": null,
+    "original_source_retrieved_utc": null,
+    "source_license_verified": false,
+    "raw_site_specific_signal_values_observed": false
+  },
+  "release_claim_gates": {
+    "open_data_source_retrieval_verified": false,
+    "time_resolved_gas_engine_energy_balance_audited": false,
+    "instrument_calibrations_authenticated": false,
+    "historical_hourly_matlink_performance_validated": false,
+    "time_resolved_subhour_engine_ramps_identified": false,
+    "biogasflex_engine_model_site_calibrated": false,
+    "v1_physical_validation_completed": false
+  },
+  "record_status": "BLOCKED_AWAITING_AUTHORIZED_HUMAN_SOURCE_TRANSFER",
+  "data_received": false
+}

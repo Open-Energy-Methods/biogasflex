@@ -1,3 +1,13 @@
+## v0.9.16-C — Matlink authorized source request and physical evidence blockers (2026-11-15)
+
+- Sourced the NYSERDA Matlink Farm biogas reciprocating-engine monitoring notes, distinguishing the original 91-channel 15-minute daily CSV logs from the derivative public hourly reports.
+- Explicitly block unverified source license, private raw data receipt, Eastern local-clock/DST conversion, cumulative meter rollovers, useful-heat measurement integration, suspicious published gas heating-value units and >100% reported monthly electrical efficiencies.
+- Added nine documented acquisition dependencies, a fail-closed machine-readable evidence register and five adversarial non-validation tests.
+- Prepared but **did not send** a targeted inquiry to the public program data custodian; no unauthorized access or bypass of download restrictions.
+- Preserve v0.9.16 software version and all prior physical and market validation gates. No real Matlink CSV, engine-fit evidence or scientific v1.0 claims.
+
+---
+
 # v0.9.16 — 2026-11-15 — External measured CHP source inventory and acquisition
 
 - Discover/pin real published CC BY 4.0 CHP sources with **distinct
