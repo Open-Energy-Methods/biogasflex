@@ -19,10 +19,11 @@ from .telemetry_acquisition_v0915 import audit_telemetry
 from .public_chp_sources_v0916 import run as run_public_chp_sources
 from .kitakyushu_real_v0917 import run as run_kitakyushu_real_v0917
 from .benchmark_v0918 import run as run_v0918_benchmark, write_out as write_v0918_benchmark, SCALES as V0918_SCALES
+from .benchmark_v0919 import run as run_v0919_benchmark, write_out as write_v0919_benchmark
 from .market_provenance_v0913 import run_market_source_audit, require_operational_validation
 from .svk import fetch_local_day
 
-parser = argparse.ArgumentParser(description='BiogasFlex 0.9.18: source-provenance auditable research CHP and strict market bid-time validation gate')
+parser = argparse.ArgumentParser(description='BiogasFlex 0.9.19: source-provenance auditable research CHP and strict market bid-time validation gate')
 sub = parser.add_subparsers(dest='command', required=True)
 p = sub.add_parser('fetch-svk', help='Retrieve a licensed day of historical SE3 prices')
 p.add_argument('--output', type=Path, default=Path('data/external/svk_se3_20200101.csv'))
@@ -111,8 +112,16 @@ p=sub.add_parser('benchmark-v0918',
     help='v0.9.18: synthetic 15-min 96/192/672-slot MILP and ramp-LP math verification; NOT calibrated CHP')
 p.add_argument('--smoke',action='store_true',help='Short 4/8-slot analytical oracle checks, no real week performance claim')
 p.add_argument('--output',type=Path,default=None,help='Save complete benchmark rows OUTSIDE repository for independent stdlib witness')
+p=sub.add_parser('benchmark-v0919',
+    help='v0.9.19: hypothetical endogenous 15-min MILP design and independent LP dual-KKT mathematical verification')
+p.add_argument('--smoke',action='store_true',help='8-slot endogenous commitment and small LP case only')
+p.add_argument('--output',type=Path,default=None,help='Write complete synthetic case schedule OUTSIDE repository checkout')
 args=parser.parse_args()
-if args.command == 'benchmark-v0918':
+if args.command == 'benchmark-v0919':
+    result=run_v0919_benchmark(smoke=args.smoke)
+    if args.output is not None:
+        write_v0919_benchmark(result,args.output)
+elif args.command == 'benchmark-v0918':
     result=run_v0918_benchmark((4,8) if args.smoke else V0918_SCALES)
     if args.output is not None:
         write_v0918_benchmark(result,args.output)
@@ -225,7 +234,31 @@ elif args.command == 'dispatch':
     result=run_dispatch(args.config,args.prices,args.output,capacity_mwh_lhv=args.capacity_mwh_lhv)
 else:
     result=run_sweep(args.config,args.prices,args.output)
-if args.command == 'benchmark-v0918':
+if args.command == 'benchmark-v0919':
+    print(json.dumps({
+      'protocol':result['protocol'],
+      'status':result['status'],
+      'solved_synthetic_cases':len(result['cases']),
+      'endogenous_MILP_cases':sum(c['model']=='ENDOGENOUS_ON_OFF_MILP' for c in result['cases']),
+      'LP_cases':sum(c['model']=='ALWAYS_ON_RAMP_LP' for c in result['cases']),
+      'finite_design_frontiers':len(result['frontiers']),
+      'endogenous_starting_cases':sum(
+          c['start_count']>0 for c in result['cases']
+          if c['model']=='ENDOGENOUS_ON_OFF_MILP'),
+      'cases_containing_actual_off_slots':sum(
+          any(row['on']==0 for row in c['rows'])
+          for c in result['cases'] if c['model']=='ENDOGENOUS_ON_OFF_MILP'),
+      'max_starts_per_case':max((c['start_count'] for c in result['cases']
+                                if c['model']=='ENDOGENOUS_ON_OFF_MILP'),default=0),
+      'frontier_details':result['frontiers'],
+      'case_preview':[{'seed':c['seed'],'slots':c['slots'],
+                       'storage_mwh':c['capacity_mwh_lhv'],
+                       'synthetic_objective_eur':c['reported_net_objective_eur'],
+                       'starts':c['start_count']} for c in result['cases'][:5]],
+      'output':str(args.output) if args.output is not None else None,
+      'physical_reliability_validation':False,
+    },indent=2,allow_nan=False))
+elif args.command == 'benchmark-v0918':
     print(json.dumps({
       'protocol':result['protocol'],
       'status':result['status'],

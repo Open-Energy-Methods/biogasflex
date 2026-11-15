@@ -1,3 +1,49 @@
+## v0.9.19 — 2026-11-15 — Endogenous CHP on/off flexibility and independent primal–dual verification
+
+- Executed **46 actual mathematical optimization cases** in
+  the dedicated research workflow, with **1,736 quarter-hour
+  observations**, 46 independently reconstructed LP KKT
+  tests and an exhaustive 2^8=256 binary-pattern global
+  case witness. **Six** solver-optimal MILP schedules actually
+  chose OFF/restart; the maximum was 2 starts per 6h case.
+  Full source-derived results and three distinct price-path
+  Pareto tables in
+  `reports/V0919_EXECUTED_ENDOGENOUS_FLEXIBILITY_KKT.md`.
+- A reproducible `scripts/plot_v0919_frontiers.py` produces
+  three separate, source-attested **SVG** visualizations of
+  synthetic backup-heat fraction versus operating objective.
+  Marker radius encodes modeled start count; non-dominated
+  options marked. No plant-reliability figure asserted.
+- Eliminated a duplicate scenario seed from a modular arithmetic
+  collision (seed 83 duplicated seed 11); now **11, 37, 59**
+  give three distinct validated synthetic price paths.
+- Introduced finite **36-case** (3 seeds × 3 buffer capacities ×
+  2 backup-heat capacities × 2 startup-cost coefficients)
+  15-minute commitment study with endogenous on/off/heat and
+  energy-inventory decisions, without altering the inherited v0.9.7 MILP.
+- Nine matched **96-quarter-hour ramp LP** cases using the
+  inherited v0.9.5 continuously-on CHP surrogate. Separate independent
+  reconstruction and **primal/dual KKT residual verification**
+  with explicitly scoped same-SciPy/HiGHS numerical backend.
+- Independent **2^8=256 binary pattern enumeration** and
+  separately reconstructed fixed-pattern LP optimum checks for an
+  eight-quarter-hour MILP, rather than mislabelling an unchanged
+  zero-buffer forced schedule as an endogenous optimum.
+- Three nonprobabilistic finite operational-design Pareto sets
+  (synthetic contribution, modeled backup heat reliance, startup
+  counts). Different backup/capacity assumptions are **equipment design
+  counterfactuals**, not repeated samples of one physical plant.
+- All market prices, plant coefficients, electricity revenues,
+  switching penalties and weather profiles fictional.
+  No physical reliability/availability probability, manufacturer
+  validation, site calibration, stochastic confidence interval
+  or actual investment net present value is inferred.
+- Preserved measured v0.9.17 city-gas CHP source identification and
+  v0.9.18 168h LP/MILP research benchmark, full inherited model
+  tests and strict SHA256 release coverage.
+
+---
+
 ## v0.9.18 — 2026-11-15 — Quarter-hour 168h optimization and independent verification
 
 - Dedicated 96/192/672 run 43719038048 **PASSED independent
