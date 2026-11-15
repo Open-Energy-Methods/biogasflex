@@ -33,6 +33,18 @@ class PublishedCHPSources(unittest.TestCase):
                             and not s["high_rate_event_data_identified"]
                             for s in sources.values()))
 
+    def test_nyserda_real_biogas_engine_candidate_stays_not_acquired(self):
+        candidate=json.loads((ROOT/"data/evidence/v0916_matlink_biogas_engine_candidate.json").read_text(encoding="utf8"))
+        self.assertEqual(candidate["fuel"],"ANAEROBIC_DIGESTER_GAS")
+        self.assertEqual(candidate["technology"],"145_KWE_WAUKESHA_RECIPROCATING_ENGINE")
+        self.assertEqual(candidate["license_status"],"SOURCE_PORTAL_REUSE_RIGHTS_NOT_YET_VERIFIED")
+        self.assertIsNone(candidate["source_raw_csv_sha256"])
+        self.assertFalse(candidate["raw_data_downloaded_and_integrity_verified"])
+        self.assertFalse(candidate["approved_for_physical_biogas_engine_calibration"])
+        self.assertFalse(candidate["high_frequency_startup_ramp_verified"])
+        self.assertIn("WAF",candidate["recommended_manual_source_export"]["automated_http_access"])
+        self.assertGreater(len(candidate["source_document_claims"]["obvious_published_efficiency_quality_flags"]),1)
+
     def test_no_online_download_without_explicit_optin(self):
         r=run("all")
         self.assertEqual(r["status"],"PASS_SOURCE_METADATA_SCOPE_NOT_YET_DOWNLOADED")
