@@ -327,7 +327,7 @@ def audit_telemetry(manifest_path: str | Path = DEFAULT_MANIFEST,
             std_u("useful_recovered_heat_kwh"))+1e-9,
             f"row {n}: electric plus useful heat exceeds plausible measured LHV input")
         _require(
-            e<=manifest["generator_nameplate_kw_e"]*.25+
+            e<=manifest["generator_nameplate_kw_e"]*.25*fraction+
             multiplier*std_u("generator_electric_kwh")+1e-9,
             f"row {n}: interval energy exceeds declared generator nameplate",
         )
