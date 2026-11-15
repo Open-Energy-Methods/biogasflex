@@ -1,3 +1,28 @@
+# v0.9.14-B — 2026-11-15 — Predeclared hypothetical contract-constraint sensitivity
+
+- New opt-in 81-cell `3^4` factorial of storage, steady-on upward ramp,
+  minimum-on generation and auxiliary heat capacity, retaining the original
+  synthetic 2-hour accepted-electricity schedule and gas/heat/commitment MILP.
+- Derive independent algebraic feasibility witness, compare each scenario
+  directly to SciPy/HiGHS and fail if infeasibility differs or unexpected
+  solver status occurs. Predeclared exact witness: 16 feasible, 65 infeasible.
+- Nine one-factor tests of electric/thermal efficiency and prior ramp-down:
+  verify terminal-inventory coupling, first-hour heat backup and inherited
+  midpoint-ramp semantics. Invalid contracts have NULL profit/revenue claims.
+- Finite-design main/pair/higher-order variance decomposition with explicit
+  **no probability interpretation**. Two conditional rectangular analytical
+  certificates: broad box not robust, restricted box robust **only within
+  the locked synthetic always-on 2-slot model**.
+- Constructive non-identifiability witness confirms annual power integrals
+  and running hours cannot recover unique ramp/start traces.
+- Add independent no-solver-import 81-cell check, adversarial provenance
+  tests, optional JSON report, versioned methods/results and cross-platform
+  reproduction with all v0.9.14-A and v0.9.13 source gates intact.
+- No physical calibration, real market accepted awards or energy sales,
+  statistical plant-reliability inference, source reviewer sign-off or v1.0.
+
+---
+
 # v0.9.14-A — 2026-11-15 — Source-scoped manufacturer / plant CHP evidence
 
 - Extend (do **not replace**) merged v0.9.13 dated market provenance and
