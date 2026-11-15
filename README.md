@@ -1,3 +1,7 @@
+## Matlink Farm — v0.9.16-C acquisition handoff (raw data not obtained)
+
+The original NYSERDA Matlink Farm **145 kWe Waukesha anaerobic-digester biogas CHP** has source-described 15-minute measurements, but neither its original CSV files nor reuse permission and calibrated instrument definitions have been received. The [Matlink acquisition handoff](docs/V0916C_MATLINK_AUTHORIZED_DATA_HANDOFF.md) and [nine-condition evidence register](data/evidence/v0916c_matlink_source_access_register.json) document raw files, fuel-energy basis, meter boundaries, timezone/DST, heat-integral ambiguity, source permissions and physical-validation blockers. The institutional data-custodian inquiry was **prepared but not sent**. No operating records were invented and no engine was calibrated.
+
 # BiogasFlex v0.9.16 — Real published CHP source acquisition
 
 This release extends **v0.9.15 telemetry QA** to independently published,
