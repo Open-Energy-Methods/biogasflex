@@ -1,0 +1,122 @@
+{
+  "protocol": "BIOGASFLEX_V0916_PUBLIC_EXTERNAL_CHP_SOURCES_V1",
+  "reviewed_at": "2026-11-15",
+  "method": "SOURCE_ORIGINAL_FILE_MD5_PLUS_RECORDED_SHA256_ON_FETCH_AND_XLSX_STRUCTURE_PREVIEW",
+  "versioning": "Only published source bytes and API-supplied MD5/size pinned; nested extracted content not asserted until downloaded",
+  "immediate_goal": "Obtain non-synthetic measured power/fuel/heat data for independently scoped external energy-accounting verification, not fit the biogas engine.",
+  "sources": [
+    {
+      "id": "rise_lulea_2023_biogas_sofc",
+      "title": "Operational data from the Luleå demosite in WEDISTRICT",
+      "technology": "SOLID_OXIDE_FUEL_CELL_NOT_GAS_ENGINE",
+      "fuel": "AUTOMOTIVE_QUALITY_BIOGAS",
+      "location": "Luleå, Sweden",
+      "publisher": "RISE Research Institutes of Sweden",
+      "source_url": "https://zenodo.org/records/14163174",
+      "api_url": "https://zenodo.org/api/records/14163174",
+      "doi": "10.5281/zenodo.14163174",
+      "published": "2024-11-14",
+      "license": "CC-BY-4.0",
+      "recorded_period": "2023-01-11_to_2023-06-16",
+      "files": [
+        {
+          "name": "FCData_v2.xlsx",
+          "url": "https://zenodo.org/api/records/14163174/files/FCData_v2.xlsx/content",
+          "bytes": 2862185,
+          "md5": "c9d0d97a0e16ccec9552ac7e8c17880e",
+          "claimed_content": "9 fuel-cell gas consumption and electric generation"
+        },
+        {
+          "name": "MeterData_v2.xlsx",
+          "url": "https://zenodo.org/api/records/14163174/files/MeterData_v2.xlsx/content",
+          "bytes": 1469441,
+          "md5": "e59a10e63d1ae5379cae8dcac32543f5",
+          "claimed_content": "five electrical grid and facility flow meters"
+        },
+        {
+          "name": "ThermalData_v2.xlsx",
+          "url": "https://zenodo.org/api/records/14163174/files/ThermalData_v2.xlsx/content",
+          "bytes": 1749672,
+          "md5": "1816bdbd305b8c4a5734157e916070b3",
+          "claimed_content": "data-centre fuel-cell/dry cooler heat flow"
+        },
+        {
+          "name": "DhSubstation_v2.xlsx",
+          "url": "https://zenodo.org/api/records/14163174/files/DhSubstation_v2.xlsx/content",
+          "bytes": 9341756,
+          "md5": "781c92e932ff0b794d174e8d3863ed21",
+          "claimed_content": "useful delivered district heat to adjacent building"
+        }
+      ],
+      "admissible_claims": [
+        "REPRODUCIBLE_RAW_SOURCE_RETRIEVAL",
+        "EXTERNAL_SENSOR_TIMESERIES_SCHEMA_PROFILING",
+        "GENERIC_CHPSYSTEM_ENERGY_ACCOUNTING_RESEARCH"
+      ],
+      "blocked_claims": [
+        "GAS_ENGINE_RAMP_IDENTIFIED",
+        "LOVSTA_BIOGAS_ENGINE_CALIBRATED",
+        "SAME_PLANT_AS_CIULA_POLISH_LANDFILL",
+        "CALIBRATION_CERTIFICATES_AUTHENTICATED",
+        "COMPLETE_15_MIN_CHP_11_CHANNEL_SCHEMA_VERIFIED",
+        "REAL_CONTRACT_DELIVERY_VALIDATED"
+      ],
+      "high_rate_event_data_identified": false,
+      "traceable_calibration_certificates_verified": false
+    },
+    {
+      "id": "kitakyushu_japan_2001_2022_citygas_chp",
+      "title": "20-year Data of Energy Station at Kitakyushu Campus",
+      "technology": "RECIPROCATING_GAS_ENGINE_CHP_AND_FUEL_CELL",
+      "fuel": "CITY_GAS_NOT_BIOGAS",
+      "location": "Kitakyushu, Japan",
+      "publisher": "Wei Liao, Xiaoyu Jin and Yanxue Li",
+      "source_url": "https://figshare.com/articles/dataset/Energy_Station_Data/24978645",
+      "api_url": "https://api.figshare.com/v2/articles/24978645",
+      "doi": "10.6084/m9.figshare.24978645.v2",
+      "published": "2024-04-25",
+      "license": "CC-BY-4.0",
+      "recorded_period": "2001-06-01_to_2022-10-31_hourly_GAS_ENGINE_UNTIL_2016",
+      "files": [
+        {
+          "name": "Power.zip",
+          "url": "https://ndownloader.figshare.com/files/43992039",
+          "bytes": 5272497,
+          "md5": "c005150c3da98c822ad7ad6818e98658",
+          "claimed_content": "hourly gas-engine and fuel-cell electrical generation and grid import"
+        },
+        {
+          "name": "Gas usage.zip",
+          "url": "https://ndownloader.figshare.com/files/43992036",
+          "bytes": 6996876,
+          "md5": "ac5bdca572e3fd14ed9a506e2e4abb80",
+          "claimed_content": "hourly gas engine, fuel cell, boiler and absorption chiller city gas consumption"
+        },
+        {
+          "name": "Heat recovery.zip",
+          "url": "https://ndownloader.figshare.com/files/43992033",
+          "bytes": 5642319,
+          "md5": "76dea6064810b26ffabf646a125ca487",
+          "claimed_content": "hourly gas engine and fuel cell recovered heat"
+        }
+      ],
+      "admissible_claims": [
+        "REPRODUCIBLE_RAW_SOURCE_RETRIEVAL",
+        "REAL_HOURLY_GAS_ENGINE_TIMESERIES_PROVENANCE",
+        "GENERIC_CHP_THREE_CHANNEL_EXTERNAL_METHOD_CHECK"
+      ],
+      "blocked_claims": [
+        "ANAEROBIC_DIGESTER_BIOGAS_FUEL_EQUIVALENCE",
+        "LOVSTA_BIOGAS_ENGINE_CALIBRATED",
+        "PUBLISHED_SITE_EQUALS_POLISH_LANDFILL",
+        "SUBHOUR_RAMP_OR_STARTUP_IDENTIFIED",
+        "CALIBRATION_CERTIFICATES_AUTHENTICATED",
+        "NET_EXPORT_EQUALS_GENERATOR_TERMINAL_OUTPUT"
+      ],
+      "high_rate_event_data_identified": false,
+      "traceable_calibration_certificates_verified": false
+    }
+  ],
+  "unsupported_cross_source_inference": "Do not combine Japan city gas and Sweden SOFC values into one fictional CHP site, nor infer performance of the 440kWe Polish plant or hypothetical Swedish Lovsta case.",
+  "status": "CURATED_SOURCE_IDENTITIES_NO_RAW_SOURCE_BYTES_COMMITTED"
+}
