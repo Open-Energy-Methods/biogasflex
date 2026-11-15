@@ -66,6 +66,10 @@ p.add_argument('--output',type=Path,default=None,help='Opt in to write full scie
 p=sub.add_parser('market-boundary',help='v0.9.10 EXPERIMENTAL pre/post day-ahead timing, exogenous award and exact matched synthetic CHP delivery')
 p.add_argument('--manifest',type=Path,default=Path('examples/v0910_market_hourly.json'))
 p.add_argument('--output',type=Path,default=None,help='Opt-in full data report; no output file created by default')
+p=sub.add_parser('contract-dispatch',
+    help='v0.9.11 EXPERIMENTAL hard accepted MWh equality inside CHP MILP and constrained LP relaxation')
+p.add_argument('--manifest',type=Path,default=Path('examples/v0911_contract_hourly.json'))
+p.add_argument('--output',type=Path,default=None,help='Opt-in full audit; no files written by default')
 args=parser.parse_args()
 if args.command == 'fetch-svk':
     result=fetch_local_day(local_date='2020-01-01',bidding_zone='SE3',output=args.output)
@@ -121,6 +125,13 @@ elif args.command == 'rolling-forecast':
     if args.output is not None:
         args.output.parent.mkdir(parents=True,exist_ok=True)
         args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n',encoding='utf-8')
+elif args.command == 'contract-dispatch':
+    result=run_market_boundary_manifest(
+        args.manifest,include_solver_details=args.output is not None,
+        hard_contract=True)
+    if args.output is not None:
+        args.output.parent.mkdir(parents=True,exist_ok=True)
+        args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n',encoding='utf-8')
 elif args.command == 'market-boundary':
     result=run_market_boundary_manifest(args.manifest,include_solver_details=args.output is not None)
     if args.output is not None:
@@ -137,7 +148,23 @@ elif args.command == 'dispatch':
     result=run_dispatch(args.config,args.prices,args.output,capacity_mwh_lhv=args.capacity_mwh_lhv)
 else:
     result=run_sweep(args.config,args.prices,args.output)
-if args.command == 'market-boundary':
+if args.command == 'contract-dispatch':
+    post=result["postclearing"]
+    print(json.dumps({
+        "version":"0.9.11",
+        "phase":post["phase"],
+        "accepted_mwh":post["total_accepted_mwh"],
+        "gross_contract_cashflow_PROXY_not_profit_eur":
+            post["gross_contract_cashflow_proxy_eur"],
+        "hard_award_equalities_inside_milp":post["hard_award_equality_count"],
+        "maximum_award_energy_residual_mwh":
+            post["maximum_contract_vs_simulated_delivery_mwh"],
+        "constrained_LP_upper_bound_eur":
+            post["matched_contract_LP_relaxation_upper_bound_eur"],
+        "output_path":str(args.output) if args.output is not None else None,
+        "claim_limit":"Fictional awards and CHP, no real trade, forecast, imbalance settlements or metered electricity",
+    },indent=2,allow_nan=False))
+elif args.command == 'market-boundary':
     print(json.dumps({
         "status":result["postclearing"]["phase"],
         "version":"0.9.10",
