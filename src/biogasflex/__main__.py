@@ -12,9 +12,10 @@ from .experimental_v097 import optimize_commitment_milp as optimize_hourly_commi
 from .experimental_v098 import evaluate_rolling_prices
 from .experimental_v099 import run_manifest
 from .market_v0910 import run_manifest as run_market_boundary_manifest
+from .evidence_v0912 import run_evidence_audit, require_operational_validation
 from .svk import fetch_local_day
 
-parser = argparse.ArgumentParser(description='BiogasFlex 0.9.10: auditable CHP research models and optional synthetic day-ahead information gates')
+parser = argparse.ArgumentParser(description='BiogasFlex 0.9.12: original CHP dispatch + externally sourced evidence and fail-closed operational validation gate')
 sub = parser.add_subparsers(dest='command', required=True)
 p = sub.add_parser('fetch-svk', help='Retrieve a licensed day of historical SE3 prices')
 p.add_argument('--output', type=Path, default=Path('data/external/svk_se3_20200101.csv'))
@@ -70,6 +71,12 @@ p=sub.add_parser('contract-dispatch',
     help='v0.9.11 EXPERIMENTAL hard accepted MWh equality inside CHP MILP and constrained LP relaxation')
 p.add_argument('--manifest',type=Path,default=Path('examples/v0911_contract_hourly.json'))
 p.add_argument('--output',type=Path,default=None,help='Opt-in full audit; no files written by default')
+p.add_argument('--require-operational-validation',action='store_true',
+               help='Fail closed unless independently verified bid-time market and site-matched hourly CHP data exist')
+p=sub.add_parser('evidence-audit',
+    help='v0.9.12 audit original Svk retrospective prices and independent 2012-22 published CHP annual field aggregates')
+p.add_argument('--manifest',type=Path,default=Path('examples/v0912_external_evidence.json'))
+p.add_argument('--output',type=Path,default=None,help='Opt-in full evidence report; no file by default')
 args=parser.parse_args()
 if args.command == 'fetch-svk':
     result=fetch_local_day(local_date='2020-01-01',bidding_zone='SE3',output=args.output)
@@ -125,7 +132,15 @@ elif args.command == 'rolling-forecast':
     if args.output is not None:
         args.output.parent.mkdir(parents=True,exist_ok=True)
         args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n',encoding='utf-8')
+elif args.command == 'evidence-audit':
+    result=run_evidence_audit(args.manifest)
+    if args.output is not None:
+        args.output.parent.mkdir(parents=True,exist_ok=True)
+        args.output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n',encoding='utf-8')
 elif args.command == 'contract-dispatch':
+    if args.require_operational_validation:
+        evidence=run_evidence_audit(Path('examples/v0912_external_evidence.json'))
+        require_operational_validation(evidence)
     result=run_market_boundary_manifest(
         args.manifest,include_solver_details=args.output is not None,
         hard_contract=True)
@@ -148,7 +163,20 @@ elif args.command == 'dispatch':
     result=run_dispatch(args.config,args.prices,args.output,capacity_mwh_lhv=args.capacity_mwh_lhv)
 else:
     result=run_sweep(args.config,args.prices,args.output)
-if args.command == 'contract-dispatch':
+if args.command == 'evidence-audit':
+    print(json.dumps({
+        "version":result["version"],
+        "status":result["status"],
+        "observed_market_intervals":result["market_archive"]["observed_intervals"],
+        "source_market_sha256":result["market_archive"]["source_csv_sha256"],
+        "external_chp_annual_years":result["independent_chp_reference"]["annual_record_count"],
+        "published_table_3_gas_mean_discrepancy_m3_per_year":
+            result["independent_chp_reference"]["source_published_mean_discrepancy_m3_per_year"],
+        "real_contract_dispatch_eligible":result["real_contract_dispatch_eligible"],
+        "blocking_reasons":result["blocking_reasons"],
+        "output_path":str(args.output) if args.output is not None else None,
+    },indent=2,allow_nan=False))
+elif args.command == 'contract-dispatch':
     post=result["postclearing"]
     print(json.dumps({
         "version":"0.9.11",

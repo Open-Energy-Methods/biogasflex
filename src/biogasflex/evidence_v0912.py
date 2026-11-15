@@ -141,6 +141,10 @@ def audit_market_archive(root: Path, market: dict) -> dict:
     published = _date(market["source_dataset_first_publication_date"], "source dataset publication date")
     retrieved = _date(market["snapshot_retrieval_date"], "snapshot retrieval date")
     decision = _utc(market["preauction_decision_utc"], "preauction_decision_utc")
+    # Verified dates are part of this SPECIFIC frozen Svk source lineage.
+    # Do not accept user-supplied earlier dates as proof of 2020 availability.
+    if published != date(2026,4,9) or retrieved != date(2026,11,5):
+        raise EvidenceError("Frozen Svk dataset publication/retrieval metadata cannot be backdated")
     if retrieved < published:
         raise EvidenceError("Snapshot cannot have been retrieved before the source dataset record")
     if decision.astimezone(LOCAL_ZONE).date() != delivery-timedelta(days=1):
@@ -303,7 +307,7 @@ def audit_external_annual_chp(root: Path, chp: dict, hypothetical_config_path: A
         "source_doi":chp["doi"],
         "publication_date":chp["published_date"],
         "licence":chp["licence"],
-        "source_chp_fuel":"LANDILL_GAS",
+        "source_chp_fuel":"LANDFILL_GAS",
         "source_plant_electric_rating_mw":er,
         "source_plant_thermal_rating_mw":hr,
         "annual_record_count":len(yearly),
