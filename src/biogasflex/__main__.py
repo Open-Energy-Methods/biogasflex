@@ -242,6 +242,15 @@ if args.command == 'benchmark-v0919':
       'endogenous_MILP_cases':sum(c['model']=='ENDOGENOUS_ON_OFF_MILP' for c in result['cases']),
       'LP_cases':sum(c['model']=='ALWAYS_ON_RAMP_LP' for c in result['cases']),
       'finite_design_frontiers':len(result['frontiers']),
+      'endogenous_starting_cases':sum(
+          c['start_count']>0 for c in result['cases']
+          if c['model']=='ENDOGENOUS_ON_OFF_MILP'),
+      'cases_containing_actual_off_slots':sum(
+          any(row['on']==0 for row in c['rows'])
+          for c in result['cases'] if c['model']=='ENDOGENOUS_ON_OFF_MILP'),
+      'max_starts_per_case':max((c['start_count'] for c in result['cases']
+                                if c['model']=='ENDOGENOUS_ON_OFF_MILP'),default=0),
+      'frontier_details':result['frontiers'],
       'case_preview':[{'seed':c['seed'],'slots':c['slots'],
                        'storage_mwh':c['capacity_mwh_lhv'],
                        'synthetic_objective_eur':c['reported_net_objective_eur'],
