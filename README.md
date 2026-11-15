@@ -1,3 +1,39 @@
+# BiogasFlex v0.9.14-B — Synthetic CHP bounded sensitivity and identifiability
+
+**Research software, not a calibrated plant, grid-export forecast, or tradable
+physical guarantee.** The opt-in `bounded-sensitivity` command evaluates the
+*unchanged* fictional v0.9.11 2-hour hard-electricity-award case across
+a predeclared **81-cell full factorial**, **9 one-at-a-time checks**,
+and **2 conditional continuous parameter boxes**.
+
+```powershell
+git pull origin main
+python -m pip install -e .
+python -m biogasflex bounded-sensitivity
+python -m biogasflex bounded-sensitivity --output report_v0914b.json
+python scripts/audit_v0914b_sensitivity.py
+.\scripts\reproduce_v0914b.ps1
+```
+
+The exact source-pinned model and analytical witness establish which of
+the hypothetical parameter combinations can satisfy the awarded
+`[0.2,0.6] MWh_e` schedule. **16/81** finite design cells are feasible;
+this is a *design-grid fraction, not a probability of real delivery*.
+The available 2012–2022 annual landfill-CHP measurements do not identify
+dynamic ramps or start/stop counts. A carefully scoped monotonicity
+proof certifies a narrower hypothetical continuous box **only for the
+fixed 2-hour always-on interval model**; the larger box is falsified.
+
+All original model code and data, the 29-entry manufacturer provenance
+register, and the v0.9.13 historical market as-of evidence gate remain
+separate and unchanged. No manufacturer catalogue maxima are installed
+as operating constraints. See [full methodology](docs/V0914B_BOUNDED_SENSITIVITY_PROTOCOL.md)
+and [internal research report](reports/V0914B_INTERNAL_RESEARCH_REPORT.md).
+No independent human peer review, site dynamic validation or public v1.0
+research release has been completed.
+
+---
+
 # BiogasFlex v0.9.14-A — CHP operating-parameter source and identity audit
 
 This milestone builds **on top of** the merged v0.9.13 historical
