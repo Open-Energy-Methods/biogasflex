@@ -1,3 +1,50 @@
+# BiogasFlex v0.9.18 — Independently audited 15-minute optimizer week
+
+Research-scale mathematical verification (**synthetic assumptions, not
+plant telemetry**): the inherited clock-hour commitment MILP and
+always-ON ramp LP now have a systematic three-scale quarter-hour
+benchmark: **96, 192 and 672 intervals** (24h, 48h, 168h).
+
+- **MILP:** zero gas buffer + periodic 0/2 MW_LHV fictional gas input
+  force on/off switching; an independent algebraic witness fixes every
+  gas, power, startup and shutdown decision and hence the exact
+  mathematical objective.
+- **LP:** paired no-storage and buffered (0.75 MWh_LHV) scenarios
+  test genuinely shiftable CHP output under 15-minute midpoint ramp
+  constraints, cyclic gas stock and instantaneous heat service.
+- **Three negative controls:** insufficient heat backup, engine
+  rating exceeded and startup minimum-on dwell crossing the horizon.
+- **Independent physical audit:** source-free standard-library
+  recomputation of all quarter-hour gas, electric, heat, ramp,
+  commitment and economic ledgers. Buffered LP primal is verified,
+  but its dual optimality is **not independently certified**.
+- Full week executes only in the separate
+  [v0.9.18 benchmark workflow](.github/workflows/v0918-week-benchmark.yml).
+  Portable regression and original frozen scientific cases run across
+  Linux, Windows and macOS. No wall-time SLA or real equipment
+  ramp/availability assertion is made.
+
+```powershell
+git pull origin main
+python -m pip install -e .
+.\scripts\reproduce_v0918.ps1
+
+# Full synthetic 672-interval scaling and independent scientific audit:
+$full = Join-Path $env:TEMP 'biogasflex_v0918_full.json'
+$proof = Join-Path $env:TEMP 'biogasflex_v0918_independent.json'
+python -m biogasflex benchmark-v0918 --output $full
+python scripts/audit_v0918_independent.py --input $full --output $proof
+```
+
+See the [complete predeclared research protocol](docs/V0918_QUARTER_HOUR_WEEK_VERIFICATION_PROTOCOL.md)
+for assumptions, independent algebraic derivation and limitations.
+This benchmark does **not** implement 672-slot hard electricity awards:
+earlier 2-slot contract semantics remain unchanged and are not
+represented as day-ahead market participation. No actual biogas plant
+performance or scientific v1.0 calibration is claimed.
+
+---
+
 # BiogasFlex v0.9.17 — Measured hourly Kitakyushu gas-engine source analysis
 
 **Actual externally published real CHP data, not calibrated biogas-engine
