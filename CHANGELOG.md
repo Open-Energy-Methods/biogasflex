@@ -1,3 +1,32 @@
+# v0.9.15 — 2026-11-15 — CHP field telemetry acquisition readiness and uncertainty metadata
+
+- New documented 15-minute raw-measurement **data contract** distinguishing
+  CHP generator terminals, signed PCC export/import, on-site electric
+  consumption and auxiliaries, actual engine fuel dry-normalized flow,
+  production, flared gas, LHV, useful delivered heat and gas-buffer volumes.
+- Four-row SHA-pinned **invented synthetic** fixture and 11-entry
+  **uncalibrated synthetic** instrument registry for offline QA demonstration.
+  No real plant instrument data, real field measurements or certificates.
+- Fail-closed `biogasflex telemetry-qa` supports a separately authorized
+  real input manifest only for source/schema/energy-balance screening;
+  requires all UTC periods aligned, no gaps/suspect records, synchronized
+  meter clocks and 24-hour minimum coverage, plus calibration **metadata**
+  with declared validity, not independently authenticated certificates.
+- Linear sum of individual meter standard-u inputs as a **non-GUM,
+  non-probabilistic screening allowance**, without claiming covariance
+  estimation, physical bounds or measurement traceability.
+- Reject plant identity and calibration claim laundering, invalid
+ /modified SHA, fuel/heat mismatch, impossible electrical balances,
+  unaccounted flare/buffer gas and false generator-versus-grid equivalence.
+- Separate not-yet-implemented high-rate startup/ramp data contract,
+  testable independent Decimal witness, adversarial regression tests,
+  full-tree release manifest and multi-platform reproducibility.
+- No high-frequency engine tests, calibrated CHP partload,
+  physically validated dispatch, actual market trade, net profit
+  or external human review. Scientific v1.0 remains blocked.
+
+---
+
 # v0.9.14-B — 2026-11-15 — Predeclared hypothetical contract-constraint sensitivity
 
 - New opt-in 81-cell `3^4` factorial of storage, steady-on upward ramp,
