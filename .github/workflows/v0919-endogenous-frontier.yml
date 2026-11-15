@@ -8,6 +8,7 @@ on:
       - 'src/biogasflex/__main__.py'
       - 'scripts/audit_v0919_independent.py'
       - 'tests/test_v0919_endogenous_duality.py'
+      - 'scripts/plot_v0919_frontiers.py'
   pull_request:
     paths:
       - '.github/workflows/v0919-endogenous-frontier.yml'
@@ -15,6 +16,7 @@ on:
       - 'src/biogasflex/__main__.py'
       - 'scripts/audit_v0919_independent.py'
       - 'tests/test_v0919_endogenous_duality.py'
+      - 'scripts/plot_v0919_frontiers.py'
   workflow_dispatch:
 
 permissions:
@@ -43,6 +45,18 @@ jobs:
         run: |
           set -euo pipefail
           python scripts/audit_v0919_independent.py --input "$RUNNER_TEMP/v0919_finite_synthetic_design.json" --output "$RUNNER_TEMP/v0919_independent_kkt_enumeration.json"
+      - name: Create three strictly synthetic vector frontier visualizations
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/plot_v0919_frontiers.py --report "$RUNNER_TEMP/v0919_finite_synthetic_design.json" --out-dir "$RUNNER_TEMP/v0919_frontier_plots"
+      - name: Archive independent synthetic-design figures
+        uses: actions/upload-artifact@v4
+        with:
+          name: biogasflex-v0919-3-hypothetical-operational-frontier-svg
+          path: ${{ runner.temp }}/v0919_frontier_plots/*.svg
+          if-no-files-found: error
+          retention-days: 60
       - name: Archive synthetic data and independent certificate reports
         uses: actions/upload-artifact@v4
         with:
