@@ -281,7 +281,7 @@ def _row_checks(case,cfg,lim,prices):
         demand(starts==es and stops==vs,"Dwell/transition independently fails")
         near(case["start_count"],sum(es),"Number of startups")
         near(case["stop_count"],sum(vs),"Number of shutdowns")
-        value=gross-chp_cost-aux_cost-dump_cost-5.*0
+        value=gross-chp_cost-aux_cost-dump_cost
         value-=lim["startup_cost_eur"]*sum(es)+lim["shutdown_cost_eur"]*sum(vs)
         near(case["reported_mip_gap"],0.,"Original MILP mip_gap")
     else:
