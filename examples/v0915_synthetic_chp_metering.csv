@@ -1,0 +1,5 @@
+interval_start_utc,interval_end_utc,generator_electric_kwh,net_grid_export_kwh,site_electric_consumption_kwh,auxiliary_electric_consumption_kwh,engine_gas_nm3_dry,produced_gas_nm3_dry,flared_gas_nm3_dry,fuel_lhv_mj_per_nm3_dry,useful_recovered_heat_kwh,buffer_gas_start_nm3_dry,buffer_gas_end_nm3_dry,engine_running_fraction,max_clock_offset_s,quality_flag
+2026-10-01T00:00:00Z,2026-10-01T00:15:00Z,10,7,2,1,5,5,0,20,12,20,20,1,0.3,GOOD
+2026-10-01T00:15:00Z,2026-10-01T00:30:00Z,12,8,3,1,6,6,0,20,14,20,20,1,0.2,GOOD
+2026-10-01T00:30:00Z,2026-10-01T00:45:00Z,11,7,3,1,5.5,5.5,0,20,13,20,20,1,0.2,GOOD
+2026-10-01T00:45:00Z,2026-10-01T01:00:00Z,9,6,2,1,4.5,4.5,0,20,11,20,20,1,0.2,GOOD
