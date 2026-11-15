@@ -1,3 +1,49 @@
+# BiogasFlex v0.9.19 — Endogenous CHP flexibility and independent LP dual/KKT verification
+
+**Synthetic mathematical research, not calibrated plant dispatch.** The
+[v0.9.19 protocol](docs/V0919_ENDOGENOUS_FLEXIBILITY_DUAL_CERTIFICATION_PROTOCOL.md)
+adds a finite factorial of **36 endogenous CHP on/off MILPs** (3 declared
+fictional price patterns × 3 gas-buffer capacities × 2 backup-heat
+capacities × 2 startup-cost assumptions), **nine 96-quarter-hour
+continuously-on ramp LPs**, and one 8-quarter-hour exhaustive binary
+global-optimum comparison.
+
+The independent source-free auditor reassembles the five-block gas,
+electricity and heat LP, directly checks its **primal and dual KKT
+conditions** (stationarity, signs, complementarity, duality gap),
+and enumerates **all 256 possible binary patterns** for the small
+commitment case. The larger MILPs remain HiGHS optimized with
+independently checked selected-pattern LP certificates,
+**not** independently enumerated global MILP optima.
+
+A finite design frontier compares hypothetical economic contribution,
+backup-heat dependence and number of modeled engine starts.
+**No stochastic probabilities, equipment reliability estimates,
+calibrated engine startup dynamics, real electricity awards, gas-vessel
+pressure model or installation/investment profitability are claimed.**
+
+```powershell
+git pull origin main
+python -m pip install -e .
+.\scripts\reproduce_v0919.ps1
+
+# Complete finite design and independent KKT/oracle audit:
+$design = Join-Path $env:TEMP 'biogasflex_v0919_design.json'
+$proof = Join-Path $env:TEMP 'biogasflex_v0919_independent.json'
+python -m biogasflex benchmark-v0919 --output $design
+python scripts/audit_v0919_independent.py --input $design --output $proof
+```
+
+The dedicated [endogenous research workflow](.github/workflows/v0919-endogenous-frontier.yml)
+archives both the original fully synthetic source report and
+the independently constructed KKT/exhaustive enumeration report,
+separate from the cross-platform numerical regression.
+The v0.9.18 week benchmark and v0.9.17 **real Japanese city-gas**
+measurements are unchanged and remain explicitly distinct
+research tracks.
+
+---
+
 # BiogasFlex v0.9.18 — Independently audited 15-minute optimizer week
 
 Research-scale mathematical verification (**synthetic assumptions, not
