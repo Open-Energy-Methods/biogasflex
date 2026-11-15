@@ -30,6 +30,44 @@ July 2016. Neither this value nor the measured series is evidence
 for the previously studied **440 kWe Polish landfill CHP**, which is
 separately source-audited in v0.9.12.
 
+## Additional high-value, not-yet-retrieved match: NYSERDA Matlink Farm
+
+The [NYSERDA project-516 Matlink Farm site](https://der.nyserda.ny.gov/facilities/567/?project=516)
+describes a **145 kW Waukesha reciprocating generator using actual anaerobic
+digester gas**, with documented monitoring October 2004 to July 2005.
+Its [performance portal](https://der.nyserda.ny.gov/reports/view/performance/?project=516)
+displays **225,083 kWh** aggregate generation and **13,407 Mcf**
+biogas input, as well as source-flagged monthly efficiencies.
+The [2006 measurement/database notes](https://dataint.s3.amazonaws.com/docs/proj_516/Database_Notes_-_Matlink_Farm.pdf)
+describe **91 channels captured at 15-minute intervals**, including a generator
+cumulative kWh meter and the engine-biogas cumulative gas meter, but do not
+clarify every interval's heat-flow integration and local-time interpretation.
+The public portal exposes an hourly/day/month CSV download interface;
+in the current automated browser test, the direct export was challenged
+by an access WAF. **No raw Matlink CSV has been received, source-hashed or
+approved for BiogasFlex calibration**. The site's explicit redistribution
+license has not yet been established.
+
+Several monthly computed efficiencies shown on the portal appear physically
+inconsistent (**2858.5% HHV** in October 2004, **545.8% HHV**
+in December 2004), and a nonzero November electricity total is displayed
+beside rounded or zero monthly gas input. These are a data-quality
+**warning, not values to use**. The 91 signals are not independently
+verified as calibrated, and published hourly data cannot prove actual
+seconds-scale starts/ramps.
+
+The machine-readable blocked candidate,
+`data/evidence/v0916_matlink_biogas_engine_candidate.json`,
+pins these constraints and an authorized manual export path.
+Acquisition procedure: use NYSERDA's **Performance -> Data -> HR**
+interface to export one **January 2005** month *both with and without*
+automatic quality filtering; preserve the raw CSV, URL, filter state,
+local-time/DST conversion, size and SHA256 under reviewed permitted-use
+terms. Ideally obtain the original 15-minute records and instrument
+calibration references from the data custodian.
+**Do not bypass site access controls or assume a portal screenshot
+constitutes source-verified numerical calibration**.
+
 ## 2. Acquisition contract and source files
 
 Seven **published originals** are identified and SHA256 is computed
