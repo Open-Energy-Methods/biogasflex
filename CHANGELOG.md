@@ -1,3 +1,32 @@
+# v0.9.16 — 2026-11-15 — External measured CHP source inventory and acquisition
+
+- Discover/pin real published CC BY 4.0 CHP sources with **distinct
+  equipment and fuel**: 2023 RISE Swedish biogas solid-oxide fuel-cell
+  energy-flow data and 2001–2022 Kitakyushu Japanese **city-gas**
+  reciprocating-engine/fuel-cell electricity, gas and heat data.
+- Source DOI, provenance class, source paper, license, measured periods,
+  original filenames, provider byte sizes and MD5 digests for seven
+  distributed original measurement archives recorded in the source registry.
+- Explicit network-opt-in `public-chp-sources --fetch` retrieves actual
+  publication bytes, checks size+MD5, computes independent SHA256 and
+  profiles ZIP/XLSX structures with path-traversal and expansion limits.
+  Offline metadata-only mode never retrieves or fabricates any observations.
+- Independently maintained online-acquisition workflow: source-specific
+  provenance JSON reports archived; **raw source files not committed**,
+  numeric solver CI stays independent of network.
+- Adversarial provenance and archive safety tests; full documentation,
+  source-transfer restrictions, measured-data incompleteness and
+  an **unsent** authorized gas-engine dataset request.
+- Full v0.9.15 telemetry QA, v0.9.14-B factorial/identifiability,
+  v0.9.13 market provenance and all older frozen physical oracle audits
+  retained without importing either unrelated source into CHP MILP.
+- No biogas reciprocating-engine high-rate operation dataset or
+  authenticated calibration certificates; independent human validation,
+  physical engine parameter fit, field partnership and scientific v1.0
+  remain explicitly pending.
+
+---
+
 # v0.9.15 — 2026-11-15 — CHP field telemetry acquisition readiness and uncertainty metadata
 
 - New documented 15-minute raw-measurement **data contract** distinguishing
