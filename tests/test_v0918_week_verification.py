@@ -86,6 +86,32 @@ class QuarterHourResearchBench(unittest.TestCase):
         with self.assertRaises(AssertionError):
             aud.witness_case(bad)
 
+    def test_independent_oracle_rejects_tampered_input_prices_or_gas(self):
+        bad=deepcopy(self.study["cases"][0])
+        bad["price_eur_mwh"][0]+=1
+        with self.assertRaisesRegex(AssertionError,"price scenario altered"):
+            aud.witness_case(bad)
+        bad=deepcopy(self.study["cases"][0])
+        bad["problem_input"]["gas_production_mw_lhv"][2]=1.
+        with self.assertRaisesRegex(AssertionError,"gas-source pattern altered"):
+            aud.witness_case(bad)
+        bad=deepcopy(self.study["cases"][0])
+        bad["problem_input"]["aux_heat_capacity_mw_th"]=.19
+        with self.assertRaisesRegex(AssertionError,"base assumptions changed"):
+            aud.witness_case(bad)
+
+    def test_independent_optimum_proof_rejects_wasteful_heat_split(self):
+        bad=deepcopy(self.study["cases"][0])
+        # On interval 2 has .4 MWth potential and .15 MWth demand.
+        # A less-direct heat split may satisfy heat balances but has
+        # strictly higher auxiliary/dump costs and is not optimal.
+        row=bad["rows"][2]
+        row["useful_heat_mw_th"]-=.01
+        row["aux_heat_mw_th"]+=.01
+        row["dump_heat_mw_th"]+=.01
+        with self.assertRaisesRegex(AssertionError,"cost-minimal"):
+            aud.witness_case(bad)
+
     def test_independent_oracle_rejects_fake_start_and_times(self):
         bad=deepcopy(self.study["cases"][0])
         bad["rows"][2]["startup"]=0
