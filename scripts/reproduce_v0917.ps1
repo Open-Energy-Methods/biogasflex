@@ -23,7 +23,8 @@ $steps = @(
     @('scripts/audit_v0914_chp_sources.py'),
     @('scripts/audit_v0914b_sensitivity.py'),
     @('scripts/audit_v0915_telemetry_qa.py'),
-    @('-m', 'biogasflex', 'public-chp-sources', 'real-chp-analysis'),
+    @('-m', 'biogasflex', 'public-chp-sources'),
+    @('-m', 'unittest', 'tests.test_v0917_kitakyushu_real', '-v'),
     @('scripts/verify_v09_manifest.py'),
     @('scripts/verify_v091_git_coverage.py')
 )
