@@ -112,6 +112,17 @@ class QuarterHourResearchBench(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError,"cost-minimal"):
             aud.witness_case(bad)
 
+    def test_zero_storage_lp_optimum_rejects_costly_heat_splitting(self):
+        case=next(deepcopy(c) for c in self.study["cases"]
+                  if c["kind"]=="zero_storage_ramp_lp"
+                  and c["interval_count"]==4)
+        row=case["rows"][0]
+        row["heat_served_chp_mw_th"]-=.01
+        row["heat_served_auxiliary_mw_th"]+=.01
+        row["heat_rejected_mw_th"]+=.01
+        with self.assertRaisesRegex(AssertionError,"cost-minimal"):
+            aud.witness_case(case)
+
     def test_independent_oracle_rejects_fake_start_and_times(self):
         bad=deepcopy(self.study["cases"][0])
         bad["rows"][2]["startup"]=0
