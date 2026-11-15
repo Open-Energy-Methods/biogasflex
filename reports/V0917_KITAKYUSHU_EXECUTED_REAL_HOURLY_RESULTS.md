@@ -77,6 +77,19 @@ boundaries need independent investigation; the source alone cannot
 identify the cause. The variation also confirms why an annual aggregate
 cannot reveal actual starts, ramp speeds or gas-engine dynamic parameters.
 
+## Reproducible derived charts
+
+The dedicated online workflow uses
+`scripts/plot_v0917_real.py` to produce three source-labelled
+SVG figures directly from the measured monthly report:
+`engine_electricity_mwh.svg`,
+`engine_gas_source_m3.svg` and
+`electric_gas_conflict_hours.svg`.
+It checks that 8,760 monthly records and the source volume/electricity
+totals agree with the independently observed annual measurements
+before any plot can be generated. The CI artifact contains figures
+and aggregate results **only**; no raw publisher files are committed.
+
 ## Calculation conventions
 
 - `kW` on hourly bins integrated as `kWh`, one hour per row.
