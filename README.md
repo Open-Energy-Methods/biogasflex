@@ -13,6 +13,16 @@ reciprocating engine is physically calibrated.
   archives cover hourly electrical generation, gas use and recovered heat.
   **Not biogas, not sub-hour ramp/event metering.**
 
+A **third, stronger equipment/fuel match** is identified but not
+downloaded: the [NYSERDA Matlink Farm 145 kW Waukesha biogas engine](https://der.nyserda.ny.gov/facilities/567/?project=516).
+Its source notes describe 15-minute monitoring and the NYSERDA site
+offers hourly/daily/monthly export; however the automated export was
+blocked by the site WAF, the reuse license is unverified, and some
+published monthly efficiencies are implausible. No Matlink source
+values have been admitted into the model. Its blocked
+[candidate register](data/evidence/v0916_matlink_biogas_engine_candidate.json)
+details manual authorization, checksums and calibration prerequisites.
+
 Source DOI, CC BY 4.0 license, technology/fuel boundary, author-attributed
 original file sizes and MD5 references are pinned in
 [data/evidence/v0916_public_chp_source_registry.json](data/evidence/v0916_public_chp_source_registry.json).
