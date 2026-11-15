@@ -1,0 +1,153 @@
+{
+  "protocol": "BIOGASFLEX_V0914B_HYPOTHETICAL_FACTORIAL_V1",
+  "scenario_id": "v0914b_fully_synthetic_two_hour_awarded_chp",
+  "effective_date": "2026-11-15",
+  "evidence_class": "EXPLICITLY_HYPOTHETICAL_NOT_MANUFACTURER_SPECIFIED_OR_CALIBRATED",
+  "experimental_design": "EXHAUSTIVE_DISCRETE_CARTESIAN_3_LEVEL_4_FACTOR",
+  "reference_contract_manifest": "examples/v0911_contract_hourly.json",
+  "contract_manifest_sha256": "1ced01d0e97b0a76a0ac9f7442419fb577b20fb1056dcd6a7abda1e3441505c4",
+  "reference_chp_config": "examples/v0911_synthetic_chp.json",
+  "chp_config_sha256": "637c95d5e5db7e88acade3e063d9582fffa291e2f4541ec3a2f6d5f5e2fa3b29",
+  "source_evidence_register": "data/evidence/v0914_chp_parameter_register.json",
+  "source_evidence_sha256": "03d1e141e33ca820878772d377234400eab7fab18825305e1dec2ae878b56823",
+  "varied_parameters": [
+    {
+      "name": "gas_storage_capacity_mwh_lhv",
+      "levels": [
+        0.4,
+        0.5,
+        0.7
+      ],
+      "unit": "MWh_LHV",
+      "source": "HYPOTHETICAL_RANGE",
+      "interpretation": "Candidate hypothetical buffer energy capacity, not vessel dimension"
+    },
+    {
+      "name": "experimental_v098.ramp_up_mw_e_per_hour",
+      "levels": [
+        0.3,
+        0.4,
+        0.8
+      ],
+      "unit": "MW_e/h",
+      "source": "HYPOTHETICAL_RANGE",
+      "interpretation": "Steady-on midpoint ramp bound only; no verified engine transient"
+    },
+    {
+      "name": "experimental_v098.minimum_on_power_mw_e",
+      "levels": [
+        0.15,
+        0.2,
+        0.25
+      ],
+      "unit": "MW_e",
+      "source": "HYPOTHETICAL_RANGE",
+      "interpretation": "Minimum sustained positive modelled electrical power, not verified engine stable load"
+    },
+    {
+      "name": "aux_heat_capacity_mw_th",
+      "levels": [
+        0.03,
+        0.05,
+        0.1
+      ],
+      "unit": "MW_th",
+      "source": "HYPOTHETICAL_RANGE",
+      "interpretation": "Modelled backup heat capacity, not physical district heat backup"
+    }
+  ],
+  "one_at_a_time": [
+    {
+      "name": "electric_efficiency_lhv",
+      "levels": [
+        0.38,
+        0.4,
+        0.42
+      ],
+      "unit": "LHV_fraction",
+      "source": "HYPOTHETICAL_RANGE",
+      "interpretation": "Under fixed gas arrival and exact final stock, changing efficiency changes required total fuel and contract feasibility"
+    },
+    {
+      "name": "thermal_efficiency_lhv",
+      "levels": [
+        0.15,
+        0.2,
+        0.25
+      ],
+      "unit": "LHV_fraction",
+      "source": "HYPOTHETICAL_RANGE",
+      "interpretation": "Heat conversion assumption; zero thermal-storage model"
+    },
+    {
+      "name": "experimental_v098.ramp_down_mw_e_per_hour",
+      "levels": [
+        0.25,
+        0.4,
+        0.6
+      ],
+      "unit": "MW_e/h",
+      "source": "HYPOTHETICAL_RANGE",
+      "interpretation": "First-interval steady-on ramp from historical initial power"
+    }
+  ],
+  "one_at_a_time_reference": {
+    "gas_storage_capacity_mwh_lhv": 0.5,
+    "experimental_v098.ramp_up_mw_e_per_hour": 0.8,
+    "experimental_v098.minimum_on_power_mw_e": 0.15,
+    "aux_heat_capacity_mw_th": 0.05
+  },
+  "continuous_rectangles": [
+    {
+      "id": "wide_hypothetical_box_expected_not_robust",
+      "bounds": {
+        "gas_storage_capacity_mwh_lhv": [
+          0.4,
+          0.7
+        ],
+        "experimental_v098.ramp_up_mw_e_per_hour": [
+          0.3,
+          0.8
+        ],
+        "experimental_v098.minimum_on_power_mw_e": [
+          0.15,
+          0.25
+        ],
+        "aux_heat_capacity_mw_th": [
+          0.03,
+          0.1
+        ]
+      }
+    },
+    {
+      "id": "restricted_hypothetical_box_analytic_robust_for_this_2slot_model",
+      "bounds": {
+        "gas_storage_capacity_mwh_lhv": [
+          0.5,
+          0.7
+        ],
+        "experimental_v098.ramp_up_mw_e_per_hour": [
+          0.4,
+          0.8
+        ],
+        "experimental_v098.minimum_on_power_mw_e": [
+          0.15,
+          0.2
+        ],
+        "aux_heat_capacity_mw_th": [
+          0.05,
+          0.1
+        ]
+      }
+    }
+  ],
+  "out_of_scope": [
+    "actual manufacturer equipment parameter probability distributions",
+    "Polish landfill source plant hourly operation",
+    "Swedish Lovsta CHP calibration",
+    "physical startup/shutdown trajectories",
+    "fuel meter and vessel pressure-volume feasibility",
+    "real grid net export and contractual settlement",
+    "statistical confidence intervals or likelihood of feasible operation"
+  ]
+}
