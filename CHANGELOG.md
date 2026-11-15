@@ -4,6 +4,12 @@
   equipment and fuel**: 2023 RISE Swedish biogas solid-oxide fuel-cell
   energy-flow data and 2001–2022 Kitakyushu Japanese **city-gas**
   reciprocating-engine/fuel-cell electricity, gas and heat data.
+- Additional **not-yet-acquired**, more directly matched candidate:
+  NYSERDA Matlink Farm, 145 kW Waukesha anaerobic-digester-gas
+  reciprocating CHP, originally 15-minute/91-point monitoring (2004–2005).
+  Raw download challenged by WAF, license not established and anomalous
+  public efficiency computations flagged; candidate **blocked from model
+  calibration** pending authorized export/source checks.
 - Source DOI, provenance class, source paper, license, measured periods,
   original filenames, provider byte sizes and MD5 digests for seven
   distributed original measurement archives recorded in the source registry.
