@@ -73,6 +73,23 @@ def witness(path: Path = REGISTER) -> dict:
         rows = list(csv.DictReader(f))
     assert [int(r["year"]) for r in rows] == list(range(2012, 2023))
     assert len(rows) == 11
+    # Constructive identifiability counterexample, NOT real engine operation.
+    # Two candidate curves can share annualized integrals and on-hours
+    # under the single known 0.44 MW nameplate while having distinct ramps.
+    steady = [0.20, 0.20, 0.20, 0.20]
+    variable = [0.10, 0.30, 0.10, 0.30]
+    assert all(0 < p <= 0.44 for p in steady + variable)
+    assert sum(steady) == sum(variable) == 0.8
+    assert sum(p > 0 for p in steady) == sum(p > 0 for p in variable) == 4
+    assert max(abs(b-a) for a,b in zip(steady, steady[1:])) == 0
+    assert abs(max(abs(b-a) for a,b in zip(variable, variable[1:])) - 0.20) < 1e-12
+    # Distinct temporal on/off patterns may also share running-hours and energy.
+    one_start = [0.20, 0.20, 0.0, 0.0]
+    two_starts = [0.20, 0.0, 0.20, 0.0]
+    assert sum(one_start) == sum(two_starts) == 0.4
+    assert sum(p > 0 for p in one_start) == sum(p > 0 for p in two_starts) == 2
+    starts = lambda x: sum(p > 0 and (i == 0 or x[i-1] == 0) for i,p in enumerate(x))
+    assert starts(one_start) == 1 and starts(two_starts) == 2
     return {
         "status": "PASS_INDEPENDENT_SOURCE_SCOPE",
         "sources": 3, "equipment_identities": 3, "parameter_rows": 29,
@@ -80,6 +97,7 @@ def witness(path: Path = REGISTER) -> dict:
         "manufacturer_site_equivalence_asserted": False,
         "catalogue_efficiency_as_partload_curve": False,
         "physical_dispatch_calibrated": False,
+        "constructive_nonidentifiability_witness": "PASS_two_distinct_ramps_and_start_patterns_same_aggregates",
         "source_claims_checked_against_frozen_human_curated_values": True,
         "live_manufacturer_revision_automatically_retrieved": False,
     }
