@@ -1,0 +1,80 @@
+{
+  "protocol": "BIOGASFLEX_V0915_HIGH_RATE_EVENT_RECORDING_DESIGN_NOT_IMPLEMENTED",
+  "data_status": "SCHEMA_DESIGN_ONLY_NO_TELEMETRY_OBSERVED",
+  "purpose": "Commissioned CHP ramp/start/stop/dwell identifiability and model holdout validation; 15-minute energy readings are insufficient",
+  "recommended_sample_period_seconds": 1,
+  "sample_rate_qualification": "Engineering starting point only. Confirm sensor/controller bandwidth, anti-alias filters, scan cycle, NTP/PTP clock sync and actual start dynamics before specifying final rate.",
+  "mandatory_columns": [
+    {
+      "name": "timestamp_utc",
+      "unit": "ISO-8601 UTC",
+      "scope": "common time base with documented maximum offset"
+    },
+    {
+      "name": "generator_terminal_power_kw_e",
+      "unit": "kW_e",
+      "scope": "independent calibrated actual output, not controller demand"
+    },
+    {
+      "name": "generator_power_setpoint_kw_e",
+      "unit": "kW_e",
+      "scope": "controller demand with controller history"
+    },
+    {
+      "name": "engine_run_state",
+      "unit": "OFF|STARTING|ON|STOPPING|TRIPPED",
+      "scope": "latched actual state"
+    },
+    {
+      "name": "controller_start_pulse",
+      "unit": "0|1",
+      "scope": "timestamp of accepted start command"
+    },
+    {
+      "name": "controller_stop_pulse",
+      "unit": "0|1",
+      "scope": "timestamp of accepted stop command"
+    },
+    {
+      "name": "engine_gas_flow_nm3_dry_per_hour",
+      "unit": "Nm3_dry/h",
+      "scope": "metered actual inlet flow and lag"
+    },
+    {
+      "name": "fuel_lhv_mj_per_nm3_dry",
+      "unit": "MJ/Nm3_dry",
+      "scope": "time-matched analyzer/sample with gas transport delay"
+    },
+    {
+      "name": "useful_heat_power_kw_th",
+      "unit": "kW_th",
+      "scope": "heat meter at useful heat delivery boundary"
+    },
+    {
+      "name": "engine_protection_trip_code",
+      "unit": "controller code or NONE",
+      "scope": "first-out record when available"
+    },
+    {
+      "name": "clock_offset_seconds",
+      "unit": "s",
+      "scope": "tracked source time basis"
+    },
+    {
+      "name": "data_quality_flag",
+      "unit": "GOOD|SUSPECT|BAD",
+      "scope": "do not silently fill or interpolate missing records"
+    }
+  ],
+  "required_companion_artifacts": [
+    "engine nameplate, model variant, serial, gas approval and emission settings",
+    "instrument IDs, calibration certificates, validity, correction and covariance notes",
+    "clock alignment tests and acquisition software versions",
+    "load-step, startup, stop and trip logs (test only with site safety approval)",
+    "maintenance, derating, ambient, fuel-gas and operator interventions",
+    "retained immutable raw files, SHA256 and access authorization"
+  ],
+  "outcome": "DO_NOT_INFER_HARDWARE_RAMP_LIMITS_UNTIL_SOURCE_LOGS_ACQUIRED_AND_AUDITED",
+  "processing_implemented": false,
+  "plant_ramp_identified": false
+}
