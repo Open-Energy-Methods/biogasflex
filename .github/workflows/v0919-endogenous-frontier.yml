@@ -5,12 +5,14 @@ on:
     paths:
       - '.github/workflows/v0919-endogenous-frontier.yml'
       - 'src/biogasflex/benchmark_v0919.py'
+      - 'src/biogasflex/__main__.py'
       - 'scripts/audit_v0919_independent.py'
       - 'tests/test_v0919_endogenous_duality.py'
   pull_request:
     paths:
       - '.github/workflows/v0919-endogenous-frontier.yml'
       - 'src/biogasflex/benchmark_v0919.py'
+      - 'src/biogasflex/__main__.py'
       - 'scripts/audit_v0919_independent.py'
       - 'tests/test_v0919_endogenous_duality.py'
   workflow_dispatch:
@@ -29,6 +31,8 @@ jobs:
           python-version: '3.13'
       - name: Install original solver package
         run: python -m pip install -e .
+      - name: Run independent small-case and adversarial scientific tests
+        run: python -m unittest tests.test_v0919_endogenous_duality -q
       - name: Execute original synthetic CHP solver over all finite design cells
         shell: bash
         run: |
