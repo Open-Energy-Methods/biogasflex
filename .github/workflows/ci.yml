@@ -1,4 +1,4 @@
-name: biogasflex-v0914b-bounded-sensitivity-and-identifiability
+name: biogasflex-v0915-telemetry-acquisition-and-provenance
 on:
   push:
   pull_request:
@@ -25,18 +25,17 @@ jobs:
         run: |
           python -m pip install -e .
           python -m pip check
-          python scripts/verify_v0914_environment.py --require-installed
+          python scripts/verify_v0915_environment.py --require-installed
       - name: Linux or macOS offline research gates
         if: runner.os != 'Windows'
         shell: bash
         run: |
-          bash scripts/reproduce_v0914.sh
-          python scripts/audit_v0914b_sensitivity.py
+          bash scripts/reproduce_v0915.sh
       - name: Windows PowerShell offline research gates
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          ./scripts/reproduce_v0914.ps1
+          ./scripts/reproduce_v0915.ps1
           python scripts/audit_v0914b_sensitivity.py
   wheel-install-smoke:
     name: Built wheel installation / Python 3.13 / Ubuntu
@@ -52,11 +51,11 @@ jobs:
         run: |
           python -m pip wheel --no-deps --wheel-dir dist .
           python -m venv .venv
-          .venv/bin/python -m pip install dist/biogasflex-0.9.14-py3-none-any.whl
+          .venv/bin/python -m pip install dist/biogasflex-0.9.15-py3-none-any.whl
           .venv/bin/python -m pip check
       - name: Smoke test installed wheel outside checkout
         shell: bash
         run: |
           cd /tmp
           "$GITHUB_WORKSPACE/.venv/bin/python" -m biogasflex --help
-          "$GITHUB_WORKSPACE/.venv/bin/python" "$GITHUB_WORKSPACE/scripts/verify_v0914_environment.py" --require-installed
+          "$GITHUB_WORKSPACE/.venv/bin/python" "$GITHUB_WORKSPACE/scripts/verify_v0915_environment.py" --require-installed
