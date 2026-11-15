@@ -59,12 +59,15 @@ Original implementation: `experimental_v097.optimize_commitment_milp`.
   v_i = 1 only at a (1 -> 0) production boundary
 ```
 
-The gas equality and power minimum/nameplate force **all gas flows
-and all binary decisions**; thermal service and cost components are
-then fixed. Therefore the independent arithmetic objective is
-the **unique feasible, hence globally optimal, solution of this
-particular reduced zero-buffer model**, not an optimization
-theorem for arbitrary buffered CHP scheduling.
+The gas equality and power minimum/nameplate force **all gas flows,
+electrical outputs and binary transitions**. The heat-allocation
+variables can have other *feasible* splits, but both backup-heat
+and dumped-heat penalties are strictly positive. Therefore a
+**cost-minimal optimum** must maximize contemporaneous useful CHP
+heat `q_useful=min(η_th·u, demand)`, which fixes auxiliary and
+dumped heat and establishes the exact independently derived
+optimal objective for this particular reduced zero-buffer model.
+This is **not** a theorem for arbitrary buffered CHP scheduling.
 
 For each daily block, the independent witness predicts:
 `24 MWh_LHV` gas consumed; `9.6 MWh_e` generated; `704 EUR`
