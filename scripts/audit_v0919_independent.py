@@ -309,7 +309,7 @@ def audit_case(case,*,exhaustive=False):
         es,vs=_events(states,lim)
         starts=sum(es);stops=sum(vs)
     independent_obj=-cert["independent_lp_primal_eur"]
-    if fixed is not None:independent_obj-=5.*0+starts*lim["startup_cost_eur"]+stops*lim["shutdown_cost_eur"]
+    if fixed is not None:independent_obj-=starts*lim["startup_cost_eur"]+stops*lim["shutdown_cost_eur"]
     near(independent_obj,objective,"Independent fixed-pattern LP vs inherited solver optimum",2e-4)
     exhaustive_report=None
     if exhaustive:
