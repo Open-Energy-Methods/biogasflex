@@ -1,5 +1,12 @@
 ## v0.9.17 — 2026-11-15 — Measured external CHP hourly channel study
 
+- Actual published Kitakyushu 2005 source results from independent online
+  run 43711923353: 8,760 aligned hourly records, 686,380 kWh engine
+  electrical output, 199,510.35 source m³ engine gas, 27
+  power-positive/gas-zero hours and 316 gas-positive/power-zero
+  hours. Original `Gas 1` and `Gas 2` heat recovery rate sums
+  remain separately reported with source heat allocation unverified.
+  Evidence recorded in the versioned executed research report.
 - First separately executed actual published Kitakyushu 2005 city-gas engine
   **three-source** analysis, not merely metadata/ZIP structure preview:
   engine electricity `Gas engine (kW)`, engine gas use `Gas engine (m3)`,
