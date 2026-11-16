@@ -221,8 +221,8 @@ def audit_case(case):
         close(objective,sol["reported_model_objective_eur"],
               "Nominal or lower-bound solver objective")
         close(sol["reported_mip_gap"],0,"Original MILP reported MIP gap")
-        demand(len(starts)==sol["start_count"] and
-               len(stops)==sol["stop_count"],"Switch count inconsistent")
+        demand(sum(starts)==sol["start_count"] and
+               sum(stops)==sol["stop_count"],"Switch count inconsistent")
         value_nominal=_physical_cost(sol["rows"],forecast,cfg,
                                      enforce_own_row_price=False)[0]
         value_lower=_physical_cost(sol["rows"],lower,cfg,
