@@ -11,6 +11,12 @@ and wide price envelopes**, three held-out prices per case,
 counterfactual perfect-information schedules, and separate independent
 physics/KKT verification JSON are attached to the workflow run.
 The 12 targeted adversarial tests passed.
+The same original source-verified workflow also produces
+four normalized vector SVG charts
+(`reference` and `wide_stress` for exact rectangular
+worst-case and selected held-out mean modeled €/h).
+The figures have no statistical probability interpretation
+and are archived separately from the source and witness JSON.
 
 ## Audited numerical coverage
 
