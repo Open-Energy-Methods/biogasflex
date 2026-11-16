@@ -157,6 +157,17 @@ class PriceBoundedRobustStudyTests(unittest.TestCase):
         self.assertEqual(aud.audit_case(wide)["status"],
                          "PASS_SEPARATE_OPTIMALITY_AND_OUT_OF_SAMPLE_PHYSICAL_WITNESS")
 
+    def test_plotting_rejects_incomplete_study_and_git_checkout_output(self):
+        spec=importlib.util.spec_from_file_location(
+            "v0920_svg",ROOT/"scripts/plot_v0920_robustness.py")
+        plots=importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(plots)
+        with self.assertRaisesRegex(ValueError,"OUTSIDE the source checkout"):
+            plots.render(self.smoke,ROOT/"charts/v0920")
+        with tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaisesRegex(ValueError,"Incomplete synthetic"):
+                plots.render(self.smoke,Path(tmp))
+
     def test_reject_unsafe_output_path(self):
         with self.assertRaisesRegex(ValueError,"OUTSIDE git repository"):
             write_out(self.smoke,ROOT/"reports/oos-v0920.json")
