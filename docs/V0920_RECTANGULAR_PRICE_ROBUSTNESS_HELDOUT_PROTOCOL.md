@@ -242,8 +242,13 @@ python scripts/audit_v0920_independent.py --input $scenarios --output $proof
 
 The dedicated workflow
 `.github/workflows/v0920-robust-price-oos.yml`
-uploads both the immutable fully synthetic source schedule and
-the independent witness JSON as distinct research artifacts.
+uploads the immutable synthetic original schedule and
+the independent witness JSON as separate research artifacts,
+plus **four** standard-library-generated SVG charts comparing
+normalized €/h exact rectangle worst cases and selected
+three-path held-out arithmetic means for both bands.
+The charts are generated **after** the independent audit
+and must remain outside the repository source tree.
 A scientific publication or operations claim should disclose
 both *reference* and *wide_stress* outcomes, including cases
 where robust dispatch is less profitable than nominal ex-post.
