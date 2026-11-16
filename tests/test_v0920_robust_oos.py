@@ -39,21 +39,24 @@ class PriceBoundedRobustStudyTests(unittest.TestCase):
         self.assertFalse(self.check["real_bid_time_forecast_or_plant_calibration"])
 
     def test_explicit_every_price_uncertainty_vertex_proves_lower_worst(self):
-        case=self.case;lo=case["rectangular_lower_price_eur_mwh"]
-        hi=case["rectangular_upper_price_eur_mwh"]
-        self.assertEqual(len(lo),8)
-        for policy in case["policies"].values():
-            values=[
-                _value(policy["rows"],
-                       [hi[i] if bit else lo[i]
-                        for i,bit in enumerate(bits)],case["config"])
-                for bits in product((0,1),repeat=8)
-            ]
-            self.assertAlmostEqual(min(values),
-                policy["frozen_worst_case_rectangle_eur"],places=6)
-        self.assertGreaterEqual(
-            case["policies"]["rectangular_maximin"]["frozen_worst_case_rectangle_eur"]+1e-6,
-            case["policies"]["nominal_forecast"]["frozen_worst_case_rectangle_eur"])
+        for case in self.smoke["cases"]:
+            lo=case["rectangular_lower_price_eur_mwh"]
+            hi=case["rectangular_upper_price_eur_mwh"]
+            self.assertEqual(len(lo),8)
+            for policy in case["policies"].values():
+                # Literally enumerate each of 2^8 rectangular PRICE corners
+                # for both classes, independently of binary enumeration.
+                values=[
+                    _value(policy["rows"],
+                           [hi[i] if bit else lo[i]
+                            for i,bit in enumerate(bits)],case["config"])
+                    for bits in product((0,1),repeat=8)
+                ]
+                self.assertAlmostEqual(min(values),
+                    policy["frozen_worst_case_rectangle_eur"],places=6)
+            self.assertGreaterEqual(
+                case["policies"]["rectangular_maximin"]["frozen_worst_case_rectangle_eur"]+1e-6,
+                case["policies"]["nominal_forecast"]["frozen_worst_case_rectangle_eur"])
 
     def test_heldout_forecast_timing_and_no_operational_lookahead(self):
         case=self.case
