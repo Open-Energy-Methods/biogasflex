@@ -1,3 +1,48 @@
+## v0.9.20 — 2026-11-16 — Bounded synthetic price robustness and frozen held-out dispatch
+
+- Introduced an **exact rectangular maximin** CHP electrical-price
+  policy using the unchanged existing elapsed-hour on/off MILP.
+  Since `P_e >= 0` and modeled nonprice costs are invariant
+  over the price scenarios, the exact worst price vector
+  is the intervalwise lower envelope.
+- Added **two** explicitly invented and distinct
+  price-bound severity classes, `reference` and
+  `wide_stress`, for **two** training seed profiles
+  and **24/96/192** quarter-hour horizons, plus separate
+  globally auditable 8-slot cases.
+- Preserved the **negative reference-band finding**:
+  nominal and robust policies were essentially identical.
+  Under wide stress, the optimized robust strategy
+  improved the exact modeled worst case but earned **less**
+  on the three selected deterministic held-out price
+  scenarios, exposing the conservatism trade-off.
+- Strict chronology: schedules and physical-decision
+  SHA256 hashes frozen **before** held-out paths are
+  generated. Post hoc perfect-information optimization
+  is reported as non-operational hindsight regret, never
+  a usable forecast or booked market result.
+- Completed **14 mathematical cases, 28 ex-ante
+  schedules, 42 held-out paths, 6,320 independently
+  checked quarter-hours, 70 separate fixed-binary
+  LP KKT certificates and 4 eight-quarter exhaustive
+  256-pattern global MILP benchmarks**.
+- New `scripts/plot_v0920_robustness.py` generates
+  **four** portable normalized-value SVG diagrams
+  (guaranteed worst-case vs selected held-out means
+  for both uncertainty classes), outside source tree.
+- Added independent no-package audit, adversarial
+  leakage, gas/heat conservation, chronology,
+  price-vertex, objective, regret and data-integrity
+  tests, plus v0.9.20 CLI, Windows/Linux reproduction,
+  package metadata, full SHA256 and CI.
+- The price intervals are **not** empirically estimated
+  prediction bounds; no stochastic risk probabilities,
+  independently certified 192-slot global MILP
+  optimum, physical gas storage pressures, real
+  biogas engine calibration or market settlement.
+
+---
+
 ## v0.9.19 — 2026-11-15 — Endogenous CHP on/off flexibility and independent primal–dual verification
 
 - Executed **46 actual mathematical optimization cases** in
