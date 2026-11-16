@@ -109,8 +109,6 @@ reference-only null result and is disclosed transparently.
 
 ### 24-hour worked example: training seed 11
 
-<text-only>
-
 - Hypothetical uncertain prices: high base-price quarters
   may fall by as much as €115/MWh under `wide_stress`.
 - Guaranteed worst-case contribution:
@@ -124,7 +122,6 @@ reference-only null result and is disclosed transparently.
   after disclosure of each held-out price path to provide
   an upper-performance reference only.
 
-</text-only>
 
 ## Scientific evidence boundary
 
