@@ -1,3 +1,57 @@
+## v0.9.21 — 2026-11-16 — Verified SE3 forecast errors and conditional correlated-uncertainty CHP
+
+- **Independently verified real archived SE3 source** from OPSD
+  release 2020-10-06 against the publisher's published full
+  original 60min CSV SHA256. Source data remain outside git.
+- Accepted **8,756** hourly 2019 region-level source price/load
+  pairs; **6,548** training / **2,208** held-out,
+  **271 / 92** complete UTC days, missing source
+  entries explicitly counted and never imputed.
+- Genuine archived **TSO regional electricity load
+  forecast-vs-observed errors**: relative MAE
+  2.557% training, 2.209% holdout.
+  Historical **7-day persistence price-baseline errors**:
+  MAE €5.669/MWh training, €4.749/MWh holdout.
+  Original price-forecast vintages and individual TSO
+  gate-closure revision records **not available**.
+- Empirical paired regional price/load
+  errors have weak observed Pearson correlation
+  (+0.017 training, +0.103 holdout), preserved
+  as complete cross-channel serial blocks, **not
+  fabricated strong correlation**.
+- **Synthetic-only gas and CHP local heat** reconstructed
+  using explicitly disclosed shared price/load
+  latent coefficients; not statistical inference
+  of a real site-level three-way covariance.
+- New six-hour / 24-quarter two-stage maximin MILP
+  holds binary start/stop/ON decisions constant
+  across eight source-paired training day blocks,
+  with scenario-specific fully future-known
+  **idealized recourse**, not physically causal dispatch.
+- Holdout actual residuals are constructed only
+  after both ex-ante first-stage schedules are
+  solved and SHA-fingerprinted. Three source-backed
+  heldout days gave **identical** nominal/joint
+  hypothetical contribution, a documented
+  **negative performance result**.
+- Independent reimplementation and audit of source
+  pair construction, synthetic gas/heat functions,
+  gas/electric/heat constraints and
+  **33 fixed-binary conditional LP/KKT certificates**
+  across three heldout target dates.
+- Added source SHA/field evidence register,
+  scientific methods, executed numerical report,
+  CLI `source-evidence-v0921` and
+  `joint-scenarios-v0921`, explicit 124 MB
+  download workflow, all-offline Windows/Linux
+  reproduction and full 10-job release CI.
+- No real gas-vessel/CHP transient calibration,
+  price forecasting industry-vintage verification,
+  gas/heat covariance measurements, chance constraints
+  or validated plant operational reliability.
+
+---
+
 ## v0.9.20 — 2026-11-16 — Bounded synthetic price robustness and frozen held-out dispatch
 
 - Introduced an **exact rectangular maximin** CHP electrical-price
