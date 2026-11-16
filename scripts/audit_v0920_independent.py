@@ -16,12 +16,20 @@ import argparse
 from datetime import datetime,timedelta,timezone
 from itertools import product
 import hashlib
+import importlib.util
 import json
 import math
 from pathlib import Path
 
 import numpy as np
-import audit_v0919_independent as m19
+# Load the *independent* prior LP/KKT mathematical formulation by path,
+# including when this file is imported through unittest spec_from_file_location.
+_SOURCE=Path(__file__).resolve().with_name("audit_v0919_independent.py")
+_SPEC=importlib.util.spec_from_file_location("v0919_independent_math",_SOURCE)
+if _SPEC is None or _SPEC.loader is None:
+    raise RuntimeError("Independent source-level LP/KKT audit unavailable")
+m19=importlib.util.module_from_spec(_SPEC)
+_SPEC.loader.exec_module(m19)
 
 PROTOCOL="BIOGASFLEX_V0920_RECTANGULAR_PRICE_UNCERTAINTY_HELDOUT_REPLAY_V1"
 SOURCE="SYNTHETIC_NO_REAL_BID_TIME_MARKET_OR_BIOGAS_ENGINE_OBSERVATIONS"
