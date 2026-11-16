@@ -34,6 +34,27 @@ class JointConditionalScenarioTests(unittest.TestCase):
         self.assertEqual(self.study["second_stage"],
             "FULL_SCENARIO_PATH_CONTINUOUS_PERFECT_INFORMATION_RECOURSE_OPTIMISTIC_BOUND")
 
+    def test_heldout_scenario_does_not_exist_at_optimization_issue_time(self):
+        pre=joint.build_source_scenarios(self.source,target_ordinal=8)
+        self.assertNotIn("heldout_post_reveal",pre)
+        self.assertTrue(pre["heldout_not_generated_at_forecast_time"])
+        self.assertEqual(
+            self.case["source_bundle"]["heldout_post_reveal"]["source_day_utc"],
+            pre["target_day_utc"])
+
+    def test_no_biogasflex_independent_joint_reconstruction_and_kkt(self):
+        import importlib.util
+        spec=importlib.util.spec_from_file_location(
+            "v0921_independent",ROOT/"scripts/audit_v0921_joint_independent.py")
+        oracle=importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(oracle)
+        result=oracle.audit(self.source,self.study)
+        self.assertEqual(result["status"],
+            "PASS_INDEPENDENT_SOURCE_PAIRED_CORRELATED_STRESS_AND_IDEALIZED_RECOURSE")
+        self.assertEqual(result["number_of_synthetic_CHP_heldout_targets"],1)
+        self.assertEqual(result["conditional_KKT_and_heldout_checks"],11)
+        self.assertFalse(result["global_MILP_optimality_independently_certified"])
+
     def test_frozen_first_stage_shared_across_all_eight_training_blocks(self):
         output=self.case["joint_block_maximin_first_stage"]
         self.assertEqual(len(output["binary_first_stage_on"]),24)
