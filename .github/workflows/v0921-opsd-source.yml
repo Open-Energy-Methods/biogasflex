@@ -8,6 +8,7 @@ on:
       - 'tests/test_v0921_opsd_evidence.py'
       - 'tests/test_v0921_joint_correlated.py'
       - 'src/biogasflex/joint_v0921.py'
+      - 'scripts/audit_v0921_joint_independent.py'
   pull_request:
     paths:
       - '.github/workflows/v0921-opsd-source.yml'
@@ -15,6 +16,7 @@ on:
       - 'tests/test_v0921_opsd_evidence.py'
       - 'tests/test_v0921_joint_correlated.py'
       - 'src/biogasflex/joint_v0921.py'
+      - 'scripts/audit_v0921_joint_independent.py'
   workflow_dispatch:
 
 concurrency:
@@ -50,6 +52,21 @@ jobs:
         run: |
           set -euo pipefail
           python -m biogasflex.joint_v0921 --source "$RUNNER_TEMP/v0921_verified_SE3_2019_load_forecast_errors.json" --output "$RUNNER_TEMP/v0921_joint_training_heldout_recourse.json"
+      - name: Independently reassemble paired historical inputs, hypothetical CHP constraints and conditional recourse KKT
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/audit_v0921_joint_independent.py \
+            --source "$RUNNER_TEMP/v0921_verified_SE3_2019_load_forecast_errors.json" \
+            --study "$RUNNER_TEMP/v0921_joint_training_heldout_recourse.json" \
+            --output "$RUNNER_TEMP/v0921_independent_joint_source_first_stage_recourse_KKT.json"
+      - name: Archive separate no-biogasflex mathematical recourse witness
+        uses: actions/upload-artifact@v4
+        with:
+          name: biogasflex-v0921-independently-verified-real-paired-errors-and-synthetic-gas-heat-recourse
+          path: ${{ runner.temp }}/v0921_independent_joint_source_first_stage_recourse_KKT.json
+          if-no-files-found: error
+          retention-days: 30
       - name: Archive joint hypothetical CHP research results
         uses: actions/upload-artifact@v4
         with:
