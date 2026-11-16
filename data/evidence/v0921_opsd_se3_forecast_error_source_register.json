@@ -1,0 +1,68 @@
+{
+  "schema_version": "v0921_OPSD_SE3_EVIDENCE_LOCKED_V1",
+  "research_status": "EMPIRICAL_REGIONAL_LOAD_ERRORS_AND_HISTORICAL_PRICE_PERSISTENCE_ONLY_SITE_GAS_HEAT_UNMEASURED",
+  "record_created_utc": "2026-11-16",
+  "dataset": "Open Power System Data — Time series, fixed release 2020-10-06",
+  "publisher": "Open Power System Data; ENTSO-E Transparency upstream",
+  "release_doi": "https://doi.org/10.25832/time_series/2020-10-06",
+  "data_csv_url": "https://data.open-power-system-data.org/time_series/2020-10-06/time_series_60min_singleindex.csv",
+  "publisher_checksums_url": "https://github.com/Open-Power-System-Data/time_series/blob/master/checksums.txt",
+  "original_sha256": "6a7f2bc571314cbf9c321cc03437691cd4be95c3a6f075e60ff99e8035c704c8",
+  "source_fields": {
+    "time": "utc_timestamp",
+    "published_load_forecast": "SE_3_load_forecast_entsoe_transparency",
+    "published_load_actual": "SE_3_load_actual_entsoe_transparency",
+    "day_ahead_price_realized": "SE_3_price_day_ahead"
+  },
+  "time_basis": "60-minute explicit UTC; no 15-minute source observations inferred",
+  "time_window": [
+    "2019-01-01T00:00:00Z",
+    "2020-01-01T00:00:00Z"
+  ],
+  "train_to_holdout_boundary": "2019-10-01T00:00:00Z",
+  "recorded_verified_run": "https://github.com/Open-Energy-Methods/biogasflex/actions/runs/43885759398",
+  "verified_source_qc": {
+    "valid_hourly_pairs_2019": 8756,
+    "train_hourly_pairs": 6548,
+    "holdout_hourly_pairs": 2208,
+    "train_complete_utc_days": 271,
+    "holdout_complete_utc_days": 92,
+    "total_complete_utc_days": 363,
+    "source_missing_price_rows": 2,
+    "source_missing_lagged_price_rows": 2
+  },
+  "source_derived_error_metrics": {
+    "train": {
+      "TSO_day_ahead_load_forecast_mean_absolute_relative_error": 0.025572968748395073,
+      "TSO_day_ahead_load_forecast_root_mean_square_relative_error": 0.032553834962807504,
+      "price_7day_lag_persistence_MAE_eur_per_MWh": 5.669166157605376,
+      "price_7day_lag_persistence_RMSE_eur_per_MWh": 8.839577600909015,
+      "paired_Pearson_price_persistence_vs_regional_load_error": 0.017404594210407635
+    },
+    "holdout": {
+      "TSO_day_ahead_load_forecast_mean_absolute_relative_error": 0.022094705798920724,
+      "TSO_day_ahead_load_forecast_root_mean_square_relative_error": 0.028257479004940897,
+      "price_7day_lag_persistence_MAE_eur_per_MWh": 4.749180253623188,
+      "price_7day_lag_persistence_RMSE_eur_per_MWh": 7.325852874249177,
+      "paired_Pearson_price_persistence_vs_regional_load_error": 0.1027371437847286
+    }
+  },
+  "original_published_price_forecast_vintage_available": false,
+  "per_observation_TSO_forecast_revision_as_of_gate_verified": false,
+  "original_day_ahead_price_class": "AUCTION_CLEARED_OBSERVATION",
+  "constructed_price_error_class": "HISTORICAL_7DAY_PERSISTENCE_BASELINE_ERROR_NOT_VENDOR_FORECAST",
+  "original_TSO_load_forecast_class": "DAY_AHEAD_REGIONAL_ELECTRICITY_LOAD_FORECAST_AS_PUBLISHED_IN_HARMONIZED_ARCHIVE",
+  "regional_electricity_load_is_site_heat_demand": false,
+  "site_biogas_production_measured": false,
+  "site_heat_demand_measured": false,
+  "all_three_channel_correlation_empirically_established": false,
+  "reproduction_method": "python src/biogasflex/opsd_v0921.py --csv PATH --download --output OUTSIDE_CHECKOUT",
+  "redistribution": "Source data subject to OPSD CC BY 4.0 where available and original provider conditions; no raw vendor dataset checked into this repository",
+  "notes": [
+    "Source raw SHA256 is pinned to a checksum independently published in the OPSD GitHub repository.",
+    "Regional SE3 hourly load forecast error is a genuine reported forecast-vs-actual archival comparison but cannot prove individual historical forecast revision timing at gate closure.",
+    "Price error is computed from observed SE3 auction prices minus the price exactly seven calendar days earlier: a mechanically reproducible constructed persistence baseline, never an authenticated historical price forecast.",
+    "OPSD regional electrical load is NOT local CHP heat demand. No gas/heat site covariance has been measured.",
+    "Training/holdout split is chronological rather than random. The released 2019 SE3 data are historical and do not represent 2026 prices."
+  ]
+}
