@@ -21,10 +21,16 @@ from .kitakyushu_real_v0917 import run as run_kitakyushu_real_v0917
 from .benchmark_v0918 import run as run_v0918_benchmark, write_out as write_v0918_benchmark, SCALES as V0918_SCALES
 from .benchmark_v0919 import run as run_v0919_benchmark, write_out as write_v0919_benchmark
 from .robust_v0920 import run as run_v0920_robust, write_out as write_v0920_robust
+from .opsd_v0921 import (
+    analyze as analyze_opsd_v0921,
+    download_verified as download_opsd_v0921,
+    write_out as write_opsd_v0921,
+)
+from .joint_v0921 import run as run_joint_v0921, write_out as write_joint_v0921
 from .market_provenance_v0913 import run_market_source_audit, require_operational_validation
 from .svk import fetch_local_day
 
-parser = argparse.ArgumentParser(description='BiogasFlex 0.9.20: source-provenance auditable research CHP and strict market bid-time validation gate')
+parser = argparse.ArgumentParser(description='BiogasFlex 0.9.21: source-provenance auditable research CHP and strict market bid-time validation gate')
 sub = parser.add_subparsers(dest='command', required=True)
 p = sub.add_parser('fetch-svk', help='Retrieve a licensed day of historical SE3 prices')
 p.add_argument('--output', type=Path, default=Path('data/external/svk_se3_20200101.csv'))
@@ -121,8 +127,27 @@ p=sub.add_parser('price-robust-v0920',
     help='v0.9.20: rectangular synthetic-price maximin CHP with frozen nominal/robust dispatch and no-lookahead heldout replay')
 p.add_argument('--smoke',action='store_true',help='8-slot independent exhaustive MILP oracle, BOTH price stress bands')
 p.add_argument('--output',type=Path,default=None,help='Write full synthetic schedule/heldout report OUTSIDE git checkout')
+p=sub.add_parser('source-evidence-v0921',
+    help='v0.9.21: verified publisher-SHA OPSD SE3 hourly regional load forecast errors and 7-day historical price baseline')
+p.add_argument('--csv',type=Path,required=True,help='Source 124MB frozen OPSD CSV (outside checkout)')
+p.add_argument('--download',action='store_true',help='Explicitly authorize public OPSD 124MB download from frozen source URL')
+p.add_argument('--output',type=Path,required=True,help='Complete source report JSON outside checkout')
+p=sub.add_parser('joint-scenarios-v0921',
+    help='v0.9.21: paired regional price/load errors with UNCALIBRATED synthetic gas/heat joint CHP maximin')
+p.add_argument('--source',type=Path,required=True,help='SHA-verified SE3 source report JSON outside checkout')
+p.add_argument('--smoke',action='store_true',help='One of three predeclared heldout days only')
+p.add_argument('--output',type=Path,required=True,help='Complete hypothetical joint CHP and recourse output JSON outside checkout')
 args=parser.parse_args()
-if args.command == 'price-robust-v0920':
+if args.command == 'source-evidence-v0921':
+    if args.download:
+        download_opsd_v0921(args.csv,allow_network=True)
+    result=analyze_opsd_v0921(args.csv)
+    write_opsd_v0921(result,args.output,Path(__file__).resolve().parents[2])
+elif args.command == 'joint-scenarios-v0921':
+    result=run_joint_v0921(json.loads(args.source.read_text(encoding='utf8')),
+                           smoke=args.smoke)
+    write_joint_v0921(result,args.output)
+elif args.command == 'price-robust-v0920':
     result=run_v0920_robust(smoke=args.smoke)
     if args.output is not None:
         write_v0920_robust(result,args.output)
@@ -243,7 +268,30 @@ elif args.command == 'dispatch':
     result=run_dispatch(args.config,args.prices,args.output,capacity_mwh_lhv=args.capacity_mwh_lhv)
 else:
     result=run_sweep(args.config,args.prices,args.output)
-if args.command == 'price-robust-v0920':
+if args.command == 'source-evidence-v0921':
+    print(json.dumps({
+       'source_verified_original_SHA256':result['source']['sha256'],
+       'status':result['status'],
+       'training_metrics':result['training_metrics'],
+       'heldout_metrics':result['heldout_metrics'],
+       'region_electric_load_is_site_heat':False,
+       'original_price_forecast_vintage_available':False,
+       'full_source_report':str(args.output),
+    },indent=2,allow_nan=False))
+elif args.command == 'joint-scenarios-v0921':
+    print(json.dumps({
+       'status':result['status'],
+       'source_sha':result['source_checksum_verified_expected'],
+       'number_of_heldout_targets':len(result['cases']),
+       'heldout_idealized_recourse_comparison':[{
+          'source_day_utc':case['source_bundle']['target_day_utc'],
+          'nominal':case['holdout_comparison']['nominal']['realized_idealized_contribution_eur'],
+          'joint_scenario':case['holdout_comparison']['joint_block_maximin']['realized_idealized_contribution_eur'],
+        } for case in result['cases']],
+       'real_gas_heat_measurements_available':False,
+       'full_joint_report':str(args.output),
+    },indent=2,allow_nan=False))
+elif args.command == 'price-robust-v0920':
     print(json.dumps({
       'protocol':result['protocol'],
       'status':result['status'],
