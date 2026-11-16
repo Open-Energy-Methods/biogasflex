@@ -32,10 +32,10 @@ class PriceBoundedRobustStudyTests(unittest.TestCase):
     def test_rectangular_robust_8slot_global_independent_commitment(self):
         self.assertEqual(self.check["status"],
                          "PASS_BOUNDED_PRICE_ROBUST_CHRONOLOGY_AND_INDEPENDENT_REPLAY_CERTIFICATES")
-        self.assertEqual(self.check["research_cases"],1)
-        self.assertEqual(self.check["immutable_ex_ante_policies_audited"],2)
-        self.assertEqual(self.check["selected_heldout_paths_replayed"],3)
-        self.assertEqual(self.check["exhaustively_certified_eight_slot_MILP_policies"],2)
+        self.assertEqual(self.check["research_cases"],2)
+        self.assertEqual(self.check["immutable_ex_ante_policies_audited"],4)
+        self.assertEqual(self.check["selected_heldout_paths_replayed"],6)
+        self.assertEqual(self.check["exhaustively_certified_eight_slot_MILP_policies"],4)
         self.assertFalse(self.check["real_bid_time_forecast_or_plant_calibration"])
 
     def test_explicit_every_price_uncertainty_vertex_proves_lower_worst(self):
@@ -126,6 +126,7 @@ class PriceBoundedRobustStudyTests(unittest.TestCase):
         self.assertEqual(self.smoke["train_seeds"],[11])
         self.assertEqual(self.smoke["unseen_price_evaluation_seeds"],list(HOLDOUT))
         self.assertTrue(self.smoke["uncertainty_geometry"].startswith("RECTANGULAR_"))
+        self.assertEqual(self.smoke["price_stress_classes"],["reference","wide_stress"])
         data=deepcopy(self.smoke)
         data["claims"]["actual_price_forecast_verified"]=True
         with self.assertRaisesRegex(AssertionError,"Unfounded"):
@@ -134,12 +135,27 @@ class PriceBoundedRobustStudyTests(unittest.TestCase):
     def test_synthetic_training_paths_frozen_and_distinct(self):
         for seed in TRAIN:
             forecast=_nominal(seed,24)
-            lo,hi=_envelope(forecast)
+            lo,hi=_envelope(forecast,"reference")
             self.assertEqual(len(forecast),24)
             self.assertNotEqual(_holdout(seed,101,lo,hi),
                                 _holdout(seed,211,lo,hi))
             self.assertTrue(all(l<=f<=u for l,f,u in zip(lo,forecast,hi)))
         self.assertNotEqual(_nominal(TRAIN[0],24),_nominal(TRAIN[1],24))
+
+    def test_wide_stress_is_distinct_and_reference_study_remains_present(self):
+        reference,wide=self.smoke["cases"]
+        self.assertEqual(reference["price_bound_class"],"reference")
+        self.assertEqual(wide["price_bound_class"],"wide_stress")
+        self.assertEqual(reference["nominal_train_forecast_eur_mwh"],
+                         wide["nominal_train_forecast_eur_mwh"])
+        self.assertTrue(all(w<=r+1e-12 for w,r in zip(
+            wide["rectangular_lower_price_eur_mwh"],
+            reference["rectangular_lower_price_eur_mwh"])))
+        self.assertTrue(any(w<r-1e-6 for w,r in zip(
+            wide["rectangular_lower_price_eur_mwh"],
+            reference["rectangular_lower_price_eur_mwh"])))
+        self.assertEqual(aud.audit_case(wide)["status"],
+                         "PASS_SEPARATE_OPTIMALITY_AND_OUT_OF_SAMPLE_PHYSICAL_WITNESS")
 
     def test_reject_unsafe_output_path(self):
         with self.assertRaisesRegex(ValueError,"OUTSIDE git repository"):
