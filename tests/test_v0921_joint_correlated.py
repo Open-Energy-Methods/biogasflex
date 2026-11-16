@@ -111,6 +111,39 @@ class JointConditionalScenarioTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"dates duplicated or reordered"):
             joint.build_source_scenarios(bad)
 
+    def _independent(self):
+        import importlib.util
+        spec=importlib.util.spec_from_file_location(
+            "v0921_independent_adversarial",ROOT/"scripts/audit_v0921_joint_independent.py")
+        audit=importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(audit)
+        return audit
+
+    def test_independent_oracle_rejects_forged_gas_and_heat_correlation(self):
+        oracle=self._independent()
+        invalid=deepcopy(self.study)
+        invalid["cases"][0]["source_bundle"]["training_blocks"][0][
+            "synthetic_gas_production_mw_lhv"][0]+=.05
+        with self.assertRaisesRegex(AssertionError,"scenario"):
+            oracle.audit(self.source,invalid)
+        invalid=deepcopy(self.study)
+        invalid["cases"][0]["source_bundle"]["heldout_post_reveal"][
+            "synthetic_site_heat_demand_mw_th"][1]+=.02
+        with self.assertRaisesRegex(AssertionError,"scenario"):
+            oracle.audit(self.source,invalid)
+
+    def test_independent_oracle_rejects_forged_locked_commitment_and_cash(self):
+        oracle=self._independent()
+        invalid=deepcopy(self.study)
+        invalid["cases"][0]["nominal_first_stage"]["first_stage_sha256"]="0"*64
+        with self.assertRaisesRegex(AssertionError,"fingerprint"):
+            oracle.audit(self.source,invalid)
+        invalid=deepcopy(self.study)
+        invalid["cases"][0]["holdout_comparison"]["nominal"][
+            "realized_idealized_contribution_eur"]+=17
+        with self.assertRaisesRegex(AssertionError,"source-heldout"):
+            oracle.audit(self.source,invalid)
+
     def test_fail_closed_on_false_measured_gas_claim(self):
         bad=deepcopy(self.source)
         bad["source"]["gas_production_or_heat_load_site_measurement_present"]=True
