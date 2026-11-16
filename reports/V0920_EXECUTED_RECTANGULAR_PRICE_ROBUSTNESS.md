@@ -10,7 +10,7 @@ The research source, original HiGHS/MILP schedules, **both reference
 and wide price envelopes**, three held-out prices per case,
 counterfactual perfect-information schedules, and separate independent
 physics/KKT verification JSON are attached to the workflow run.
-The 11 targeted adversarial tests passed.
+The 12 targeted adversarial tests passed.
 
 ## Audited numerical coverage
 
