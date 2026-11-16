@@ -35,6 +35,7 @@ from .public_chp_sources_v0916 import ROOT
 PROTOCOL="BIOGASFLEX_V0920_RECTANGULAR_PRICE_UNCERTAINTY_HELDOUT_REPLAY_V1"
 SOURCE="SYNTHETIC_NO_REAL_BID_TIME_MARKET_OR_BIOGAS_ENGINE_OBSERVATIONS"
 TRAIN=(11,37)
+BANDS=("reference","wide_stress")
 HOLDOUT=(101,211,307)
 HORIZONS=(24,96,192)
 DT=.25
@@ -50,11 +51,18 @@ def _nominal(seed:int,n:int)->list[float]:
        for i in range(n)
     ]
 
-def _envelope(nominal:list[float])->tuple[list[float],list[float]]:
-    # Scope is rectangular per-quarter price uncertainty.
-    # Not a historical or confidence bound; explicit synthetic assumptions.
-    spreads=[55. if BASE_PRICES[i%24]>=100. else
-             12. if BASE_PRICES[i%24]>=15. else 8.
+def _envelope(nominal:list[float],band:str)->tuple[list[float],list[float]]:
+    # TWO frozen research envelopes, not historical confidence intervals.
+    # Retain the original reference study whose robust & nominal policies
+    # were identical; deliberately add a separately named more severe
+    # hypothetical stress, never select outcomes by heldout performance.
+    require(band in BANDS,"Unregistered deterministic price stress design")
+    if band=="reference":
+        high,mid,low=55.,12.,8.
+    else:
+        high,mid,low=115.,20.,8.
+    spreads=[high if BASE_PRICES[i%24]>=100. else
+             mid if BASE_PRICES[i%24]>=15. else low
              for i in range(len(nominal))]
     lower=[max(0.,round(v-spread,8)) for v,spread in zip(nominal,spreads)]
     upper=[round(v+spread,8) for v,spread in zip(nominal,spreads)]
@@ -68,12 +76,12 @@ def _holdout(seed:int,source:int,lower:list[float],upper:list[float])->list[floa
         for i,(lo,hi) in enumerate(zip(lower,upper))
     ]
 
-def _config_for(n:int,seed:int)->dict:
+def _config_for(n:int,seed:int,band:str)->dict:
     # Deliberately frozen v0.9.19 hypothetical physical service,
     # not a tuned gas/heat performance or a model trained on holdouts.
     cfg=_config(seed,96 if n==192 else n,1.5,.15,5.)
     cfg["gas_production_mw_lhv"]=[1.]*n
-    cfg["case_id"]=f"v0920_RECTANGULAR_SYNTHETIC_price_seed{seed}_{n}slots"
+    cfg["case_id"]=f"v0920_RECTANGULAR_SYNTHETIC_price_seed{seed}_{n}slots_{band}"
     cfg["forecast_source_status"]=SOURCE
     return cfg
 
@@ -123,10 +131,10 @@ def _value(rows:list[dict],prices:list[float],cfg:dict)->float:
     require(math.isfinite(value),"Nonfinite replay contribution")
     return value
 
-def _case(seed:int,n:int)->dict:
-    cfg=_config_for(n,seed)
+def _case(seed:int,n:int,band:str)->dict:
+    cfg=_config_for(n,seed,band)
     nominal=_nominal(seed,n)
-    lower,upper=_envelope(nominal)
+    lower,upper=_envelope(nominal,band)
     forecast_issued=(START-timedelta(hours=1)).isoformat()
     # Hard information barrier: no holdout path exists until both
     # fixed schedules are chosen and serialized in memory.
@@ -167,7 +175,8 @@ def _case(seed:int,n:int)->dict:
             "frozen_policy_evaluations":values,
         })
     return {
-       "train_seed":seed,"slots":n,"duration_hours":n*.25,
+       "train_seed":seed,"slots":n,"price_bound_class":band,
+       "duration_hours":n*.25,
        "forecast_issued_at_utc":forecast_issued,
        "service_begins_utc":START.isoformat(),
        "synthetic_electricity_price_zone_label_not_actual_market":"SE3",
@@ -183,9 +192,10 @@ def _case(seed:int,n:int)->dict:
     }
 
 def run(*,smoke:bool=False)->dict:
-    cells=([(11,8)] if smoke else
-           [(seed,n) for seed in TRAIN for n in HORIZONS]+[(11,8)])
-    cases=[_case(seed,n) for seed,n in cells]
+    cells=([(11,8,band) for band in BANDS] if smoke else
+           [(seed,n,band) for seed in TRAIN for n in HORIZONS
+            for band in BANDS]+[(11,8,band) for band in BANDS])
+    cases=[_case(seed,n,band) for seed,n,band in cells]
     totals=[]
     for c in cases:
         if c["slots"]==8:continue
@@ -200,6 +210,7 @@ def run(*,smoke:bool=False)->dict:
                         "perfect_information_regret_eur"] for row in rows]
         totals.append({
             "train_seed":c["train_seed"],"slots":c["slots"],
+            "price_bound_class":c["price_bound_class"],
             "nominal_min_observed_heldout_eur":min(nom),
             "robust_min_observed_heldout_eur":min(rob),
             "nominal_arithmetic_heldout_mean_eur":math.fsum(nom)/len(nom),
@@ -217,6 +228,7 @@ def run(*,smoke:bool=False)->dict:
        "release_version":"0.9.20",
        "status":"PASS_SYNTHETIC_FROZEN_POLICY_BOUNDED_PRICE_OOS_PENDING_INDEPENDENT_AUDIT",
        "train_seeds":list(TRAIN[:1] if smoke else TRAIN),
+       "price_stress_classes":list(BANDS),
        "unseen_price_evaluation_seeds":list(HOLDOUT),
        "horizons_quarter_hour_intervals":[8] if smoke else list(HORIZONS)+[8],
        "uncertainty_geometry":"RECTANGULAR_INDEPENDENT_INTERVAL_PRICE_BOUNDS_NOT_STATISTICAL_CONFIDENCE_INTERVAL",
