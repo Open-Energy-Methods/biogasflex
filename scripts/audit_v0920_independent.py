@@ -34,6 +34,7 @@ _SPEC.loader.exec_module(m19)
 PROTOCOL="BIOGASFLEX_V0920_RECTANGULAR_PRICE_UNCERTAINTY_HELDOUT_REPLAY_V1"
 SOURCE="SYNTHETIC_NO_REAL_BID_TIME_MARKET_OR_BIOGAS_ENGINE_OBSERVATIONS"
 TRAIN=(11,37)
+BANDS=("reference","wide_stress")
 HOLDOUT=(101,211,307)
 HORIZONS=(24,96,192)
 PRICES=(5.,5.,5.,5.,120.,120.,120.,120.,120.,120.,15.,15.,
@@ -49,11 +50,16 @@ def close(a,b,label,tol=TOL):
     demand(math.isfinite(a) and math.isfinite(b) and abs(a-b)<=tol,
            f"{label}: {a} vs {b}")
 
-def price_design(seed,n):
-    demand(seed in TRAIN and n in (8,*HORIZONS),"Nonpredeclared training seed/horizon")
+def price_design(seed,n,band):
+    demand(seed in TRAIN and n in (8,*HORIZONS) and band in BANDS,
+           "Nonpredeclared training seed/horizon/stress band")
     forecast=[float(PRICES[i%24]+((seed*7+i*13+(i//4)*5)%9-4))
               for i in range(n)]
-    spread=[55. if PRICES[i%24]>=100. else 12. if PRICES[i%24]>=15. else 8.
+    if band=="reference":
+        high,mid,low=55.,12.,8.
+    else:
+        high,mid,low=115.,20.,8.
+    spread=[high if PRICES[i%24]>=100. else mid if PRICES[i%24]>=15. else low
             for i in range(n)]
     lo=[max(0.,round(p-d,8)) for p,d in zip(forecast,spread)]
     hi=[round(p+d,8) for p,d in zip(forecast,spread)]
@@ -68,7 +74,8 @@ def heldout(seed,hold_seed,lo,hi):
 
 def _design_check(case):
     seed,n=case["train_seed"],case["slots"]
-    forecast,lo,hi=price_design(seed,n)
+    band=case["price_bound_class"]
+    forecast,lo,hi=price_design(seed,n,band)
     demand(case["duration_hours"]==n*.25,"Wrong time resolution")
     demand(case["forecast_issued_at_utc"]==NOW_BEFORE
            and case["service_begins_utc"]==START.isoformat(),
@@ -87,7 +94,7 @@ def _design_check(case):
     demand(case["rectangle_exactness_reason"].startswith("GENERATOR_TERMINAL_EXPORT_NONNEGATIVE"),
            "Rectangular min-price proof's nonnegative-flow premise missing")
     cfg=case["config"];lim=cfg["experimental_v097"]
-    demand(cfg["case_id"]==f"v0920_RECTANGULAR_SYNTHETIC_price_seed{seed}_{n}slots",
+    demand(cfg["case_id"]==f"v0920_RECTANGULAR_SYNTHETIC_price_seed{seed}_{n}slots_{band}",
            "Unexpected synthetic case identity")
     demand(cfg["forecast_source_status"]==SOURCE
            and cfg["input_provenance"]==m19.PROVENANCE,
@@ -299,6 +306,7 @@ def audit_case(case):
                    "Out-of-sample realized below analytic bound")
     return {
         "train_seed":case["train_seed"],"slots":case["slots"],
+        "price_bound_class":case["price_bound_class"],
         "policy_count":len(policy_certificates),
         "holdout_paths":len(holdouts),
         "physical_rows_audited":case["slots"]*(2+len(holdouts)),
@@ -322,17 +330,23 @@ def audit(payload):
     demand(not any(payload["claims"].values()),
            "Unfounded physical/forecast certification")
     cases=payload["cases"]
-    declared=[(11,8)] if payload["horizons_quarter_hour_intervals"]==[8] else (
-        [(seed,n) for seed in TRAIN for n in HORIZONS]+[(11,8)])
-    demand([(c["train_seed"],c["slots"]) for c in cases]==declared,
+    declared=[(11,8,band) for band in BANDS] if (
+        payload["horizons_quarter_hour_intervals"]==[8]) else (
+        [(seed,n,band) for seed in TRAIN for n in HORIZONS
+         for band in BANDS]+[(11,8,band) for band in BANDS])
+    demand([(c["train_seed"],c["slots"],c["price_bound_class"])
+             for c in cases]==declared,
            "Source train/horizon case list incomplete, substituted or reordered")
+    demand(payload["price_stress_classes"]==list(BANDS),
+           "Missing wide envelope or reference negative-result control")
     demand(payload["unseen_price_evaluation_seeds"]==list(HOLDOUT),
            "Holdout selection manipulated")
     certificates=[audit_case(case) for case in cases]
     for reported in payload["selected_holdout_descriptive_comparisons"]:
         c=next((x for x in cases
                 if x["train_seed"]==reported["train_seed"]
-                and x["slots"]==reported["slots"]),None)
+                and x["slots"]==reported["slots"]
+                and x["price_bound_class"]==reported["price_bound_class"]),None)
         demand(c is not None and c["slots"]!=8,"Summarized unknown horizon")
         for name,key in (("nominal_forecast","nominal"),
                          ("rectangular_maximin","robust")):
