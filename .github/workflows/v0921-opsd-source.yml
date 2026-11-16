@@ -1,0 +1,48 @@
+name: v0.9.21 source-publisher SHA256 verified SE3 real load forecast evidence
+
+on:
+  push:
+    paths:
+      - '.github/workflows/v0921-opsd-source.yml'
+      - 'src/biogasflex/opsd_v0921.py'
+      - 'tests/test_v0921_opsd_evidence.py'
+  pull_request:
+    paths:
+      - '.github/workflows/v0921-opsd-source.yml'
+      - 'src/biogasflex/opsd_v0921.py'
+      - 'tests/test_v0921_opsd_evidence.py'
+  workflow_dispatch:
+
+concurrency:
+  group: biogasflex-${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  source-provenance-SE3:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Run synthetic adversarial/UTC source validator without network
+        run: python -m unittest tests.test_v0921_opsd_evidence -q
+      - name: Acquire official frozen OPSD release and independently published checksum
+        shell: bash
+        run: |
+          set -euo pipefail
+          python src/biogasflex/opsd_v0921.py \
+            --csv "$RUNNER_TEMP/time_series_60min_singleindex.csv" \
+            --download \
+            --output "$RUNNER_TEMP/v0921_verified_SE3_2019_load_forecast_errors.json"
+      - name: Archive measured regional load forecast-error report with original source SHA
+        uses: actions/upload-artifact@v4
+        with:
+          name: biogasflex-v0921-OPSD-2019-SE3-load-errors-and-price-persistence-source-hashed
+          path: ${{ runner.temp }}/v0921_verified_SE3_2019_load_forecast_errors.json
+          if-no-files-found: error
+          retention-days: 30
