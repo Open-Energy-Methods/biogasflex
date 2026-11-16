@@ -8,6 +8,7 @@ on:
       - 'scripts/audit_v0920_independent.py'
       - 'tests/test_v0920_robust_oos.py'
       - 'scripts/audit_v0919_independent.py'
+      - 'scripts/plot_v0920_robustness.py'
   pull_request:
     paths:
       - '.github/workflows/v0920-robust-price-oos.yml'
@@ -15,6 +16,7 @@ on:
       - 'scripts/audit_v0920_independent.py'
       - 'tests/test_v0920_robust_oos.py'
       - 'scripts/audit_v0919_independent.py'
+      - 'scripts/plot_v0920_robustness.py'
   workflow_dispatch:
 
 concurrency:
@@ -47,6 +49,18 @@ jobs:
         run: |
           set -euo pipefail
           python scripts/audit_v0920_independent.py --input "$RUNNER_TEMP/v0920_price_robust_heldout_synthetic.json" --output "$RUNNER_TEMP/v0920_independent_rectangular_certificates.json"
+      - name: Reproduce normalized price-robustness and selected heldout SVG figures
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/plot_v0920_robustness.py --report "$RUNNER_TEMP/v0920_price_robust_heldout_synthetic.json" --out-dir "$RUNNER_TEMP/v0920_robust_figures"
+      - name: Archive audited synthetic research charts
+        uses: actions/upload-artifact@v4
+        with:
+          name: biogasflex-v0920-reference-and-wide-price-robustness-four-svgs
+          path: ${{ runner.temp }}/v0920_robust_figures/*.svg
+          if-no-files-found: error
+          retention-days: 60
       - name: Archive synthetic scenario inputs and independently certified out-of-sample results
         uses: actions/upload-artifact@v4
         with:
