@@ -161,9 +161,10 @@ def build_source_scenarios(source:dict,*,target_ordinal:int=8)->dict:
     scales=_standardizers(source)
     samples=[_scenario(train[i],price_persistence,scales,
                        key=f"TRAIN_BLOCK_{i:03d}") for i in TRAIN_ORDINALS]
-    # True target actuals withheld until AFTER a first-stage policy is chosen.
-    realized=_scenario(target,price_persistence,scales,
-                       key=f"HELDOUT_REALIZED_TARGET_{target_ordinal:03d}")
+    # Deliberately DO NOT construct or return a heldout scenario yet.
+    # At this point only a historical lagged-price baseline is
+    # available, and the training residual blocks. The later
+    # evaluator must call reveal_heldout() after both solves.
     nominal={
        "block_key":"NOMINAL_HYPOTHETICAL_GAS_HEAT_LAGGED_PRICE",
        "source_day_utc":None,
@@ -187,8 +188,22 @@ def build_source_scenarios(source:dict,*,target_ordinal:int=8)->dict:
                              "price_std_eur_mwh":scales[2],
                              "load_std_relative":scales[3]},
       "nominal":nominal,"training_blocks":samples,
-      "heldout_post_reveal":realized,
+      "heldout_not_generated_at_forecast_time":True,
     }
+
+def reveal_heldout(source:dict,*,target_ordinal:int)->dict:
+    """Construct held-out actual-price/load-error block ONLY after solves.
+
+    The caller's ordering is independently checked in run(): this function
+    is absent from the ex-ante bundle and from optimizer inputs.
+    """
+    train,test=_source_validate(source)
+    demand(target_ordinal in HELDOUT_ORDINALS,"Unlisted evaluation day")
+    target=test[target_ordinal]
+    base=[p-e for p,e in zip(target["delivery_price_eur_mwh"],
+                            target["price_baseline_error_eur_mwh"])]
+    return _scenario(target,base,_standardizers(source),
+                     key=f"HELDOUT_REALIZED_TARGET_{target_ordinal:03d}")
 
 def _milp_bundle(scenarios:list[dict],*,fixed_binary:list[int]|None=None)->dict:
     """8-block two-stage MILP with COMMON binary first-stage commitment.
@@ -434,11 +449,19 @@ def run(source:dict,*,smoke:bool=False)->dict:
     cases=[]
     for ordinal in targets:
         bundle=build_source_scenarios(source,target_ordinal=ordinal)
-        # Critical no-lookahead barrier: heldout real scenario is NEVER
-        # used in either nominal or training-block first-stage solve.
+        # Strict no-lookahead barrier: heldout source innovations do not
+        # even exist as optimizer inputs or as a generated scenario until
+        # BOTH first-stage policies have been solved and hashed.
+        demand("heldout_post_reveal" not in bundle and
+               bundle["heldout_not_generated_at_forecast_time"] is True,
+               "A heldout price/load path leaked into ex-ante bundle")
         nominal=_milp_bundle([bundle["nominal"]])
         joint=_milp_bundle(bundle["training_blocks"])
-        realized=bundle["heldout_post_reveal"]
+        for policy in (nominal,joint):
+            demand(len(policy["first_stage_sha256"])==64,
+                   "Pre-reveal binary decision was not frozen")
+        realized=reveal_heldout(source,target_ordinal=ordinal)
+        bundle["heldout_post_reveal"]=realized
         comparisons={}
         for name,opt in (("nominal",nominal),("joint_block_maximin",joint)):
             result=_fixed_recourse(realized,opt["binary_first_stage_on"])
