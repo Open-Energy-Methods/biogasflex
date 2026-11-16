@@ -342,7 +342,11 @@ def audit(payload):
     demand(payload["unseen_price_evaluation_seeds"]==list(HOLDOUT),
            "Holdout selection manipulated")
     certificates=[audit_case(case) for case in cases]
+    seen_summaries=set()
     for reported in payload["selected_holdout_descriptive_comparisons"]:
+        index=(reported["train_seed"],reported["slots"],reported["price_bound_class"])
+        demand(index not in seen_summaries,"Duplicate selected heldout scenario summary")
+        seen_summaries.add(index)
         c=next((x for x in cases
                 if x["train_seed"]==reported["train_seed"]
                 and x["slots"]==reported["slots"]
@@ -368,8 +372,10 @@ def audit(payload):
         demand(reported[
             "average_refers_only_to_3_selected_nonprobabilistic_holdout_paths"] is True,
             "False uncertainty distribution inference")
-    demand(len(payload["selected_holdout_descriptive_comparisons"])==
-           sum(c["slots"]!=8 for c in cases),"Missing reported comparison")
+    expected_summaries={(c["train_seed"],c["slots"],c["price_bound_class"])
+                        for c in cases if c["slots"]!=8}
+    demand(seen_summaries==expected_summaries,
+           "Incomplete/replaced price stress or horizon summary")
     return {
       "protocol":"BIOGASFLEX_V0920_INDEPENDENT_RECTANGULAR_PROOF_AND_HELDOUT_KKT_V1",
       "status":"PASS_BOUNDED_PRICE_ROBUST_CHRONOLOGY_AND_INDEPENDENT_REPLAY_CERTIFICATES",
