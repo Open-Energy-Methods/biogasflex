@@ -1,3 +1,70 @@
+# BiogasFlex v0.9.20 — Bounded-price robust CHP optimization and synthetic held-out replay
+
+**Scientific result:** An exact **rectangular price-uncertainty
+maximin** CHP policy is obtained from the unchanged v0.9.7 binary
+commitment MILP because every generator-terminal output is nonnegative:
+the worst admissible price vector is the intervalwise lower bound.
+The model compares this conservative, physically frozen policy against
+a nominal-price policy, then evaluates each on **three selected
+synthetic price trajectories disclosed only after both
+schedules are fixed**. It separately calculates non-operational
+perfect-price-hindsight regret.
+
+The [executed price-robustness report](reports/V0920_EXECUTED_RECTANGULAR_PRICE_ROBUSTNESS.md)
+preserves **both** price-bound classes and both their positive
+and negative research findings:
+
+- Under the `reference` price rectangle, **nominal and robust
+  outcomes were essentially the same** at each tested horizon.
+- Under the deliberately more extreme `wide_stress`
+  rectangle, the robust policy achieved a **better exact model
+  worst-case guarantee** but **lower contribution on the three
+  selected held-out price paths**. In the synthetic 24h,
+  train-seed-11 case, the exact rectangle-worst value was
+  nominal **−€39.44** versus robust **+€15.11**;
+  the selected three-path mean was nominal **€1027.13**
+  versus robust **€762.99**. No claim about real risk
+  distributions or actual market performance follows.
+
+**Research QA:** **14** fully fictional studies, **28** immutable
+ex-ante policies, **42** selected held-out paths,
+**6,320** independently checked quarter-hour model rows,
+**70** independent fixed-pattern LP primal/dual KKT witnesses,
+and **four** 8-slot exhaustively enumerated 256-pattern
+small-case global MILP certificates. Four reproducible
+SVG graphs show normalized €/h worst-case protection versus
+selected held-out means under each band.
+
+```powershell
+git pull origin main
+python -m pip install -e .
+.\scripts\reproduce_v0920.ps1
+
+# Reproduce the full two-band benchmark and independent proof:
+$cases = Join-Path $env:TEMP "biogasflex_v0920.json"
+$proof = Join-Path $env:TEMP "biogasflex_v0920_audit.json"
+python -m biogasflex price-robust-v0920 --output $cases
+python scripts/audit_v0920_independent.py --input $cases --output $proof
+```
+
+The complete [methods and mathematical proof](docs/V0920_RECTANGULAR_PRICE_ROBUSTNESS_HELDOUT_PROTOCOL.md)
+specify all physical assumptions, uncertainty bands,
+pre-/post-revelation chronology, no-lookahead integrity
+tests, inherited solver use and the boundary between
+fixed-pattern dual certification and general MILP
+optimality. The dedicated [CI and research artifact
+workflow](.github/workflows/v0920-robust-price-oos.yml)
+archives original synthetic schedules, separate
+independent audit JSON and normalized source-derived figures.
+
+**No real biogas-engine calibration, stochastic forecast
+distribution, commercial trading, physically justified
+probabilistic reliability, electricity export metering
+or plant revenue has been established.** The field
+measurement and v1.0 scientific validation gates remain open.
+
+---
+
 # BiogasFlex v0.9.19 — Endogenous CHP flexibility and independent LP dual/KKT verification
 
 **Synthetic mathematical research, not calibrated plant dispatch.** The

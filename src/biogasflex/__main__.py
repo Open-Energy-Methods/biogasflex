@@ -20,10 +20,11 @@ from .public_chp_sources_v0916 import run as run_public_chp_sources
 from .kitakyushu_real_v0917 import run as run_kitakyushu_real_v0917
 from .benchmark_v0918 import run as run_v0918_benchmark, write_out as write_v0918_benchmark, SCALES as V0918_SCALES
 from .benchmark_v0919 import run as run_v0919_benchmark, write_out as write_v0919_benchmark
+from .robust_v0920 import run as run_v0920_robust, write_out as write_v0920_robust
 from .market_provenance_v0913 import run_market_source_audit, require_operational_validation
 from .svk import fetch_local_day
 
-parser = argparse.ArgumentParser(description='BiogasFlex 0.9.19: source-provenance auditable research CHP and strict market bid-time validation gate')
+parser = argparse.ArgumentParser(description='BiogasFlex 0.9.20: source-provenance auditable research CHP and strict market bid-time validation gate')
 sub = parser.add_subparsers(dest='command', required=True)
 p = sub.add_parser('fetch-svk', help='Retrieve a licensed day of historical SE3 prices')
 p.add_argument('--output', type=Path, default=Path('data/external/svk_se3_20200101.csv'))
@@ -116,8 +117,16 @@ p=sub.add_parser('benchmark-v0919',
     help='v0.9.19: hypothetical endogenous 15-min MILP design and independent LP dual-KKT mathematical verification')
 p.add_argument('--smoke',action='store_true',help='8-slot endogenous commitment and small LP case only')
 p.add_argument('--output',type=Path,default=None,help='Write complete synthetic case schedule OUTSIDE repository checkout')
+p=sub.add_parser('price-robust-v0920',
+    help='v0.9.20: rectangular synthetic-price maximin CHP with frozen nominal/robust dispatch and no-lookahead heldout replay')
+p.add_argument('--smoke',action='store_true',help='8-slot independent exhaustive MILP oracle, BOTH price stress bands')
+p.add_argument('--output',type=Path,default=None,help='Write full synthetic schedule/heldout report OUTSIDE git checkout')
 args=parser.parse_args()
-if args.command == 'benchmark-v0919':
+if args.command == 'price-robust-v0920':
+    result=run_v0920_robust(smoke=args.smoke)
+    if args.output is not None:
+        write_v0920_robust(result,args.output)
+elif args.command == 'benchmark-v0919':
     result=run_v0919_benchmark(smoke=args.smoke)
     if args.output is not None:
         write_v0919_benchmark(result,args.output)
@@ -234,7 +243,19 @@ elif args.command == 'dispatch':
     result=run_dispatch(args.config,args.prices,args.output,capacity_mwh_lhv=args.capacity_mwh_lhv)
 else:
     result=run_sweep(args.config,args.prices,args.output)
-if args.command == 'benchmark-v0919':
+if args.command == 'price-robust-v0920':
+    print(json.dumps({
+      'protocol':result['protocol'],
+      'status':result['status'],
+      'price_stress_classes':result['price_stress_classes'],
+      'research_case_count':len(result['cases']),
+      'frozen_ex_ante_policies':sum(len(c['policies']) for c in result['cases']),
+      'heldout_scenario_paths':sum(len(c['heldout_paths']) for c in result['cases']),
+      'descriptive_oos_policy_comparisons':result['selected_holdout_descriptive_comparisons'],
+      'full_source_report':str(args.output) if args.output is not None else None,
+      'measured_market_or_engine_parameters':False,
+    },indent=2,allow_nan=False))
+elif args.command == 'benchmark-v0919':
     print(json.dumps({
       'protocol':result['protocol'],
       'status':result['status'],
