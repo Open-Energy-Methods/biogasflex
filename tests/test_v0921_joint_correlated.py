@@ -124,12 +124,12 @@ class JointConditionalScenarioTests(unittest.TestCase):
         invalid=deepcopy(self.study)
         invalid["cases"][0]["source_bundle"]["training_blocks"][0][
             "synthetic_gas_production_mw_lhv"][0]+=.05
-        with self.assertRaisesRegex(AssertionError,"scenario"):
+        with self.assertRaisesRegex(AssertionError,"synthetic_gas_production"):
             oracle.audit(self.source,invalid)
         invalid=deepcopy(self.study)
         invalid["cases"][0]["source_bundle"]["heldout_post_reveal"][
             "synthetic_site_heat_demand_mw_th"][1]+=.02
-        with self.assertRaisesRegex(AssertionError,"scenario"):
+        with self.assertRaisesRegex(AssertionError,"synthetic_site_heat_demand"):
             oracle.audit(self.source,invalid)
 
     def test_independent_oracle_rejects_forged_locked_commitment_and_cash(self):
@@ -141,7 +141,7 @@ class JointConditionalScenarioTests(unittest.TestCase):
         invalid=deepcopy(self.study)
         invalid["cases"][0]["holdout_comparison"]["nominal"][
             "realized_idealized_contribution_eur"]+=17
-        with self.assertRaisesRegex(AssertionError,"source-heldout"):
+        with self.assertRaisesRegex(AssertionError,"Source-heldout"):
             oracle.audit(self.source,invalid)
 
     def test_fail_closed_on_false_measured_gas_claim(self):
