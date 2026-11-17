@@ -46,7 +46,12 @@ def current_hour_lp(*, on: list[int], prior_on: int, prior_stock: float,
     demand(prior_on in (0, 1), "Bad previous commitment")
     demand(all(isfinite(x) for x in (prior_stock, prior_power, gas, heat)),
            "Nonfinite physical state")
-    demand(0 <= prior_stock <= CAP + 1e-5, "Invalid carried buffer state")
+    demand(-6e-5 <= prior_stock <= CAP + 6e-5,
+           f"Invalid carried buffer state: {prior_stock:.12f}")
+    # Original independently audited full-day gas-ledger tolerance is 6e-5.
+    # Roundoff at a physical zero or ceiling must not be mistaken for a
+    # new infeasibility; normalize ONLY values inside this narrow tolerance.
+    prior_stock = min(CAP, max(0., prior_stock))
     demand(0 <= gas and 0 <= heat, "Negative gas/heat input")
 
     n = 4
