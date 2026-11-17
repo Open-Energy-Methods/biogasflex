@@ -228,6 +228,8 @@ def replay_causal(nominal: dict, actual: dict, states: list[int],
         "hourly_observation_log": observations,
         "terminal_stock_mwh_lhv": stock,
         "terminal_deviation_from_soft_target_mwh_lhv": stock-j.STOCK_INITIAL,
+        "terminal_inventory_matches_initial_for_comparison":
+            abs(stock-j.STOCK_INITIAL) <= 5e-5,
         "actual_terminal_stock_requirement_enforced": False,
         "perfect_future_information_used_for_dispatch": False,
         "gas_heat_observation_assumed_at_start_of_each_source_hour": True,
@@ -298,7 +300,11 @@ def run(source: dict, *, max_days: int | None = None) -> dict:
                     hindsight["contribution_eur"] - switch if hindsight["feasible"] else None,
                 "same_binary_hindsight_feasible": hindsight["feasible"],
             }
-            if simulated["feasible"] and hindsight["feasible"]:
+            # The hindsight LP imposes exact cyclic terminal stock, whereas
+            # causal planning only PENALIZES terminal deviation. A bound
+            # comparison is valid only on matched-inventory outcomes.
+            if (simulated["feasible"] and hindsight["feasible"] and
+                    simulated["terminal_inventory_matches_initial_for_comparison"]):
                 require(simulated["economic_contribution_eur"] <=
                         comparisons[name]["same_binary_full_future_recourse_upper_bound_eur"] + 2e-4,
                         "Causal replay exceeds fixed-binary perfect-future information upper bound")
@@ -313,9 +319,17 @@ def run(source: dict, *, max_days: int | None = None) -> dict:
         row["comparisons"]["joint"]["causal_hourly_observation_replay"]["economic_contribution_eur"]
         - row["comparisons"]["nominal"]["causal_hourly_observation_replay"]["economic_contribution_eur"]
         for row in results
-        if all(row["comparisons"][strategy]["causal_hourly_observation_replay"]["feasible"]
-               for strategy in ("nominal", "joint"))
+        if all(
+            row["comparisons"][strategy]["causal_hourly_observation_replay"]["feasible"]
+            and row["comparisons"][strategy]["causal_hourly_observation_replay"]
+                ["terminal_inventory_matches_initial_for_comparison"]
+            for strategy in ("nominal", "joint"))
     ]
+    unmatched_count = sum(
+        any(row["comparisons"][strategy]["causal_hourly_observation_replay"]["feasible"]
+            and not row["comparisons"][strategy]["causal_hourly_observation_replay"]
+                ["terminal_inventory_matches_initial_for_comparison"]
+            for strategy in ("nominal", "joint")) for row in results)
     fail_count = sum(any(not row["comparisons"][strategy]
                              ["causal_hourly_observation_replay"]["feasible"]
                          for strategy in ("nominal", "joint")) for row in results)
@@ -331,6 +345,8 @@ def run(source: dict, *, max_days: int | None = None) -> dict:
         "study_is_subset_smoke_not_population_evidence": len(selected) != len(eligible),
         "both_policies_feasible_count": len(paired),
         "one_or_more_causal_replays_infeasible_count": fail_count,
+        "one_or_more_replays_terminal_inventory_unmatched_count": unmatched_count,
+        "paired_economic_comparison_only_if_both_causal_replays_feasible_and_terminal_stock_matched": True,
         "joint_minus_nominal_causal_contribution_eur_paired": paired,
         "paired_average_difference_eur_descriptive_not_confidence_interval":
             mean(paired) if paired else None,
