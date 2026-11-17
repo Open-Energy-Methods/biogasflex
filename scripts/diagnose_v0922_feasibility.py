@@ -31,6 +31,7 @@ def demand(ok, why):
 
 def current_hour_lp(*, on: list[int], prior_on: int, prior_stock: float,
                     prior_power: float, gas: float, heat: float,
+                    global_hour_index: int,
                     relax: str = "none") -> bool:
     """Feasibility only, with 20 variables, 12 energy equalities and ramps.
 
@@ -86,8 +87,8 @@ def current_hour_lp(*, on: list[int], prior_on: int, prior_stock: float,
         if relax != "ramps" and on[t] == (prior_on if t == 0 else on[t-1]) == 1:
             for sign in (-1., 1.):
                 d = {u+t: sign * ETA_E}
-                bound = RAMP * (DT/2 if t == 0 and prior_stock == INIT_STOCK
-                                and prior_power == INIT_POWER else DT)
+                bound = RAMP * (DT/2 if t == 0 and global_hour_index == 0
+                                else DT)
                 # The half-interval exception is ONLY for initial t=0
                 # in the 6-hour replay, not at each replanning hour.
                 if t:
@@ -155,7 +156,7 @@ def classify(report: dict) -> dict:
             states = comparison["first_stage_on"][failed_hour*4:failed_hour*4+4]
             input_ = dict(on=states, prior_on=prev_on,
                           prior_stock=stock, prior_power=power,
-                          gas=gas, heat=heat)
+                          gas=gas, heat=heat, global_hour_index=failed_hour)
             # The first 15-min ramp uses half a time interval only at
             # actual global quarter index zero, not at hour index zero
             # whenever initial conditions happen to resemble their defaults.
