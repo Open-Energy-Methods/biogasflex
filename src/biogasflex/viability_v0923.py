@@ -82,9 +82,11 @@ def _build_compatible_view(source: dict, entries: list[dict],
             paired.append(flows["joint"]["economic_contribution_eur"]
                           -flows["nominal"]["economic_contribution_eur"])
     return {
-        "protocol":c22.PROTOCOL if hasattr(c22,"PROTOCOL") else
-           "BIOGASFLEX_V0922_HOURLY_CAUSAL_OBSERVATION_15MIN_CHp_REPLAY_RESEARCH_V1",
+        "protocol":"BIOGASFLEX_V0922_HOURLY_CAUSAL_OBSERVATION_15MIN_CHp_REPLAY_RESEARCH_V1",
         "source_sha256":j.SOURCE_SHA256,
+        "gas_and_heat_couplings_empirically_calibrated":False,
+        "original_price_forecast_vintages_verified":False,
+        "real_traded_awards_enforced":False,
         "available_complete_heldout_days":
             source["quality"]["heldout_complete_days"],
         "eligible_days_with_exact_complete_7day_lag":eligible_count,
