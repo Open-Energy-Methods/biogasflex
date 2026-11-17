@@ -343,7 +343,7 @@ def run(source: dict, *, max_days: int | None = None) -> dict:
         "days_evaluated": len(results),
         "all_eligible_days_evaluated": max_days is None or len(selected) == len(eligible),
         "study_is_subset_smoke_not_population_evidence": len(selected) != len(eligible),
-        "both_policies_feasible_count": len(paired),
+        "both_policies_feasible_and_terminal_matched_count": len(paired),
         "one_or_more_causal_replays_infeasible_count": fail_count,
         "one_or_more_replays_terminal_inventory_unmatched_count": unmatched_count,
         "paired_economic_comparison_only_if_both_causal_replays_feasible_and_terminal_stock_matched": True,
