@@ -1,3 +1,95 @@
+# BiogasFlex v0.9.21 — Publisher-verified regional forecast errors and source-paired uncertainty
+
+**First empirically grounded uncertainty-evidence increment.** The
+original [OPSD fixed release 2020-10-06](https://doi.org/10.25832/time_series/2020-10-06)
+SE3 hourly source was actually downloaded and **its complete original
+SHA256 checked against the publisher's independent
+[`checksums.txt`](https://github.com/Open-Power-System-Data/time_series/blob/master/checksums.txt)**.
+The result is **8,756** valid 2019 hourly reported load
+forecast/observation pairs with the actual day-ahead
+electricity clearing price.
+
+The [source and joint-research report](reports/V0921_EXECUTED_SE3_SOURCE_PAIRED_CHp_UNCERTAINTY.md)
+records original source-verified results: **6,548 training**
+and **2,208 strictly held-out** hourly observations;
+genuine published **regional TSO electrical-load forecast
+relative MAE 2.557% training / 2.209% held-out**;
+independent *constructed* **7-day-lagged price-persistence
+baseline error MAE €5.669/MWh / €4.749/MWh**.
+These are distinct error definitions: an original
+archived price forecast is **not** present. Nor are
+historical per-observation load-forecast revision timestamps
+or site biogas and useful-heat forecasts.
+
+The [source-paired mathematical protocol](docs/V0921_SOURCE_VERIFIED_PAIRED_UNCERTAINTY_PROTOCOL.md)
+takes **whole historical daily blocks of paired regional
+price-baseline and load-forecast errors**, retaining
+the original cross-series and serial timing, and constructs
+six-hour synthetic scenario gas/heat values via **explicit
+uncalibrated coefficients** using both shared source errors.
+This is **NOT** experimentally measured
+three-way price–gas–heat covariance or reliability.
+
+A new two-stage **six-hour, 24-quarter-hour joint CHP
+maximin MILP** optimizes a *single common first-stage
+on/off/start/stop trajectory* against eight paired
+training blocks, with deliberately **full-future-known,
+optimistic continuous recourse**. Source hold-out
+days are not even constructed until the two
+ex-ante policies are fixed. Three source-backed
+held-out target days (**2019-10-09, 2019-11-10,
+2019-12-12**) produced the **same** hypothetical
+held-out contribution under nominal and
+joint-scenario first-stage decisions; this **negative
+finding** is preserved, not promoted as a
+robustness or reliability improvement.
+
+A separately written, no-BiogasFlex-import mathematical
+audit independently reconstructs original source errors,
+fictional gas/heat proxies, physical constraints and
+**33 fixed-first-stage conditional LP primal/dual KKT
+checks**. The original binary global MILP optimum
+is still solver-reported, and full future-known
+continuous recourse is **not** a physically causal
+electricity-delivery controller.
+
+```powershell
+git pull origin main
+python -m pip install -e .
+
+# Fully offline model, dataset-contract and inherited regression:
+.\scripts\reproduce_v0921.ps1
+
+# Explicit public 124MB source download, original source hash,
+# source-reported real forecast errors and source-backed CHP:
+$raw = Join-Path $env:TEMP "OPSD_2020_10_06_60min.csv"
+$source = Join-Path $env:TEMP "biogasflex_v0921_SE3.json"
+$study = Join-Path $env:TEMP "biogasflex_v0921_joint.json"
+$check = Join-Path $env:TEMP "biogasflex_v0921_joint_audit.json"
+
+python -m biogasflex source-evidence-v0921 --csv $raw --download --output $source
+python -m biogasflex joint-scenarios-v0921 --source $source --output $study
+python scripts/audit_v0921_joint_independent.py --source $source --study $study --output $check
+```
+
+All full source/derived records are generated outside
+Git and archived in the [separate source-verification
+workflow](.github/workflows/v0921-opsd-source.yml).
+The [pinned source evidence register](data/evidence/v0921_opsd_se3_forecast_error_source_register.json)
+explains each observation's meaning and the missing
+source forecast-vintage and site-meter evidence.
+
+The correct current claim is **source-verified regional
+electricity forecast-error evidence and reproducible
+hypothetical coupled CHP scenario mathematics**.
+Source-vintage-verified price predictions, real
+digester gas production and CHP useful-heat
+forecast/error pairs, pressure/transient measurements
+and operationally causal dispatch are still required
+before scientific v1.0 physical validation.
+
+---
+
 # BiogasFlex v0.9.20 — Bounded-price robust CHP optimization and synthetic held-out replay
 
 **Scientific result:** An exact **rectangular price-uncertainty

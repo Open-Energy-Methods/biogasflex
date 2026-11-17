@@ -1,0 +1,83 @@
+name: v0.9.21 source-publisher SHA256 verified SE3 real load forecast evidence
+
+on:
+  push:
+    paths:
+      - '.github/workflows/v0921-opsd-source.yml'
+      - 'src/biogasflex/opsd_v0921.py'
+      - 'tests/test_v0921_opsd_evidence.py'
+      - 'tests/test_v0921_joint_correlated.py'
+      - 'src/biogasflex/joint_v0921.py'
+      - 'scripts/audit_v0921_joint_independent.py'
+  pull_request:
+    paths:
+      - '.github/workflows/v0921-opsd-source.yml'
+      - 'src/biogasflex/opsd_v0921.py'
+      - 'tests/test_v0921_opsd_evidence.py'
+      - 'tests/test_v0921_joint_correlated.py'
+      - 'src/biogasflex/joint_v0921.py'
+      - 'scripts/audit_v0921_joint_independent.py'
+  workflow_dispatch:
+
+concurrency:
+  group: biogasflex-${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  source-provenance-SE3:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install current SciPy numerical test environment
+        run: python -m pip install -e .
+      - name: Run synthetic adversarial source and coupled-scenario tests
+        run: python -m unittest tests.test_v0921_opsd_evidence tests.test_v0921_joint_correlated -q
+      - name: Acquire official frozen OPSD release and independently published checksum
+        shell: bash
+        run: |
+          set -euo pipefail
+          python src/biogasflex/opsd_v0921.py \
+            --csv "$RUNNER_TEMP/time_series_60min_singleindex.csv" \
+            --download \
+            --output "$RUNNER_TEMP/v0921_verified_SE3_2019_load_forecast_errors.json"
+      - name: Run joint paired historical SE3 error block stochastic CHP study
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m biogasflex.joint_v0921 --source "$RUNNER_TEMP/v0921_verified_SE3_2019_load_forecast_errors.json" --output "$RUNNER_TEMP/v0921_joint_training_heldout_recourse.json"
+      - name: Independently reassemble paired historical inputs, hypothetical CHP constraints and conditional recourse KKT
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/audit_v0921_joint_independent.py \
+            --source "$RUNNER_TEMP/v0921_verified_SE3_2019_load_forecast_errors.json" \
+            --study "$RUNNER_TEMP/v0921_joint_training_heldout_recourse.json" \
+            --output "$RUNNER_TEMP/v0921_independent_joint_source_first_stage_recourse_KKT.json"
+      - name: Archive separate no-biogasflex mathematical recourse witness
+        uses: actions/upload-artifact@v4
+        with:
+          name: biogasflex-v0921-independently-verified-real-paired-errors-and-synthetic-gas-heat-recourse
+          path: ${{ runner.temp }}/v0921_independent_joint_source_first_stage_recourse_KKT.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Archive joint hypothetical CHP research results
+        uses: actions/upload-artifact@v4
+        with:
+          name: biogasflex-v0921-source-paired-price-load-latents-hypothetical-gas-heat-and-two-stage-CHP
+          path: ${{ runner.temp }}/v0921_joint_training_heldout_recourse.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Archive measured regional load forecast-error report with original source SHA
+        uses: actions/upload-artifact@v4
+        with:
+          name: biogasflex-v0921-OPSD-2019-SE3-load-errors-and-price-persistence-source-hashed
+          path: ${{ runner.temp }}/v0921_verified_SE3_2019_load_forecast_errors.json
+          if-no-files-found: error
+          retention-days: 30
