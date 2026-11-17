@@ -79,3 +79,64 @@ jobs:
           name: v0922-two-day-independent-causal-certificate
           path: ${{ runner.temp }}/v0922_audit_smoke.json
           retention-days: 14
+
+  source-verified-full-holdout:
+    name: Complete eligible 2019 Oct-Dec heldout (research; not real plant)
+    needs: offline-causal-invariance
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -e .
+      - name: Retrieve and independently hash frozen OPSD original
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m biogasflex source-evidence-v0921 \
+            --csv "$RUNNER_TEMP/OPSD_2020-10-06_60min.csv" \
+            --download \
+            --output "$RUNNER_TEMP/verified_source.json"
+      - name: Run every chronologically eligible Oct-Dec 2019 date
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m biogasflex.causal_v0922 \
+            --source "$RUNNER_TEMP/verified_source.json" \
+            --output "$RUNNER_TEMP/v0922_full_causal.json"
+      - name: Independently validate all dated physical, chronological and economic rows
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/audit_v0922_causal_independent.py \
+            --source "$RUNNER_TEMP/verified_source.json" \
+            --study "$RUNNER_TEMP/v0922_full_causal.json" \
+            --output "$RUNNER_TEMP/v0922_full_independent.json"
+      - name: Print bounded failure diagnostics rather than suppress them
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          data = json.loads((Path(os.environ["RUNNER_TEMP"])/"v0922_full_causal.json").read_text())
+          failures = []
+          for day in data["rows"]:
+              for name, comparison in day["comparisons"].items():
+                  replay = comparison["causal_hourly_observation_replay"]
+                  if not replay["feasible"]:
+                      failures.append((day["heldout_day_utc"], name,
+                                       replay["failed_hour"], replay["failure_reason"]))
+          print("TOTAL_CAUSAL_INFEASIBLE_POLICY_DAYS", len(failures))
+          for example in failures[:20]:
+              print("EXPLICIT_CAUSAL_FAILURE", *example)
+          print("FULL_ELIGIBLE_DAY_COUNT", data["eligible_days_with_exact_complete_7day_lag"])
+          print("FULL_MATCHED_ECONOMIC_COMPARISONS",
+                data["both_policies_feasible_and_terminal_matched_count"])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v0922-complete-holdout-independent-causal-certificate
+          path: ${{ runner.temp }}/v0922_full_independent.json
+          retention-days: 14
