@@ -45,6 +45,12 @@ class IndependentFailureReasonTests(unittest.TestCase):
                         global_hour_index=1)
         self.assertTrue(mod.current_hour_lp(**p))
 
+    def test_tiny_stock_roundoff_does_not_invalidate_feasible_hour(self):
+        self.assertTrue(mod.current_hour_lp(
+            **self.params(prior_stock=-1e-10, gas=1.0, heat=.15)))
+        self.assertTrue(mod.current_hour_lp(
+            **self.params(prior_stock=1.5+1e-10, gas=1.0, heat=.15)))
+
     def test_invalid_binary_rejected(self):
         with self.assertRaisesRegex(ValueError, "commitment"):
             mod.current_hour_lp(**self.params(on=[1, 1, 2, 0]))
