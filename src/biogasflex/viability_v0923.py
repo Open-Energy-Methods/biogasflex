@@ -142,7 +142,6 @@ def _metrics(entries, policy_name):
 
 def run(source:dict, *, max_days:int|None=None,
         synthetic_gas_floor_mw_lhv:float=DEFAULT_SYNTHETIC_FLOOR_MW_LHV)->dict:
-    train, heldout = j._source_validate(source)
     require(max_days is None or max_days>0,"max_days must be positive")
     require(math.isfinite(synthetic_gas_floor_mw_lhv) and
             0<=synthetic_gas_floor_mw_lhv<=j.GAS_BASE,
@@ -151,6 +150,7 @@ def run(source:dict, *, max_days:int|None=None,
     # A higher 'floor' would be more optimistic, not a conservative bound.
     require(synthetic_gas_floor_mw_lhv<=.78+1e-12,
             "Requested floor exceeds the predeclared model-global synthetic lower bound .78")
+    train, heldout = j._source_validate(source)
     scales=j._standardizers(source)
     by_day={d["date_utc"]:d for d in source["complete_days"]}
     entries=[]
