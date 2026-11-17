@@ -1,0 +1,81 @@
+name: v0.9.22 causal hourly replay research validation
+
+on:
+  push:
+    branches: [research/v0922-causal-holdout-replay]
+  pull_request:
+    paths:
+      - 'src/biogasflex/causal_v0922.py'
+      - 'tests/test_v0922_causal.py'
+      - 'scripts/audit_v0922_causal_independent.py'
+      - 'docs/V0922_CAUSAL_HOURLY_REPLAY_PROTOCOL.md'
+      - '.github/workflows/v0922-causal-replay.yml'
+      - 'SHA256SUMS.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: biogasflex-v0922-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline-causal-invariance:
+    name: Causal no-lookahead tests / ${{ matrix.os }} / Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install -e .
+      - run: python -m unittest tests.test_v0922_causal -v
+      - run: python scripts/verify_v09_manifest.py
+
+  source-verified-chronological-smoke:
+    name: Frozen original OPSD source + 2 earliest eligible heldout days
+    needs: offline-causal-invariance
+    runs-on: ubuntu-latest
+    timeout-minutes: 85
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -e .
+      - name: Retrieve and hash frozen publisher source
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m biogasflex source-evidence-v0921 \
+            --csv "$RUNNER_TEMP/OPSD_2020-10-06_60min.csv" \
+            --download \
+            --output "$RUNNER_TEMP/verified_source.json"
+      - name: Run predeclared chronological two-day smoke replay
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m biogasflex.causal_v0922 \
+            --source "$RUNNER_TEMP/verified_source.json" \
+            --max-days 2 \
+            --output "$RUNNER_TEMP/v0922_causal_smoke.json"
+      - name: Run independent mathematical audit with no imported BiogasFlex modules
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/audit_v0922_causal_independent.py \
+            --source "$RUNNER_TEMP/verified_source.json" \
+            --study "$RUNNER_TEMP/v0922_causal_smoke.json" \
+            --output "$RUNNER_TEMP/v0922_audit_smoke.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v0922-two-day-independent-causal-certificate
+          path: ${{ runner.temp }}/v0922_audit_smoke.json
+          retention-days: 14
