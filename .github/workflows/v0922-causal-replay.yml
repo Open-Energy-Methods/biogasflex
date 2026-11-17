@@ -36,7 +36,7 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - run: python -m pip install -e .
-      - run: python -m unittest tests.test_v0922_causal -v
+      - run: python -m unittest tests.test_v0922_causal tests.test_v0922_feasibility_diagnostics -v
       - run: python scripts/verify_v09_manifest.py
 
   source-verified-chronological-smoke:
@@ -114,6 +114,13 @@ jobs:
             --source "$RUNNER_TEMP/verified_source.json" \
             --study "$RUNNER_TEMP/v0922_full_causal.json" \
             --output "$RUNNER_TEMP/v0922_full_independent.json"
+      - name: Independently classify failed source-hours and conditional constraint relief
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/diagnose_v0922_feasibility.py \
+            --study "$RUNNER_TEMP/v0922_full_causal.json" \
+            --output "$RUNNER_TEMP/v0922_full_diagnostic.json"
       - name: Print bounded failure diagnostics rather than suppress them
         shell: bash
         run: |
@@ -138,5 +145,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: v0922-complete-holdout-independent-causal-certificate
-          path: ${{ runner.temp }}/v0922_full_independent.json
+          path: |
+            ${{ runner.temp }}/v0922_full_independent.json
+            ${{ runner.temp }}/v0922_full_diagnostic.json
           retention-days: 14
