@@ -1135,3 +1135,13 @@ Source: Svenska kraftnät historical day-ahead market data, https://data.svk.se/
 ## Next release
 
 **v0.9**: independent pre-release software/scientific audit, external reviewer reconciliation if available, numerical and input/data stress testing, full v1.0 claims-evidence matrix. Do not claim a DOI, peer-reviewed result, or calibrated biogas plant until evidence exists.
+
+<!-- portfolio-reader-guide-2026:start -->
+## Engineering portfolio reader's guide (November 2026)
+
+**What to inspect:** Research-grade CHP/flexible-dispatch optimisation with declared contract constraints, source-year cases and synthetic stress/uncertainty tests; do not treat selected scenarios as real-world economic forecasts.
+
+**Portfolio context:** [Selected work for engineering recruiters](https://abhijith-sivaprasadan.github.io/for/armada-2026.html) · [Armada 2026 employer-facing selection](https://abhijith-sivaprasadan.github.io/for/armada-2026.html).
+
+These navigation links do not supersede the research status, assumptions, provenance, licences or validation limits documented above. This independent research project is not an employer-commissioned deliverable or externally qualified engineering product.
+<!-- portfolio-reader-guide-2026:end -->
