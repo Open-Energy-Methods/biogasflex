@@ -129,16 +129,45 @@ Run the opt-in smoke first to establish end-to-end mathematical
 feasibility, then execute the complete eligible holdout and archive
 the report and independent certificate before any result claims.
 
-## Next research steps (NOT yet implemented)
+## Executed 2019 full heldout: source-backed research candidate
 
-1. Complete cross-platform automated release integrity and separate
-   full source-backed backtest, including reproducible confidence
-   intervals adjusted for time dependence.
-2. Evaluate strict actual electricity-award equality with causal
-   physical balancing; this changes the model and requires a separate
-   feasibility/market-assumption protocol.
-3. Obtain calibrated real CHP gas, power and useful-heat field
-   measurements and archived issue-time forecasts; keep them off
-   public Git if reuse or confidentiality is not established.
-4. Model realistic gas-vessel pressure and minimum on/off/engine
-   startup transitions before operational reliability assertions.
+The frozen 92-source-day chronology, nine adversarial causal-prefix
+regression tests, six cross-platform CI jobs, separate complete
+energy/chronology audit and failed-current-hour independently built
+LP diagnostic have now executed and passed.
+
+[Executed 92-day study and complete negative-result discussion](../reports/V0922_EXECUTED_FULL_HOLDOUT_CAUSAL_FEASIBILITY.md)
+and [independently audited GitHub Actions run 44186505921](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/44186505921)
+record the limits in full.
+
+Of 92 eligible days, **58** permit matched-service comparisons,
+**29** contain at least one failed causal replay and **5** have
+unmatched terminal stock. Critically **all 92** nominal and robust
+CHP binary schedules are identical; the modeled paired mean
+increment is **EUR 0**, so no strategy improvement is demonstrated.
+
+The independent current-hour LP checked **58** failed policy replays:
+**58** were locally infeasible without looking at later nominal
+forecasts. A one-at-a-time negative-stock-floor relaxation or a
+one-at-a-time removal of the modeled ramp limit each restored local
+feasibility in those 58 cases, whereas individual stock-ceiling,
+binary-commitment and heat-capacity relaxations did not. These are
+**mutually alternative diagnostic counterfactuals, not plant repairs**.
+The output does NOT establish a unique physical cause outside the
+declared synthetic model or any real industrial reliability.
+
+## Remaining scientific work
+
+1. Pre-register and independently test a **nonanticipative fuel-stock
+   reserve / viability control** against the same frozen full holdout.
+   Retain ramp, gas conservation, inventory and heat-service limits.
+2. Establish a scientifically discriminating but **non-cherry-picked**
+   sensitivity frontier for binary policy differences and the
+   contribution / physical feasibility trade-off. Retain negative
+   and identical-schedule regions explicitly.
+3. Implement and independently audit actual awarded electricity
+   export service and real observed net-grid meter boundaries.
+4. Obtain genuine authorized biogas-CHP fuel/heat/electric
+   measurements, timestamped as-issued forecasts, startup and ramp
+   measurements and gas storage pressure/volume dynamics before
+   operational / v1.0 physical validation.
