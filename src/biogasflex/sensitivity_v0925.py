@@ -349,7 +349,7 @@ def run(source,baseline):
                         "holdout_cyclic_inventory_matched_and_feasible_days":
                             sum(r["physically_feasible_expost"] and
                                 r["terminal_stock_matched"] for r in tests),
-                        "holdout_first_failure_constraint_families_day_counts":{
+                        "holdout_any_constraint_family_violation_day_counts":{
                             reason:sum(reason in r["constraint_families_violated"]
                                        for r in tests) for reason in reasons},
                         "holdout_terminal_stock_delta_min_mwh_lhv":
