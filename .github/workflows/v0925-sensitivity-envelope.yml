@@ -44,7 +44,8 @@ jobs:
 
   complete-source-heldout-independent:
     name: All 92 original source days, 54 cells, train-only week blocks and 54 gas bounds independently audited
-    needs: cross-platform-physics-bootstrap
+    # Independent source-backed research may run in parallel with the
+    # six-platform matrix; a passing workflow still requires BOTH jobs.
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
