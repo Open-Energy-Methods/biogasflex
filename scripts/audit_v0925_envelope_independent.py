@@ -135,7 +135,8 @@ def intervals(award,cap,backup,low,high):
         hih=min(demand_heat,ETAH*burn)
         thermal=thermal and loh<=hih+EPS
     feasible=rated and ramp and thermal and lo>=-EPS and hi<=cap+EPS
-    cyc=feasible and abs(high-low)<=EPS and abs(low-burn)<=EPS
+    # Every terminal stock in [lower, upper] must lie in the energy tolerance band.
+    cyc=feasible and lower>=S0-EPS and upper<=S0+EPS
     return {
      "all_independent_bounded_gas_paths_feasible":bool(feasible),
      "all_bounded_paths_terminal_stock_matched":bool(cyc),
