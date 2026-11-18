@@ -82,6 +82,30 @@ class FixedContractEnvelopeTests(unittest.TestCase):
         self.assertTrue(x["all_independent_bounded_gas_paths_feasible"])
         self.assertTrue(x["all_bounded_paths_terminal_stock_matched"])
 
+    def test_cyclic_certificate_uses_terminal_energy_not_rate_tolerance(self):
+        # Six hours times a 4e-5 MW rate error = 2.4e-4 MWh, not <=5e-5 MWh.
+        # Check both support endpoints and a small symmetric support that
+        # really is within the terminal energy tolerance.
+        for low,high,expected in (
+            (1.,1.+4e-5,False),
+            (1.-4e-5,1.,False),
+            (1.+4e-5,1.+4e-5,False),
+            (1.-4e-5,1.-4e-5,False),
+            (1.-4e-6,1.+4e-6,True),
+            (1.,1.,True),
+        ):
+            with self.subTest(low=low,high=high):
+                x=s.worst_case_fixed_award(
+                    award_mwh=.1,capacity_mwh=1.5,backup_capacity_mwth=.2,
+                    gas_lower=low,gas_upper=high)
+                y=CHECK.intervals(.1,1.5,.2,low,high)
+                self.assertTrue(x["all_independent_bounded_gas_paths_feasible"])
+                self.assertEqual(x["all_bounded_paths_terminal_stock_matched"],expected)
+                self.assertEqual(y["all_bounded_paths_terminal_stock_matched"],expected)
+                self.assertEqual(
+                    all(self.trial(gas=[g]*6)["terminal_stock_matched"] for g in (low,high)),
+                    expected)
+
     def test_wide_gas_support_has_stock_shortage_at_nominal_award(self):
         x=s.worst_case_fixed_award(
             award_mwh=.1,capacity_mwh=3.,backup_capacity_mwth=.2,
