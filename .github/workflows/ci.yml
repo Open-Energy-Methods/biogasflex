@@ -1,4 +1,4 @@
-name: biogasflex-v0921-public-CHP-source-evidence-and-offline-model
+name: biogasflex-inherited-offline-research-regression
 on:
   push:
   pull_request:
@@ -55,7 +55,7 @@ jobs:
         run: |
           python -m pip wheel --no-deps --wheel-dir dist .
           python -m venv .venv
-          .venv/bin/python -m pip install dist/biogasflex-0.9.21-py3-none-any.whl
+          .venv/bin/python -m pip install dist/biogasflex-0.9.28-py3-none-any.whl
           .venv/bin/python -m pip check
       - name: Smoke test installed wheel outside checkout
         shell: bash
