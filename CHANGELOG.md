@@ -1,5 +1,8 @@
 ## v0.9.28 — qualification candidate (2026-11-18)
 
+- A7 completed with 9/9 successful workflows and six isolated wheel installations on exact tree e8b9191. Archived all seven qualification job certificates, with their original commit and hashes.
+- A8 implementation-side review identified and corrected the A4 cyclic-inventory tolerance dimensional error: require both extreme terminal energy deviations, not input rate differences, to meet 5e-5 MWh. Regression covers near-constant gas input. The 54 original bound cells analytically retain their prior flags; full CI must verify the changed tree. Independent human review and publication remain pending.
+
 - Consolidates v0.9.22–v0.9.27 on a candidate branch, not an announced release. Freeze existing numerical assumptions; no new physical calibration.
 - Correct the v0.9.27 ramp regression input: 0.24 MW violates 0.20 MW limit; 0.12 MW does not. Preserve historical independently audited outcomes.
 - Independently cross-check canonical reserve/award ledgers against legacy audit views, qualify wheel and source archive, instrument offline and complete source-backed regression workflows and record source attribution.
