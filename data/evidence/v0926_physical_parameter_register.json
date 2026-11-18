@@ -1,0 +1,271 @@
+{
+  "schema": "biogasflex.v0926.parameter_register.v1",
+  "scope": "Frozen v0.9.21–v0.9.25 six-hour source-paired research model, not every BiogasFlex architecture",
+  "implementation": "src/biogasflex/joint_v0921.py",
+  "all_equipment_field_calibrated": false,
+  "source_sha256": "6a7f2bc571314cbf9c321cc03437691cd4be95c3a6f075e60ff99e8035c704c8",
+  "parameters": [
+    {
+      "symbol": "DT",
+      "value": 0.25,
+      "unit": "h",
+      "classification": "numerical_discretization",
+      "meaning": "quarter-hour mathematical control; source is hourly",
+      "provenance": "Frozen repository model assumption; see implementation",
+      "measured_on_target_equipment": false
+    },
+    {
+      "symbol": "N",
+      "value": 24,
+      "unit": "1",
+      "classification": "numerical_discretization",
+      "meaning": "six-hour horizon, 24 equal intervals",
+      "provenance": "Frozen repository model assumption; see implementation",
+      "measured_on_target_equipment": false
+    },
+    {
+      "symbol": "HOURS",
+      "value": 6,
+      "unit": "h",
+      "classification": "numerical_discretization",
+      "meaning": "six-hour benchmark window",
+      "provenance": "Frozen repository model assumption; see implementation",
+      "measured_on_target_equipment": false
+    },
+    {
+      "symbol": "HOUR_START",
+      "value": 8,
+      "unit": "h_UTC",
+      "classification": "numerical_discretization",
+      "meaning": "08:00 UTC start",
+      "provenance": "Frozen repository model assumption; see implementation",
+      "measured_on_target_equipment": false
+    },
+    {
+      "symbol": "RATING",
+      "value": 0.8,
+      "unit": "MW_e",
+      "classification": "synthetic_equipment_assumption",
+      "meaning": "rated CHP gross electrical power",
+      "provenance": "Frozen repository model assumption; see implementation",
+      "measured_on_target_equipment": false
+    },
+    {
+      "symbol": "ETA_E",
+      "value": 0.4,
+      "unit": "MWh_e/MWh_LHV",
+      "classification": "synthetic_equipment_assumption",
+      "meaning": "constant gross conversion; no part-load map",
+      "provenance": "Frozen repository model assumption; see implementation",
+      "measured_on_target_equipment": false
+    },
+    {
+      "symbol": "ETA_H",
+      "value": 0.2,
+      "unit": "MWh_th/MWh_LHV",
+      "classification": "synthetic_equipment_assumption",
+      "meaning": "constant recovered useful-grade heat potential; separate from delivered heat",
+      "provenance": "Frozen repository model assumption; see implementation",
+      "measured_on_target_equipment": false
+    },
+    {
+      "symbol": "STOCK_CAP",
+      "value": 1.5,
+      "unit": "MWh_LHV",
+      "classification": "synthetic_equipment_assumption",
+      "meaning": "energy-equivalent inventory; no vessel volume or pressure rating",
+      "provenance": "Frozen repository model assumption; see implementation",
+      "measured_on_target_equipment": false
+    },
+    {
+      "symbol": "STOCK_INITIAL",
+      "value": 0.75,
+      "unit": "MWh_LHV",
+      "classification": "synthetic_initial_condition",
+      "meaning": "initial inventory, not observed measurement",
+      "provenance": "Frozen repository model assumption; see implementation",
+      "measured_on_target_equipment": false
+    },
+    {
+      "symbol": "INITIAL_ON",
+      "value": 1,
+      "unit": "1",
+      "classification": "synthetic_initial_condition",
+      "meaning": "initial on-state",
+      "provenance": "Frozen repository model assumption; see implementation",
+      "measured_on_target_equipment": false
+    },
+    {
+      "symbol": "INITIAL_POWER",
+      "value": 0.4,
+      "unit": "MW_e",
+      "classification": "synthetic_initial_condition",
+      "meaning": "initial gross generator power",
+      "provenance": "Frozen repository model assumption; see implementation",
+      "measured_on_target_equipment": false
+    },
+    {
+      "symbol": "MIN_ON",
+      "value": 0.2,
+      "unit": "MW_e",
+      "classification": "synthetic_equipment_assumption",
+      "meaning": "minimum on-state gross power",
+      "provenance": "Frozen repository model assumption; see implementation",
+      "measured_on_target_equipment": false
+    },
+    {
+      "symbol": "RAMP",
+      "value": 0.8,
+      "unit": "MW_e/h",
+      "classification": "synthetic_equipment_assumption",
+      "meaning": "consecutive ON midpoint rate; startup/shutdown dynamics excluded",
+      "provenance": "Frozen repository model assumption; see implementation",
+      "measured_on_target_equipment": false
+    },
+    {
+      "symbol": "HEAT_BACKUP_CAP",
+      "value": 0.2,
+      "unit": "MW_th",
+      "classification": "synthetic_equipment_assumption",
+      "meaning": "external thermal energy boundary, fuel not modeled",
+      "provenance": "Frozen repository model assumption; see implementation",
+      "measured_on_target_equipment": false
+    },
+    {
+      "symbol": "HEAT_DUMP_CAP",
+      "value": 0.4,
+      "unit": "MW_th",
+      "classification": "synthetic_equipment_assumption",
+      "meaning": "bounded modeled external rejection of recovered heat",
+      "provenance": "Frozen repository model assumption; see implementation",
+      "measured_on_target_equipment": false
+    },
+    {
+      "symbol": "GAS_BASE",
+      "value": 1,
+      "unit": "MW_LHV",
+      "classification": "synthetic_proxy_assumption",
+      "meaning": "nominal energy inflow, not gas volume or mass flow",
+      "provenance": "Frozen repository model assumption; see implementation",
+      "measured_on_target_equipment": false
+    },
+    {
+      "symbol": "HEAT_BASE",
+      "value": 0.15,
+      "unit": "MW_th",
+      "classification": "synthetic_proxy_assumption",
+      "meaning": "nominal useful heat demand",
+      "provenance": "Frozen repository model assumption; see implementation",
+      "measured_on_target_equipment": false
+    },
+    {
+      "symbol": "START_COST",
+      "value": 5,
+      "unit": "EUR/start",
+      "classification": "synthetic_economic_assumption",
+      "meaning": "scalar cost, not transient energy or vendor quotation",
+      "provenance": "Frozen repository model assumption; see implementation",
+      "measured_on_target_equipment": false
+    },
+    {
+      "symbol": "STOP_COST",
+      "value": 1,
+      "unit": "EUR/stop",
+      "classification": "synthetic_economic_assumption",
+      "meaning": "scalar cost, not transient energy",
+      "provenance": "Frozen repository model assumption; see implementation",
+      "measured_on_target_equipment": false
+    },
+    {
+      "symbol": "AUX_COST",
+      "value": 6,
+      "unit": "EUR/MWh_th",
+      "classification": "synthetic_economic_assumption",
+      "meaning": "external backup heat proxy",
+      "provenance": "Frozen repository model assumption; see implementation",
+      "measured_on_target_equipment": false
+    },
+    {
+      "symbol": "DUMP_COST",
+      "value": 1,
+      "unit": "EUR/MWh_th",
+      "classification": "synthetic_economic_assumption",
+      "meaning": "heat rejection proxy",
+      "provenance": "Frozen repository model assumption; see implementation",
+      "measured_on_target_equipment": false
+    },
+    {
+      "symbol": "VAR_COST",
+      "value": 0.75,
+      "unit": "EUR/MWh_e",
+      "classification": "synthetic_economic_assumption",
+      "meaning": "electric output marginal cost proxy",
+      "provenance": "Frozen repository model assumption; see implementation",
+      "measured_on_target_equipment": false
+    },
+    {
+      "symbol": "ABS_TOL",
+      "value": 0.00005,
+      "unit": "numeric_model_native_units",
+      "classification": "numerical_tolerance",
+      "meaning": "legacy model tolerance; use explicitly dimensioned checks in SI audit",
+      "provenance": "Frozen repository model assumption; see implementation",
+      "measured_on_target_equipment": false
+    }
+  ],
+  "derived": {
+    "fuel_min_mw_lhv": 0.5,
+    "fuel_max_mw_lhv": 2,
+    "conversion_unrecovered_lhv_fraction": 0.4,
+    "dt_seconds": 900,
+    "mwh_to_joule": 3600000000
+  },
+  "proxy_support": {
+    "gas_mw_lhv": [
+      0.78,
+      1.22
+    ],
+    "heat_mw_th": [
+      0.105,
+      0.195
+    ],
+    "provenance": "Uncalibrated clipped source-error functions in joint_v0921._scenario; not an empirical supply bound"
+  },
+  "external_evidence": [
+    {
+      "id": "rise_lulea_2023_biogas_sofc",
+      "doi": "10.5281/zenodo.14163174",
+      "status": "different_technology_not_target_calibration",
+      "scope": "biogas fuel-cell external method reference only"
+    },
+    {
+      "id": "kitakyushu_japan_2001_2022_citygas_chp",
+      "doi": "10.6084/m9.figshare.24978645.v2",
+      "status": "different_fuel_and_site_not_target_calibration",
+      "scope": "hourly city-gas engine/fuel-cell external method reference only"
+    }
+  ],
+  "external_registry": "data/evidence/v0916_public_chp_source_registry.json",
+  "field_gaps": [
+    "gas_composition_and_lhv_reference_conditions",
+    "traceable_gas_mass_or_standard_volume_flow",
+    "gas_holder_pressure_volume_temperature_and_control",
+    "generator_gross_to_net_auxiliary_power_and_grid_meter",
+    "load_dependent_electrical_and_heat_efficiency_maps",
+    "startup_shutdown_fuel_energy_and_emissions",
+    "ramp_measurements_and_minimum_up_down_time",
+    "backup_heat_fuel_and_efficiency",
+    "heat_supply_return_temperatures_and_flow",
+    "meter_calibration_uncertainty_and_synchronized_timestamps",
+    "actual_accepted_awards_and_forecast_issue_vintages"
+  ],
+  "forbidden_claims": [
+    "conservation_of_gas_mass_without_composition_and_flow",
+    "pressure_or_volume_from_storage_energy_alone",
+    "loss_fraction_is_measured_heat_rejection",
+    "net_grid_export_equals_real_gross_generator_power",
+    "actual_backup_fuel_consumption",
+    "dynamic_engine_safety",
+    "field_validated_optimization"
+  ]
+}
