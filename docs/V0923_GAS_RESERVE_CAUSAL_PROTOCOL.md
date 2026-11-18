@@ -159,3 +159,30 @@ settlement or manufacturer-certified equipment.
 See [v1.0 scientific release gates](V1_0_SCIENTIFIC_RELEASE_GATES.md).
 This is a mathematical feasibility-research milestone, NOT proof
 of a complete market-/site-validated decision support system.
+
+## Independently executed 92-day results
+
+The registered full study, unchanged nominal/maximin frozen commitments
+and separate reserve witness passed [eight source-backed/cross-platform CI jobs](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/44203856872).
+
+The complete October–December 2019 holdout produced:
+**63/92** feasible unprotected six-hour replays versus **92/92**
+with the predeclared minimum synthetic gas witness, with **29**
+recovered source days and no newly failed model paths.
+Only **58** unprotected and **86** protected source days
+returned to matched starting gas inventory; **six protected
+days remain unmatched** and are not valid terminal-equivalent
+economic comparisons.
+
+All 92 nominal/maximin first-stage binary decisions remained
+identical. The strict **57-day** original-versus-protected
+same-terminal-stock/model-service comparison yielded a
+mean modeled contribution difference **−EUR 0.009963723**
+per hypothetical six-hour case. No earnings were imputed
+to infeasible original cases.
+
+See [executed methods and results](../reports/V0923_EXECUTED_92DAY_GAS_RESERVE.md)
+and [machine-readable summary](../data/evidence/v0923_executed_92day_summary.json).
+This is an independent *within-model* feasibility finding;
+it does not establish a real-plant safety reserve or a
+statistical future supply guarantee.
