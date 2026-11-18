@@ -179,11 +179,12 @@ def worst_case_fixed_award(*,award_mwh,capacity_mwh,backup_capacity_mwth,
         thermal_all=thermal_all and lower<=upper+TOL
     certified=(rating and initial_ramp and thermal_all
                and minimum>=-TOL and maximum<=capacity_mwh+TOL)
-    # Aggregate source gas can vary continuously on a nondegenerate
-    # interval. A fixed-burn, zero-vent plant cannot guarantee exact
-    # terminal inventory for ALL these gas paths unless low=high=use.
-    cyclic_all=certified and abs(gas_upper-gas_lower)<=TOL and (
-        abs(gas_lower-use)<=TOL)
+    # Both extreme terminal ENERGY deviations must meet the same MWh
+    # tolerance as physical_fixed_award. Rate differences in MW are not
+    # directly comparable to an energy tolerance over a six-hour horizon.
+    # Exact equality (zero tolerance) would require low=high=use.
+    cyclic_all=certified and max(abs(lower_at_end-STOCK_INITIAL),
+                                abs(upper_at_end-STOCK_INITIAL))<=TOL
     return {
         "all_independent_bounded_gas_paths_feasible":
             bool(certified),
