@@ -3,6 +3,7 @@ import argparse
 import json
 import math
 from pathlib import Path
+from . import __version__
 from .baseline import Interval, run as baseline_run
 from .dispatch import run_dispatch, run_sweep
 from .heat_dispatch import run_heat_dispatch, load_heat_case
@@ -30,7 +31,8 @@ from .joint_v0921 import run as run_joint_v0921, write_out as write_joint_v0921
 from .market_provenance_v0913 import run_market_source_audit, require_operational_validation
 from .svk import fetch_local_day
 
-parser = argparse.ArgumentParser(description='BiogasFlex 0.9.21: source-provenance auditable research CHP and strict market bid-time validation gate')
+parser = argparse.ArgumentParser(description=f'BiogasFlex {__version__}: source-provenance auditable research CHP and strict market bid-time validation gate')
+parser.add_argument('--version', action='version', version=__version__)
 sub = parser.add_subparsers(dest='command', required=True)
 p = sub.add_parser('fetch-svk', help='Retrieve a licensed day of historical SE3 prices')
 p.add_argument('--output', type=Path, default=Path('data/external/svk_se3_20200101.csv'))
