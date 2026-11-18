@@ -57,7 +57,22 @@ or actual profitability for v1.0 without that evidence.**
 | A1 — full v0.9.22 source/causal replay | **PASS research audit:** all 92 heldout days reproduced; independently diagnosed 29 model-infeasible days; nominal/joint commitments identical | PR #28 still stacked and unmerged on main |
 | A2 — v0.9.23 minimum synthetic gas witness | **PASS research audit:** complete 92/92 modeled six-hour dispatch feasibility versus 63/92 original; 920 independently checked next-hour witnesses; **86/92** protected cyclic-stock matched; 57 strictly comparable economic days averaged **−EUR 0.009963723** | PR #29 draft, stacked on PR #28; not an operational safety certificate |
 | A3 — v0.9.24 exact hypothetical award service | **PASS within-model audit:** all 92 days, 3 fixed 15-min award profiles, 15,584 audited executed meter intervals and 6,592 awarded reserve witness quarters; 518 explicitly classified failed policy replays; **zero cyclic-terminal-stock-matched contracts** | Draft stacked PR #31; no actual awarded bid, no field meter, no matched-service economic claim |
-| A4–A8 — uncertain gas/heat calibration, independent field validation, release QA and scientific v1.0 | **OPEN** | No claim of field-qualified software |
+| A4 — v0.9.25 preregistered regional-paired synthetic uncertainty/physical envelope | **PASS complete original-source independent research audit:** 92 days × 54 finite cells; 19,602 reconstructed training/holdout trajectories; 54 analytical gas/heat interval certificates (14 conditional passes; only 1 under full synthetic proxy gas support); 271 training source days with 253 complete 7-day blocks and 200 training-only bootstrap reps/cell | Stacked draft PR #32; cross-OS release gates and main integration pending; ex-post path evaluation **not causal dispatch**, bounds **not measured** |
+| A5–A8 — equipment unit assurance, matched-service physics/economics, release QA and v1.0 | **OPEN** | Field qualification blocked; no v1.0 tag or industrial CHP certification |
+
+The v0.9.25 preregistered full-sample physical-envelope experiment is
+independently audited in
+[the complete executed scientific report](../reports/V0925_EXECUTED_92DAY_SOURCE_PAIRED_ENVELOPE.md)
+and [machine-readable results](../data/evidence/v0925_executed_92day_envelope_summary.json).
+The complete [original-source mathematical certificate](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/44373327050/artifacts/14460770850)
+reconstructed 54 cells, 54 bound certificates and the training-only 7-day source block bootstrap.
+**Storage changes the ability to retain gas but cannot repair a generator
+ramp requirement, guarantee gas arrival or recover cyclic terminal stock
+when fixed fuel burn differs from variable gas input.**
+This is a useful negative as well as positive result. It cannot establish
+site-specific predictive intervals, operational market export or annualized economics.
+PR #32 must pass final multi-OS checks and merge before a software-release
+integration claim is made.
 
 The v0.9.24 complete hypothetical contract-delivery benchmark is available as
 [an independently audited full study](../reports/V0924_EXECUTED_92DAY_HYPOTHETICAL_AWARDS.md)
