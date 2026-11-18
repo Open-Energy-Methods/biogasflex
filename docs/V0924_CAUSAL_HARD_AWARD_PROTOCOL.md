@@ -73,3 +73,50 @@ python scripts/audit_v0924_award_independent.py --source /tmp/v0921_verified.jso
 ```
 
 **Research v1.0 relationship:** [scientific release gates](V1_0_SCIENTIFIC_RELEASE_GATES.md). Gate A3 passes only after the full model-service experiment and independent contract ledger audit are green, failed-service cases remain visible, and the scope statement is precise. An actual site-specific electricity award needs a signed or otherwise authorized source with time and granularity; cannot be manufactured from regional OPSD prices.
+
+## Independently executed complete 2019 holdout
+
+Source publisher-hash verification, 6 OS/Python combinations,
+92/92 held-out day execution, exact model-award meter auditing,
+all next-hour reserve witness contract equalities and every failed
+contract's deterministic model-constraint classification passed
+[GitHub Actions 44209007420](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/44209007420).
+
+The complete benchmark's per-policy six-hour feasible delivery counts:
+**0.090 MWh:** 61/92 award-only and 61/92 guarded;
+**0.100 MWh:** 88/92 award-only and 83/92 guarded;
+**0.150 MWh:** zero/92 under either controller, as deliberately
+required by the inherited initial ramp convention.
+No successful hypothetical firm-award replay has
+**matched cyclic terminal gas inventory** under the same
+hardware/model, so no terminal-equivalent economic comparison
+is authorized.
+
+Independently diagnosed failed source-day counts:
+0.090 award-only and guarded: **4 observed-current-hour physical**,
+**27 future nominal forecast** cases each;
+0.100 award-only: **4 observed-current-hour physical**;
+0.100 guarded: **3 observed-current-hour physical**, **6
+predeclared next-hour gas-floor witness rejections**;
+0.150 award-only and guarded: **92 observed-current-hour
+physical conflicts** each. These counts are **per policy**;
+nominal and joint maximin commitments are identical across all
+92 test days.
+
+The independent contract auditor checked **15,584** executed
+quarter-hour CHP meter-energy prefixes and **6,592**
+award-locked next-hour witness quarters. A separate standard-library
+arithmetic auditor independently explained **518** failed policy
+replays, without importing the optimization implementation or
+relabeling a future *nominal* forecast infeasibility as a realized
+plant fault.
+
+[Full scientific report](../reports/V0924_EXECUTED_92DAY_HYPOTHETICAL_AWARDS.md)
+and [machine-readable evidence](../data/evidence/v0924_executed_hypothetical_awards.json).
+
+This verifies within-model energy-delivery enforcement and explicit
+infeasibility, not real accepted bids, actual grid exports,
+historical price forecast vintages or field-operational reliability.
+The next scientific obstacle is contract-aware first-stage design
+and credible terminal gas-stock service under bounded inflow,
+without inventing fuel venting, electric import or market penalties.
