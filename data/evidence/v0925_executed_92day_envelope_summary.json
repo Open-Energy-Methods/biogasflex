@@ -1,0 +1,176 @@
+{
+  "schema": "biogasflex.v0925.executed_paired_source_physical_envelope.v1",
+  "status": "INDEPENDENT_SOURCE_MATHEMATICAL_AUDIT_PASS_NOT_FIELD_QUALIFIED",
+  "provenance": {
+    "frozen_source": "Original OPSD 2020-10-06 hourly Swedish SE3 2019 regional electricity time series",
+    "original_publisher_sha256": "6a7f2bc571314cbf9c321cc03437691cd4be95c3a6f075e60ff99e8035c704c8",
+    "original_hour_resolution_minutes": 60,
+    "source_15min_plant_measurements_absent": true,
+    "historical_original_price_forecast_issued_vintage_verified": false,
+    "site_biogas_and_heat_measurements_exist": false,
+    "actual_chp_accepted_electrical_awards_exist": false,
+    "site_gas_heat_shocks_empirically_calibrated": false,
+    "weather_or_energy_supplier_plant_validation_performed": false
+  },
+  "preregistered_grid": {
+    "gas_storage_capacity_mwh_lhv": [
+      0.75,
+      1.5,
+      3
+    ],
+    "fixed_initial_stock_mwh_lhv": 0.75,
+    "original_training_only_source_paired_gas_heat_shock_multipliers": [
+      0,
+      1,
+      1.5
+    ],
+    "backup_heat_capacity_mwth": [
+      0,
+      0.2
+    ],
+    "fixed_hypothetical_electric_awards_mwh_per_15min": [
+      0.09,
+      0.1,
+      0.15
+    ],
+    "gas_interval_bounds_mw_lhv": {
+      "full_synthetic_clip": [
+        0.78,
+        1.22
+      ],
+      "narrow_assumption_not_guaranteed": [
+        0.9,
+        1.1
+      ],
+      "deterministic_nominal_only": [
+        1,
+        1
+      ]
+    },
+    "static_policy": "EX_ANTE_ALL_ON_24_QUARTERS_NO_HELDOUT_DEPENDENT_REOPTIMIZATION",
+    "all_source_days": "ALL 92 eligible Oct-Dec 2019 dates",
+    "training_only_7day_calendar_consecutive_source_block_bootstrap": true,
+    "bootstrap_replicates_per_cell": 200,
+    "bootstrap_sample_length_in_complete_source_days": 92,
+    "bootstrap_predeclared_seed": 20261118,
+    "monte_carlo_confidence_interval_for_field_reliability": false
+  },
+  "source_partition_results": {
+    "complete_source_training_days": 271,
+    "heldout_complete_eligible_days": 92,
+    "consecutive_training_7day_block_starts": 253,
+    "original_v0924_first_stage_same_as_static_all_on_heldout_days": 92,
+    "training_source_pair_price_persistence_vs_regional_load_error_pearson": -0.0285889039,
+    "heldout_source_pair_price_persistence_vs_regional_load_error_pearson_descriptive_only": 0.2079326362
+  },
+  "independently_reproduced_results": {
+    "physical_grid_cells": 54,
+    "conditional_analytical_interval_certificates": 54,
+    "source_day_cell_physical_trajectories_recomputed": 19602,
+    "conditionally_bounded_gas_and_heat_service_certificates_passed": 14,
+    "full_synthetic_gas_clip_support_certificates_passed": 1,
+    "full_synthetic_clip_only_pass_case": {
+      "capacity_mwh_lhv": 3,
+      "backup_heat_capacity_mwth": 0.2,
+      "award_mwh_e_per_15min": 0.09,
+      "guaranteed_cyclic_terminal_inventory": false
+    },
+    "all_92_realized_shock_reference_cells_with_initial_terminal_stock_matched_and_physically_feasible": 0,
+    "parent_v0924_reported_feasible_awards_contradict_expost_physical_energy_balance": 0,
+    "baseline_grid_alpha_1_backup_mwth_0p2": [
+      {
+        "buffer_mwh_lhv": 0.75,
+        "awards": [
+          {
+            "mwh_per_15min": 0.09,
+            "feasible_holdout_days": 2,
+            "training_feasible_days": 21,
+            "main_failed_constraint": "upper_buffer"
+          },
+          {
+            "mwh_per_15min": 0.1,
+            "feasible_holdout_days": 41,
+            "training_feasible_days": 95,
+            "main_failed_constraint": "upper_buffer_and_one_shortage"
+          },
+          {
+            "mwh_per_15min": 0.15,
+            "feasible_holdout_days": 0,
+            "training_feasible_days": 0,
+            "main_failed_constraint": "initial_ramp_and_gas_shortage"
+          }
+        ]
+      },
+      {
+        "buffer_mwh_lhv": 1.5,
+        "awards": [
+          {
+            "mwh_per_15min": 0.09,
+            "feasible_holdout_days": 61,
+            "training_feasible_days": 157,
+            "descriptive_training_7day_block_bootstrap_p05": 0.4673913,
+            "p95": 0.68478261
+          },
+          {
+            "mwh_per_15min": 0.1,
+            "feasible_holdout_days": 88,
+            "training_feasible_days": 235,
+            "descriptive_training_7day_block_bootstrap_p05": 0.79347826,
+            "p95": 0.93478261
+          },
+          {
+            "mwh_per_15min": 0.15,
+            "feasible_holdout_days": 0,
+            "training_feasible_days": 0
+          }
+        ]
+      },
+      {
+        "buffer_mwh_lhv": 3,
+        "awards": [
+          {
+            "mwh_per_15min": 0.09,
+            "feasible_holdout_days": 92,
+            "training_feasible_days": 271,
+            "descriptive_training_7day_block_bootstrap_p05": 1,
+            "p95": 1
+          },
+          {
+            "mwh_per_15min": 0.1,
+            "feasible_holdout_days": 91,
+            "training_feasible_days": 255,
+            "descriptive_training_7day_block_bootstrap_p05": 0.89130435,
+            "p95": 0.98913043
+          },
+          {
+            "mwh_per_15min": 0.15,
+            "feasible_holdout_days": 0,
+            "training_feasible_days": 0
+          }
+        ]
+      }
+    ]
+  },
+  "scientific_interpretation": {
+    "full_historical_gas_future_used_only_for_expost_physical_scoring": true,
+    "new_realtime_operational_causal_controller_implemented": false,
+    "gas_arrival_bounds_are_hypothetical_not_probabilistically_calibrated": true,
+    "source_paired_price_load_errors_are_not_empirical_site_gas_heat_errors": true,
+    "extra_buffer_solves_shortage_for_every_day": false,
+    "gas_storage_pressure_volume_control_validated": false,
+    "actual_settlement_and_market_earnings_estimated": false,
+    "all_bounded_gas_paths_cyclic_stock_guaranteed_non_degenerate": false,
+    "all_model_physics_and_source_mathematically_independent_audit": true,
+    "v1_0_research_software_released": false,
+    "v1_0_field_qualified": false
+  },
+  "evidence": {
+    "ci_run": "https://github.com/Open-Energy-Methods/biogasflex/actions/runs/44373327050",
+    "complete_original_source_and_independent_audit_artifact": "https://github.com/Open-Energy-Methods/biogasflex/actions/runs/44373327050/artifacts/14460770850",
+    "report": "reports/V0925_EXECUTED_92DAY_SOURCE_PAIRED_ENVELOPE.md",
+    "preregistered_protocol": "docs/V0925_PREREGISTERED_PHYSICAL_ENVELOPE_PROTOCOL.md",
+    "independent_audit_script": "scripts/audit_v0925_envelope_independent.py",
+    "full_sensitivity_research_runner": "src/biogasflex/sensitivity_v0925.py",
+    "v1_release_tracker": "https://github.com/Open-Energy-Methods/biogasflex/issues/30"
+  }
+}
