@@ -88,3 +88,55 @@ Reproduce source, original v0.9.24 and sensitivity studies outside tracked Git r
     python scripts/audit_v0925_envelope_independent.py --source /tmp/v0921_verified_source.json --baseline /tmp/v0924_full.json --study /tmp/v0925_full.json --output /tmp/v0925_certificate.json
 
 **A4 research software gate is conditional on passing all checks, not on producing a favorable feasibility figure.** Industrial CHP real-site calibration and actual settlement remain blocked. The future v1.0 software release still requires matched-terminal-service economics, equipment parameter provenance, package release QA and external methodological review.
+
+
+## Executed source-backed results, without changing the predeclared grid
+
+The original publisher-hash-verified October–December 2019 experiment
+and separate optimizer-free mathematical audit have **passed** in
+[GitHub Actions run 44373327050](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/44373327050).
+The full [executed 92-day report](../reports/V0925_EXECUTED_92DAY_SOURCE_PAIRED_ENVELOPE.md)
+and [machine-readable aggregate](../data/evidence/v0925_executed_92day_envelope_summary.json)
+retain positive and negative findings, including every source-day
+cell count and explicit false field-validation flags.
+
+The independent numerical audit reconstructed **54 physical
+parameter cells × (271 training days + 92 heldout days) = 19,602
+physical day-cell scenarios**, exactly **54 interval-bound
+certificates** (14 conditionally valid; **only one** spanning the
+synthetic model's entire gas clipping interval), **253**
+calendar-consecutive seven-day training block starts and
+**200** training-only bootstrap replicates per cell.
+The predeclared static ALL-ON CHP commitment matched the
+unmodified v0.9.24 nominal first-stage across **92/92**
+heldout days.
+
+At original paired-source shock strength and 0.20 MW_th backup,
+0.75 / 1.50 / 3.00 MWh_LHV gas storage yielded ex-post
+fixed-award physically feasible holdout days:
+
+- 0.090 MWh_e per 15min: **2 / 61 / 92** (of 92).
+- 0.100 MWh_e per 15min: **41 / 88 / 91** (of 92).
+- 0.150 MWh_e per 15min: **0 / 0 / 0** (original generator ramp violated).
+
+No original-paired-shock feasible day also recovered exact
+initial terminal fuel stock. Enlarged storage prevents
+the modeled **upper-capacity** conflict, but a
+fuel **shortage** persists on one source day at the
+0.100 MWh_e contract even with 3.00 MWh_LHV capacity.
+The initial ramp conflict cannot be resolved by adding
+storage.
+
+The complete report distinguishes the original 271
+training and 92 heldout regional **electricity** error
+correlations (−0.0285889039 and +0.2079326362)
+from unobserved real CHP site gas/heat forecast errors,
+and labels 7-day-bootstrap percentiles as descriptive
+training uncertainty rather than calibrated field
+confidence limits.
+
+**Scientific gate:** the complete source mathematical audit
+passes for A4. The remaining cross-platform tests,
+PR dependency merges, site-data validation, credible
+contract-aware commitment and strict cyclic terminal
+service are **not** thereby qualified or released.
