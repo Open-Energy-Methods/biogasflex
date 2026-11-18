@@ -50,18 +50,29 @@ def _validate_inputs(nominal: dict, actual: dict, states: list[int]) -> None:
 
 def _solve_remaining(hour: int, prior_stock: float, prior_power: float,
                      prior_on: int, states: list[int], nominal: dict,
-                     measured_gas: float, measured_heat: float) -> dict:
+                     measured_gas: float, measured_heat: float, *,
+                     next_hour_gas_floor: float | None = None) -> dict:
     """Forecast-only LP, with only the *current* source-hour gas/heat revealed.
 
     All future hours use the frozen nominal profile; no target future
     measurement and no contemporaneous/future realized price is passed in.
     Terminal stock is a SOFT target, separately reported, not a guarantee.
     """
+    if next_hour_gas_floor is not None:
+        require(math.isfinite(next_hour_gas_floor) and
+                0.0 <= next_hour_gas_floor <= 2.,
+                "Invalid hypothetical next-hour gas-production lower bound")
+    guard_next_hour = next_hour_gas_floor is not None and hour < j.HOURS - 1
     first = hour * 4
     count = j.N - first
     u, stock, useful, aux, dump = [k * count for k in range(5)]
     dplus, dminus = 5 * count, 5 * count + 1
-    nv = 5 * count + 2
+    # Eight feasibility-only auxiliary variables: four next-hour
+    # worst-case gas burn rates and four corresponding gas stocks.
+    # Their objective coefficients are ZERO. No realized future
+    # gas value enters this LP; only a declared pre-target bound.
+    witness_offset = 5 * count + 2
+    nv = witness_offset + (8 if guard_next_hour else 0)
     cost = np.zeros(nv)
     cost[dplus] = cost[dminus] = TERMINAL_SOFT_PENALTY_EUR_PER_MWH
     bounds = [(0., None)] * nv
@@ -111,6 +122,42 @@ def _solve_remaining(hour: int, prior_stock: float, prior_power: float,
                 inequalities.append(vector(constraint))
                 upper.append(limit)
 
+    if guard_next_hour:
+        wu, ws = witness_offset, witness_offset + 4
+        # Nonanticipativity: the witness starts from exactly the same
+        # current-hour end stock and electrical power as the primary
+        # forecast LP. It is a separate feasible extension under gas_floor.
+        # Heat need not enter the witness: all hypothetical demand <=0.195
+        # MW_th is serviceable by 0.20 MW_th backup; CHP output up to
+        # 2 MW_LHV has at most 0.4 MW_th of heat to reject, within
+        # the declared 0.4 MW_th dump bound. These facts are specific
+        # to this uncalibrated research model.
+        require(j.HEAT_BACKUP_CAP >= .195 and
+                j.HEAT_DUMP_CAP >= 2.*j.ETA_H,
+                "Next-hour gas witness cannot omit the heat constraints")
+        for q in range(4):
+            absolute_t = first + 4 + q
+            state = states[absolute_t]
+            bounds[wu+q] = (.5, 2.) if state else (0., 0.)
+            bounds[ws+q] = (0., j.STOCK_CAP)
+            balance = {wu+q: j.DT, ws+q: 1.}
+            if q:
+                balance[ws+q-1] = -1.
+            else:
+                balance[stock+3] = -1.
+            equations.append(vector(balance))
+            rhs.append(next_hour_gas_floor*j.DT)
+            prev_state = states[absolute_t-1]
+            if state == prev_state == 1:
+                for sign in (-1., 1.):
+                    coefficients = {wu+q: sign*j.ETA_E}
+                    if q:
+                        coefficients[wu+q-1] = -sign*j.ETA_E
+                    else:
+                        coefficients[u+3] = -sign*j.ETA_E
+                    inequalities.append(vector(coefficients))
+                    upper.append(j.RAMP*j.DT)
+
     equations.append(vector({stock+count-1: 1., dplus: -1., dminus: 1.}))
     rhs.append(j.STOCK_INITIAL)
     solution = linprog(
@@ -130,6 +177,14 @@ def _solve_remaining(hour: int, prior_stock: float, prior_power: float,
             "dumped_heat_mw_th": float(x[dump+k]),
         })
     return {"feasible": True, "steps": steps,
+            "next_hour_witness_gas_floor_mw_lhv":
+                next_hour_gas_floor if guard_next_hour else None,
+            "next_hour_witness_gas_use_mw_lhv":
+                [float(x[witness_offset+q]) for q in range(4)]
+                if guard_next_hour else None,
+            "next_hour_witness_stock_end_mwh_lhv":
+                [float(x[witness_offset+4+q]) for q in range(4)]
+                if guard_next_hour else None,
             "forecast_terminal_stock_mwh_lhv": float(x[stock+count-1]),
             "forecast_soft_terminal_deviation_mwh_lhv":
                 float(x[dplus]+x[dminus])}
@@ -137,7 +192,8 @@ def _solve_remaining(hour: int, prior_stock: float, prior_power: float,
 
 def replay_causal(nominal: dict, actual: dict, states: list[int],
                   *, starts: list[int] | None = None,
-                  stops: list[int] | None = None) -> dict:
+                  stops: list[int] | None = None,
+                  next_hour_gas_floor: float | None = None) -> dict:
     """Run hourly sense/replan/execute, with fixed ex-ante CHP commitment.
 
     The realized path is used only (a) for the CURRENT hourly observation
@@ -172,7 +228,8 @@ def replay_causal(nominal: dict, actual: dict, states: list[int],
         g = actual["synthetic_gas_production_mw_lhv"][t0]
         heat = actual["synthetic_site_heat_demand_mw_th"][t0]
         decision = _solve_remaining(hour, stock, previous_power, previous_on,
-                                    states, nominal, g, heat)
+                                    states, nominal, g, heat,
+                                    next_hour_gas_floor=next_hour_gas_floor)
         observations.append({
             "hour_index": hour,
             "revealed_source_hour_utc": 8 + hour,
@@ -181,6 +238,14 @@ def replay_causal(nominal: dict, actual: dict, states: list[int],
             "future_gas_heat_from_frozen_nominal_only": True,
             "realized_price_never_used_for_control": True,
             "forecast_lp_feasible": decision["feasible"],
+            "next_hour_gas_floor_viability_witness_active":
+                next_hour_gas_floor is not None and hour < j.HOURS-1,
+            "predeclared_next_hour_synthetic_gas_floor_mw_lhv":
+                next_hour_gas_floor if hour < j.HOURS-1 else None,
+            "feasibility_witness_gas_use_mw_lhv":
+                decision.get("next_hour_witness_gas_use_mw_lhv"),
+            "feasibility_witness_stock_end_mwh_lhv":
+                decision.get("next_hour_witness_stock_end_mwh_lhv"),
         })
         if not decision["feasible"]:
             return {
@@ -191,6 +256,8 @@ def replay_causal(nominal: dict, actual: dict, states: list[int],
                 "economic_contribution_eur": None,
                 "no_unserved_heat_claim": True,
                 "actual_terminal_stock_requirement_enforced": False,
+                "next_hour_gas_reserve_viability_guard_enabled":
+                    next_hour_gas_floor is not None,
             }
         for slot, scheduled in enumerate(decision["steps"]):
             t = t0 + slot
@@ -233,6 +300,8 @@ def replay_causal(nominal: dict, actual: dict, states: list[int],
         "actual_terminal_stock_requirement_enforced": False,
         "perfect_future_information_used_for_dispatch": False,
         "gas_heat_observation_assumed_at_start_of_each_source_hour": True,
+        "next_hour_gas_reserve_viability_guard_enabled":
+            next_hour_gas_floor is not None,
     }
 
 

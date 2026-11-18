@@ -1,0 +1,76 @@
+{
+  "schema": "biogasflex.v0923.executed_source_conditional_benchmark.v1",
+  "status": "SOURCE_SHA256_VERIFIED_SYNTHETIC_CHP_REPRODUCIBLE_NOT_FIELD_QUALIFIED",
+  "reproduction": {
+    "github_actions_run": "https://github.com/Open-Energy-Methods/biogasflex/actions/runs/44203856872",
+    "ci_jobs_completed_success": 8,
+    "independent_v0922_ledger_audit_unprotected": "PASS",
+    "independent_v0922_ledger_audit_protected": "PASS",
+    "independent_v0923_next_hour_witness": "PASS",
+    "witnesses_checked": 920,
+    "cross_platform_matrix": {
+      "os": [
+        "ubuntu-latest",
+        "windows-latest",
+        "macos-latest"
+      ],
+      "python": [
+        "3.11",
+        "3.13"
+      ]
+    }
+  },
+  "source": {
+    "dataset": "OPSD time_series 2020-10-06 SE3 hourly original",
+    "sha256": "6a7f2bc571314cbf9c321cc03437691cd4be95c3a6f075e60ff99e8035c704c8",
+    "sample_year": 2019,
+    "training_region_load_error_is_not_site_heat": true,
+    "site_gas_heat_observed": false,
+    "market_forecast_issue_vintage_verified": false,
+    "price_forecast_proxy": "7day historical price persistence, not original vendor forecast"
+  },
+  "predeclared_protocol": {
+    "source_heldout_dates_inclusive": [
+      "2019-10-01",
+      "2019-12-31"
+    ],
+    "all_source_complete_days": 92,
+    "next_hour_gas_min_mw_lhv": 0.78,
+    "min_gas_is_synthetic_clip_not_measured": true,
+    "witness_horizon_hours": 1,
+    "full_future_robust_guarantee": false,
+    "two_controllers_share_same_pre_reveal_binary_commitment": true,
+    "nominal_and_paired_maximin_first_stage_identical_days": 92,
+    "matched_service_terminal_inventory_tolerance_mwh_lhv": 0.00005
+  },
+  "executed_results": {
+    "original": {
+      "six_hour_feasible_days": 63,
+      "infeasible_days": 29,
+      "feasible_terminal_inventory_unmatched_days": 5,
+      "six_hour_feasible_terminal_stock_matched_days": 58
+    },
+    "reserve_aware": {
+      "six_hour_feasible_days": 92,
+      "infeasible_days": 0,
+      "feasible_terminal_inventory_unmatched_days": 6,
+      "six_hour_feasible_terminal_stock_matched_days": 86
+    },
+    "modeled_six_hour_infeasible_days_rescued": 29,
+    "new_infeasible_days": 0,
+    "economic_comparability_days_both_controllers_matched": 57,
+    "mean_reserve_minus_original_cash_proxy_eur_per_six_hours": -0.009963723024618662,
+    "cashflow_for_original_failure_imputed_zero": false,
+    "real_engine_or_market_earnings_validated": false
+  },
+  "scientific_limits": {
+    "field_reliability_proven": false,
+    "plant_forecast_accuracy_proven": false,
+    "closed_loop_real_gas_buffer_pressure_validated": false,
+    "actual_export_award_delivery_enforced": false,
+    "historical_market_vintage_available": false
+  },
+  "linked_report": "reports/V0923_EXECUTED_92DAY_GAS_RESERVE.md",
+  "linked_protocol": "docs/V0923_GAS_RESERVE_CAUSAL_PROTOCOL.md",
+  "release_status": "DRAFT_RESEARCH_CANDIDATE_DO_NOT_CLAIM_V1_0"
+}
