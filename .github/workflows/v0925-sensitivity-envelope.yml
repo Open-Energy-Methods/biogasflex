@@ -1,0 +1,98 @@
+name: v0.9.25 paired-source CHP uncertainty envelope and independent bounds audit
+
+on:
+  push:
+    branches: [research/v0925-preregistered-uncertainty-envelope]
+  pull_request:
+    paths:
+      - 'src/biogasflex/sensitivity_v0925.py'
+      - 'scripts/audit_v0925_envelope_independent.py'
+      - 'tests/test_v0925_sensitivity.py'
+      - 'docs/V0925_PREREGISTERED_PHYSICAL_ENVELOPE_PROTOCOL.md'
+      - '.github/workflows/v0925-sensitivity-envelope.yml'
+      - 'SHA256SUMS.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+concurrency:
+  group: biogasflex-v0925-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  cross-platform-physics-bootstrap:
+    name: Paired synthetic constraints, bounds and manifest / ${{ matrix.os }} / Py ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ['3.11','3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install -e .
+      - name: Inherited causal and award tests, plus independent sensitivity negative controls
+        run: python -m unittest tests.test_v0922_causal tests.test_v0922_feasibility_diagnostics tests.test_v0923_gas_reserve tests.test_v0924_award_causal tests.test_v0924_failure_diagnosis tests.test_v0925_sensitivity -v
+      - name: Independently check file SHA-256 manifest
+        run: python scripts/verify_v09_manifest.py
+      - name: Strict tracked files / manifest coverage
+        run: python scripts/verify_v091_git_coverage.py
+
+  complete-source-heldout-independent:
+    name: All 92 original source days, 54 cells, train-only week blocks and 54 gas bounds independently audited
+    # Independent source-backed research may run in parallel with the
+    # six-platform matrix; a passing workflow still requires BOTH jobs.
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -e .
+      - name: Download and publisher-hash-verify frozen original hourly OPSD source
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m biogasflex source-evidence-v0921 \
+            --csv "$RUNNER_TEMP/opsd_original_60min.csv" \
+            --download --output "$RUNNER_TEMP/source_verified.json"
+      - name: Reconstruct complete unchanged 92-day v0.9.24 hypothetical contract service
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m biogasflex.award_v0924 \
+            --source "$RUNNER_TEMP/source_verified.json" \
+            --output "$RUNNER_TEMP/v0924_full.json" \
+            > "$RUNNER_TEMP/v0924_full_stdout.json"
+      - name: Run all preregistered 54 synthetic physical cells and 54 ex-ante analytic gas-support checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m biogasflex.sensitivity_v0925 \
+            --source "$RUNNER_TEMP/source_verified.json" \
+            --baseline "$RUNNER_TEMP/v0924_full.json" \
+            --output "$RUNNER_TEMP/v0925_full.json" \
+            > "$RUNNER_TEMP/v0925_summary.log"
+          cat "$RUNNER_TEMP/v0925_summary.log"
+      - name: Independently rederive all 54 cell outcomes, complete past-only week bootstrap, and 54 gas intervals
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/audit_v0925_envelope_independent.py \
+            --source "$RUNNER_TEMP/source_verified.json" \
+            --baseline "$RUNNER_TEMP/v0924_full.json" \
+            --study "$RUNNER_TEMP/v0925_full.json" \
+            --output "$RUNNER_TEMP/v0925_audit_certificate.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v0925-all-92-days-independent-54cell-and-54bounds-certificate
+          path: |
+            ${{ runner.temp }}/v0925_full.json
+            ${{ runner.temp }}/v0925_audit_certificate.json
+            ${{ runner.temp }}/v0925_summary.log
+          retention-days: 14

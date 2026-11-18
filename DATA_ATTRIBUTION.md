@@ -1,0 +1,13 @@
+# Data rights and research-source attribution (A7)
+
+The MIT software licence applies to original project code, not indiscriminately to third-party data. The Python wheel is code-only; raw external input data and research scripts belong to the separately verified source archive or an explicitly acquired local dataset. No raw OPSD, RISE or Kitakyushu download is added by this milestone.
+
+| Source | Scope, attribution and licence boundary |
+|---|---|
+| Svenska kraftnät | Produced by Svenska kraftnät (Svk), [day-ahead prices, exact resource cf392ef3-7345-4e98-970e-83088c185570](https://data.svk.se/dataset/market_data_day_ahead_area_prices/resource/cf392ef3-7345-4e98-970e-83088c185570). Provider lists [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Three frozen 24-hour SE3 extracts in data/observed and the legacy data/external/svk_se3_20200101.csv copy retain UTC/column normalization, not changed price values. See data/observed/README.md. No blanket right to unrelated data. |
+| Ciuła et al. (2023) | [Analysis of Energy Generation Efficiency and Reliability of a Cogeneration Unit Powered by Biogas, Energies 16, 2180](https://doi.org/10.3390/en16052180). CC BY 4.0 paper; annual numeric transcription, not original telemetry. See docs/V0912_EXTERNAL_CHP_EVIDENCE_PROTOCOL.md. |
+| Open Power System Data (2020) | [Data package Time series, version 2020-10-06](https://doi.org/10.25832/time_series/2020-10-06), [publisher page](https://data.open-power-system-data.org/time_series/2020-10-06). Source: ENTSO-E Transparency, original upstream conditions apply. OPSD attribution and applicable CC BY terms are not a blanket grant over all underlying publisher fields. Original CSV remains outside the release tree. SHA256 6a7f2bc571314cbf9c321cc03437691cd4be95c3a6f075e60ff99e8035c704c8. Regional hourly source, not plant telemetry. |
+| RISE Luleå SOFC | [DOI 10.5281/zenodo.14163174](https://doi.org/10.5281/zenodo.14163174), source registry records CC BY 4.0; different technology. Raw bytes retrieved only on explicit request. |
+| Kitakyushu energy station | [DOI 10.6084/m9.figshare.24978645.v2](https://doi.org/10.6084/m9.figshare.24978645.v2), source registry records CC BY 4.0; different fuel/site. Raw bytes not redistributed. |
+
+The older data/README.md reflects the initial v0.5 acquisition boundary before the later attributed extracts; it is retained byte-for-byte for the inherited scientific freeze. This notice clarifies the current scope. Reuse must respect the original provider conditions. This is a provenance/attribution audit, not legal clearance of every possible downstream use. The current release publishes aggregate numerical certificates, not the downloaded full OPSD CSV or complete derived hourly source record.
