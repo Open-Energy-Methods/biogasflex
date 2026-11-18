@@ -1,0 +1,87 @@
+name: v0.9.28 integrated release qualification
+on:
+  push:
+    branches: [research/v0928-release-qualification, main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: a7-release-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+jobs:
+  offline-distribution:
+    name: Full regression and isolated wheel / ${{ matrix.os }} / Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ['3.11','3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install -e .
+      - run: python -m pip check
+      - name: Complete offline regression suite
+        run: python -m unittest discover -s tests -v
+      - run: python scripts/verify_v09_manifest.py
+      - run: python scripts/verify_v091_git_coverage.py
+      - run: python scripts/verify_v091_inherited_frozen.py
+      - run: python scripts/certify_v092_dual_bounds.py
+      - name: Source archive, wheel RECORD and outside-checkout clean installation
+        run: python scripts/qualify_v0928_distribution.py --output-dir "${{ runner.temp }}/a7-distribution"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: a7-distribution-${{ matrix.os }}-py${{ matrix.python }}
+          path: ${{ runner.temp }}/a7-distribution/distribution_certificate.json
+          if-no-files-found: error
+          retention-days: 30
+  source-chain:
+    name: Publisher SHA, full A1-A6 numerical and semantic source chain
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -e .
+      - name: Reproduce frozen source and independent checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          d="$RUNNER_TEMP/a7-source"
+          mkdir -p "$d"
+          python -m biogasflex source-evidence-v0921 --csv "$RUNNER_TEMP/opsd.csv" --download --output "$d/source.json"
+          python -m biogasflex.joint_v0921 --source "$d/source.json" --output "$d/joint.json" > "$d/joint.log"
+          python scripts/audit_v0921_joint_independent.py --source "$d/source.json" --study "$d/joint.json" --output "$d/joint_audit.json"
+          python -m biogasflex.causal_v0922 --source "$d/source.json" --output "$d/causal.json" > "$d/causal.log"
+          python scripts/audit_v0922_causal_independent.py --source "$d/source.json" --study "$d/causal.json" --output "$d/causal_audit.json"
+          python scripts/diagnose_v0922_feasibility.py --study "$d/causal.json" --output "$d/causal_diagnosis.json"
+          python -m biogasflex.viability_v0923 --source "$d/source.json" --output "$d/reserve.json" > "$d/reserve.log"
+          python scripts/audit_v0923_reserve_independent.py --source "$d/source.json" --study "$d/reserve.json" --output "$d/reserve_audit.json"
+          python -m biogasflex.award_v0924 --source "$d/source.json" --output "$d/award.json" > "$d/award.log"
+          python scripts/audit_v0924_award_independent.py --source "$d/source.json" --study "$d/award.json" --output "$d/award_audit.json"
+          python scripts/diagnose_v0924_award_failures.py --study "$d/award.json" --output "$d/award_diagnosis.json"
+          python -m biogasflex.sensitivity_v0925 --source "$d/source.json" --baseline "$d/award.json" --output "$d/sensitivity.json" > "$d/sensitivity.log"
+          python scripts/audit_v0925_envelope_independent.py --source "$d/source.json" --baseline "$d/award.json" --study "$d/sensitivity.json" --output "$d/sensitivity_audit.json"
+          python scripts/audit_v0926_physical_si.py --source "$d/source.json" --reserve "$d/reserve.json" --award "$d/award.json" --output "$d/si_audit.json"
+          python -m biogasflex.contract_v0927 --source "$d/source.json" --output "$d/contract.json" > "$d/contract.log"
+          python scripts/audit_v0927_contract_independent.py --source "$d/source.json" --study "$d/contract.json" --output "$d/contract_audit.json"
+          python scripts/audit_v0928_canonical_ledgers.py --reserve "$d/reserve.json" --award "$d/award.json" --output "$d/canonical_audit.json"
+          python scripts/audit_v0928_release_summary.py --directory "$d" --output "$d/release_certificate.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: a7-source-aggregate-release-certificate
+          path: ${{ runner.temp }}/a7-source/release_certificate.json
+          if-no-files-found: error
+          retention-days: 30
