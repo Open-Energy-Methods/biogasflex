@@ -50,6 +50,26 @@ error budgets. None is presently established by the OPSD
 regional electricity dataset. **Do not claim field validation
 or actual profitability for v1.0 without that evidence.**
 
+## Evidence-backed milestone status (2026-11-18)
+
+| Gate | Scientific result available | Release-integration status |
+|---|---|---|
+| A1 — full v0.9.22 source/causal replay | **PASS research audit:** all 92 heldout days reproduced; independently diagnosed 29 model-infeasible days; nominal/joint commitments identical | PR #28 still stacked and unmerged on main |
+| A2 — v0.9.23 minimum synthetic gas witness | **PASS research audit:** complete 92/92 modeled six-hour dispatch feasibility versus 63/92 original; 920 independently checked next-hour witnesses; **86/92** protected cyclic-stock matched; 57 strictly comparable economic days averaged **−EUR 0.009963723** | PR #29 draft, stacked on PR #28; not an operational safety certificate |
+| A3 — contracted export service | **NOT YET IMPLEMENTED IN CAUSAL RESERVE TRACK** | v0.9.24 recommended next |
+| A4–A8 — uncertain gas/heat calibration, independent field validation, release QA and scientific v1.0 | **OPEN** | No claim of field-qualified software |
+
+The v0.9.23 aggregate audited result is published at
+[data/evidence/v0923_executed_92day_summary.json](../data/evidence/v0923_executed_92day_summary.json);
+the complete scientific discussion is
+[reports/V0923_EXECUTED_92DAY_GAS_RESERVE.md](../reports/V0923_EXECUTED_92DAY_GAS_RESERVE.md);
+the reproducibility workflow is
+[GitHub Actions 44203856872](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/44203856872).
+This evidence may support a *software research release* only
+after the PR chain, version metadata and inherited release gates
+are complete. A 92/92 finite synthetic replay outcome is not
+a probability of real CHP reliability.
+
 ## Sequence and release-critical acceptance gates
 
 | Gate | Milestone | Required evidence | Automatic no-go |
