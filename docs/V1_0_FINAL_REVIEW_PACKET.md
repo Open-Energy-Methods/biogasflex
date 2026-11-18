@@ -15,9 +15,9 @@ This packet extends the original review request in issue #3. It is an author/imp
 | Paired uncertainty and physical bounds | 19,602 training/holdout day-cell paths, 54 model cells and 54 bound certificates, 14 conditional passes | Proxy sensitivities, not empirical site covariance or reliability |
 | SI energy and versioned parameter assumptions | 23 parameters; 1,472 replays; 23,288 executed quarters; 896 complete/576 failed | Not mass/pressure calibration, no target instrument uncertainty |
 | Fixed contract acceptance | 2,208 day-gate outcomes; 15,232 executed intervals; one bounded accepted case, zero failed days within modeled support, 0 strict cyclic pairs | 92 equal-carryover paired outcomes, zero operating contribution difference; no real profit or repeated-day guarantee |
-| Integrated numerical audit | A7 source-chain CI passed all semantic freezes and canonical/duplicate ledger identity checks (1,472 records) on ca1314ff688879a9a67e9e2c35864c14dd9022ee | Full release CI on that commit failed three stale version assertions; corrected tests require rerun |
+| Integrated numerical audit | A7 source-chain CI passed all semantic freezes and canonical/duplicate ledger identity checks (1,472 records) on ca1314ff688879a9a67e9e2c35864c14dd9022ee | Initial release CI failed three stale version assertions; corrected tree e8b9191 passed all nine workflows; final A8 edge correction requires new qualification |
 
-Permanent aggregate certificate: data/evidence/v0928_executed_frozen_source_chain_certificate.json. Original job: https://github.com/Open-Energy-Methods/biogasflex/actions/runs/44407079471/job/135165067350. A7 protocol: docs/V0928_RELEASE_QUALIFICATION.md. Original review context: docs/V09_REVIEW_PACKET.md and issue #3; the original review criteria also remain in force.
+Permanent aggregate certificates: data/evidence/v0928_executed_frozen_source_chain_certificate.json and data/evidence/v0928_green_a7_qualification_certificates.json (seven successful certificates, exact green A7 commit e8b9191bd5c221d31446ebbf402767d02adb6742; CI run 44412510533). Original job: https://github.com/Open-Energy-Methods/biogasflex/actions/runs/44407079471/job/135165067350. A7 protocol: docs/V0928_RELEASE_QUALIFICATION.md. Original review context: docs/V09_REVIEW_PACKET.md and issue #3; the original review criteria also remain in force.
 
 ## Reviewer tasks (not automatically checked)
 
@@ -45,3 +45,10 @@ No review has been performed simply by generating or committing this template.
 ## Release decision rules
 
 A8 requires successful integrated CI and source-chain/study audits on the release candidate, independently recorded human methodological review with no unresolved fatal/major findings, consistent release version and licence metadata, source and code distribution checks, resolution of merge constraints, and successful main-branch post-merge regression. Use a review-approved tagged tree, not an arbitrary candidate version. Publish aggregate certificates in the durable source tree and retain exact CI links; do not redistribute raw underlying source data without appropriate permissions. Do not publish a v1.0 tag or DOI on CI success alone. External data and plant calibration remain explicit limits of the research release.
+
+
+## A8 implementation-side final review finding — terminal tolerance
+
+Finding A8-01 (numerical correctness; resolved in code, verification pending): the v0.9.25 bounded cyclic certificate compared gas rate differences (MW) to a stock-energy tolerance (MWh). At nominal fuel burn of 1 MW and constant gas arrivals of 1.00004 MW, the six-hour terminal deviation is 0.00024 MWh, greater than the 0.00005 MWh tolerance, although the old test returned a cyclic certificate. The production correction checks both extreme terminal inventory energy deviations against the tolerance; the independent oracle separately checks containment in the terminal energy band. Boundary adversaries include both high and low arrivals and a genuinely tolerable small support. No change to preregistered cells, data, or plant parameters. The original 54 bound certificates are expected to be identical; the full source-chain run must confirm.
+
+This author-side finding is NOT independent human review or approval. Record actual reviewer findings separately and verify the exact final commit. Do not interpret the prior all-green A7 snapshot as approval for the changed tree.
