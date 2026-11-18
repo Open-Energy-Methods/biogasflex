@@ -300,7 +300,7 @@ def inspect(source,baseline,report):
                     all_reasons=sorted(set(k for p in holdout for k in p["violations"]))
                     true_count={k:sum(k in p["violations"] for p in holdout)
                                 for k in all_reasons}
-                    demand(row["holdout_first_failure_constraint_families_day_counts"]
+                    demand(row["holdout_any_constraint_family_violation_day_counts"]
                            ==true_count,"Physical failure family attribution altered")
                     near(row["holdout_terminal_stock_delta_min_mwh_lhv"],
                          min(p["delta"] for p in holdout),"Minimum terminal stock delta")
