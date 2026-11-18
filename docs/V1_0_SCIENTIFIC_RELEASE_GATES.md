@@ -56,8 +56,20 @@ or actual profitability for v1.0 without that evidence.**
 |---|---|---|
 | A1 — full v0.9.22 source/causal replay | **PASS research audit:** all 92 heldout days reproduced; independently diagnosed 29 model-infeasible days; nominal/joint commitments identical | PR #28 still stacked and unmerged on main |
 | A2 — v0.9.23 minimum synthetic gas witness | **PASS research audit:** complete 92/92 modeled six-hour dispatch feasibility versus 63/92 original; 920 independently checked next-hour witnesses; **86/92** protected cyclic-stock matched; 57 strictly comparable economic days averaged **−EUR 0.009963723** | PR #29 draft, stacked on PR #28; not an operational safety certificate |
-| A3 — contracted export service | **NOT YET IMPLEMENTED IN CAUSAL RESERVE TRACK** | v0.9.24 recommended next |
+| A3 — v0.9.24 exact hypothetical award service | **PASS within-model audit:** all 92 days, 3 fixed 15-min award profiles, 15,584 audited executed meter intervals and 6,592 awarded reserve witness quarters; 518 explicitly classified failed policy replays; **zero cyclic-terminal-stock-matched contracts** | Draft stacked PR #31; no actual awarded bid, no field meter, no matched-service economic claim |
 | A4–A8 — uncertain gas/heat calibration, independent field validation, release QA and scientific v1.0 | **OPEN** | No claim of field-qualified software |
+
+The v0.9.24 complete hypothetical contract-delivery benchmark is available as
+[an independently audited full study](../reports/V0924_EXECUTED_92DAY_HYPOTHETICAL_AWARDS.md)
+and a [machine-readable negative/positive benchmark record](../data/evidence/v0924_executed_hypothetical_awards.json).
+Its [eight-job source-backed release CI](https://github.com/Open-Energy-Methods/biogasflex/actions/runs/44209007420)
+passes. No profile achieves both all 24 interval-specific contracted export
+equalities and the original cyclic terminal gas inventory. **A3 verifies
+firm-award rejection and CHP export bookkeeping, not actual settled awards
+or source-backed matched-service profitability.** The first-stage nominal
+and maximin binaries are *preexisting unawarded commitments*; jointly
+award-constrained commitment and credible gas-surplus management are
+still open design dependencies.
 
 The v0.9.23 aggregate audited result is published at
 [data/evidence/v0923_executed_92day_summary.json](../data/evidence/v0923_executed_92day_summary.json);

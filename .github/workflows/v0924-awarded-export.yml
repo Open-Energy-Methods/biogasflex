@@ -1,0 +1,136 @@
+name: v0.9.24 hard hypothetical awarded-export service and independent physical audit
+
+on:
+  push:
+    branches: [research/v0924-award-causal-service]
+  pull_request:
+    paths:
+      - 'src/biogasflex/causal_v0922.py'
+      - 'src/biogasflex/award_v0924.py'
+      - 'scripts/audit_v0924_award_independent.py'
+      - 'tests/test_v0924_award_causal.py'
+      - 'docs/V0924_CAUSAL_HARD_AWARD_PROTOCOL.md'
+      - '.github/workflows/v0924-awarded-export.yml'
+      - 'SHA256SUMS.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: biogasflex-v0924-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline-multi-os-adversarial:
+    name: Exact electrical awards, nonanticipativity, physical meter and manifest / ${{ matrix.os }} / Py ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ['3.11','3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install -e .
+      - name: Test parent physical models and new independent contract audits
+        run: python -m unittest tests.test_v0922_causal tests.test_v0922_feasibility_diagnostics tests.test_v0923_gas_reserve tests.test_v0924_award_causal tests.test_v0924_failure_diagnosis -v
+      - name: Strict SHA-256 manifest
+        run: python scripts/verify_v09_manifest.py
+      - name: Manifest covers exactly tracked repository files
+        run: python scripts/verify_v091_git_coverage.py
+
+  frozen-source-predeclared-smoke:
+    name: Publisher-hash source + first two eligible dates + independent exact-export certificate
+    needs: offline-multi-os-adversarial
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -e .
+      - name: Hash the actual frozen OPSD publisher original
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m biogasflex source-evidence-v0921 \
+            --csv "$RUNNER_TEMP/opsd_original_60min.csv" \
+            --download --output "$RUNNER_TEMP/source_verified.json"
+      - name: Replay two chronological earliest days (never counted as a population estimate)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m biogasflex.award_v0924 \
+            --source "$RUNNER_TEMP/source_verified.json" \
+            --max-days 2 \
+            --output "$RUNNER_TEMP/v0924_award_smoke.json"
+      - name: Independently reconstruct all awarded MWh and CHP constraints
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/audit_v0924_award_independent.py \
+            --source "$RUNNER_TEMP/source_verified.json" \
+            --study "$RUNNER_TEMP/v0924_award_smoke.json" \
+            --output "$RUNNER_TEMP/v0924_award_smoke_audit.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v0924-first-two-source-days-independent-award-audit
+          path: ${{ runner.temp }}/v0924_award_smoke_audit.json
+          retention-days: 14
+
+  frozen-source-complete-92day:
+    name: All 92 heldout source days, three ex-ante synthetic award profiles, independent physical and contract audit
+    needs: offline-multi-os-adversarial
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -e .
+      - name: Hash and verify the original 60-minute publisher archive, not a rehost
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m biogasflex source-evidence-v0921 \
+            --csv "$RUNNER_TEMP/opsd_original_60min.csv" \
+            --download --output "$RUNNER_TEMP/source_verified.json"
+      - name: Process all complete October-December 2019 dates without selected exclusions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m biogasflex.award_v0924 \
+            --source "$RUNNER_TEMP/source_verified.json" \
+            --output "$RUNNER_TEMP/v0924_awards_complete.json" \
+            > "$RUNNER_TEMP/v0924_awards_summary.json"
+          cat "$RUNNER_TEMP/v0924_awards_summary.json"
+      - name: Independently audit awarded meter equality, stock/ramp, reserve witness and failed service
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/audit_v0924_award_independent.py \
+            --source "$RUNNER_TEMP/source_verified.json" \
+            --study "$RUNNER_TEMP/v0924_awards_complete.json" \
+            --output "$RUNNER_TEMP/v0924_awards_complete_audit.json"
+      - name: Independently classify physical, reserve-bound and nominal-future failures
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/diagnose_v0924_award_failures.py \
+            --study "$RUNNER_TEMP/v0924_awards_complete.json" \
+            --output "$RUNNER_TEMP/v0924_award_failure_diagnosis.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v0924-all-92-days-independent-award-and-reserve-certificate
+          path: |
+            ${{ runner.temp }}/v0924_awards_summary.json
+            ${{ runner.temp }}/v0924_awards_complete_audit.json
+            ${{ runner.temp }}/v0924_award_failure_diagnosis.json
+          retention-days: 14
