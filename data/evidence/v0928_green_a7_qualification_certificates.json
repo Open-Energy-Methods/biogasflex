@@ -1,0 +1,290 @@
+{
+  "schema": "biogasflex.v0928.green_release_ci.v1",
+  "git_sha": "e8b9191bd5c221d31446ebbf402767d02adb6742",
+  "source": "GitHub Actions successful job stdout",
+  "workflow_run": 44412510533,
+  "workflow_runs_passed": 9,
+  "qualification_jobs_passed": 7,
+  "historical_exact_tree_only": true,
+  "subsequent_edge_case_correction_requires_rerun": true,
+  "human_methodological_review": false,
+  "field_qualification": false,
+  "entries": [
+    {
+      "job_id": 135184161558,
+      "artifact_url": "https://github.com/Open-Energy-Methods/biogasflex/actions/runs/44412510533/artifacts/14478710643",
+      "tests": null,
+      "certificate": {
+        "status": "PASS_V0928_FROZEN_SEMANTIC_SOURCE_CHAIN",
+        "git_sha": "e8b9191bd5c221d31446ebbf402767d02adb6742",
+        "original_source_sha256": "6a7f2bc571314cbf9c321cc03437691cd4be95c3a6f075e60ff99e8035c704c8",
+        "audits": {
+          "joint_audit": {
+            "semantic_results": {
+              "status": "PASS_INDEPENDENT_SOURCE_PAIRED_CORRELATED_STRESS_AND_IDEALIZED_RECOURSE",
+              "source_training_real_price_and_electric_load_error_days": 271,
+              "source_heldout_real_price_and_electric_load_error_days": 92,
+              "conditional_KKT_and_heldout_checks": 33,
+              "global_MILP_optimality_independently_certified": false
+            },
+            "run_local_audit_file_sha256": "2ab0ebd1a0d06cb6ba668de39ad96d54f850b7f9835ce1f62fcfa100de6b4051"
+          },
+          "causal_audit": {
+            "semantic_results": {
+              "status": "PASS_INDEPENDENT_V0922_CHRONOLOGY_ENERGY_CASH_FIRST_STAGE_SHA",
+              "audited_days": 92,
+              "all_eligible_heldout_days_replayed": true,
+              "infeasible_causal_replays_days": 29,
+              "matched_service_paired_cases": 58
+            },
+            "run_local_audit_file_sha256": "04d24e12952b61910b385d5ef7b2fc2dd9409325bca23a023d4c7ec478546838"
+          },
+          "reserve_audit": {
+            "semantic_results": {
+              "status": "PASS_INDEPENDENT_V0923_CAUSAL_LOWER_GAS_WITNESS_AND_PHYSICAL_LEDGER",
+              "days_evaluated": 92,
+              "current_to_next_hour_witnesses_verified": 920,
+              "nominal_unprotected_full_horizon_feasible": 63,
+              "nominal_protected_full_horizon_feasible": 92,
+              "nominal_rescued_days": 29,
+              "joint_rescued_days": 29
+            },
+            "run_local_audit_file_sha256": "41f7cef516121af91ecec3e7670ca5acd8f52514de0c0483210f01b195cc07c5"
+          },
+          "award_audit": {
+            "semantic_results": {
+              "status": "PASS_INDEPENDENT_V0924_PRE_REVEAL_AWARDS_PHYSICAL_METER_AND_RESERVE",
+              "chronologically_eligible_days_audited": 92,
+              "modeled_15min_delivered_prefix_periods_verified": 15584,
+              "next_hour_award_locked_witness_quarters_verified": 6592,
+              "infeasible_hypothetical_contract_policy_replays_not_monetized": 518
+            },
+            "run_local_audit_file_sha256": "d4acb97f22fd58db41a6dd68d55eb76590601b621d61b6257ed942a292861bc9"
+          },
+          "award_diagnosis": {
+            "semantic_results": {
+              "status": "PASS_INDEPENDENT_V0924_REPORTED_FAILURES_DETERMINISTICALLY_RECONSTRUCTED",
+              "source_heldout_days_audited": 92,
+              "failed_policy_replays_classified": 518,
+              "all_failed_ledger_paths_explicitly_classified": true
+            },
+            "run_local_audit_file_sha256": "76bf8bb8ab9c7ec0ed8c8332f6a4cda369c86e9cb57790e9e8092de855f6bdc3"
+          },
+          "sensitivity_audit": {
+            "semantic_results": {
+              "status": "PASS_INDEPENDENT_V0925_PREDECLARED_54CELL_GAS_HEAT_STOCK_ENVELOPE",
+              "preregistered_cells_independently_recomputed": 54,
+              "independent_analytical_worst_bound_certificates": 54,
+              "physical_day_cell_paths_recomputed": 19602,
+              "robust_bounded_physical_certificates_passed": 14
+            },
+            "run_local_audit_file_sha256": "d7d897d939888ec640e12cef740cf17ec970ab4ae8aba4d5c073770815a580f5"
+          },
+          "si_audit": {
+            "semantic_results": {
+              "status": "PASS_INDEPENDENT_V0926_PHYSICAL_SI_ENERGY_AND_PARAMETER_REGISTER",
+              "parameters_checked_against_literal_model": 23,
+              "heldout_days": 92,
+              "policy_replays_checked": 1472,
+              "quarter_hour_prefix_rows_checked": 23288,
+              "complete_replays": 896,
+              "failed_replays": 576,
+              "field_qualification": false
+            },
+            "run_local_audit_file_sha256": "c32ad1a1fd5242762e7294aba9114d0f0549b2cf154f39dde602aab60afd96b1"
+          },
+          "contract_audit": {
+            "semantic_results": {
+              "status": "PASS_INDEPENDENT_V0927_FIXED_AWARD_GATE_MATCHED_SERVICE",
+              "eligible_days": 92,
+              "gates_checked": 24,
+              "day_gate_outcomes_checked": 2208,
+              "executed_intervals_checked": 15232,
+              "bounded_accepted_gates": 1,
+              "bounded_accepted_failures": 0,
+              "strict_cyclic_matched_pairs": 0,
+              "separate_equal_carryover_pairs": 92,
+              "market_or_field_validation": false
+            },
+            "run_local_audit_file_sha256": "ab5c595e90982220b143e08202a2f8adff7879450ac59902249dbb2b25d6f85c"
+          },
+          "canonical_audit": {
+            "semantic_results": {
+              "status": "PASS_V0928_CANONICAL_COMPATIBILITY_IDENTITY",
+              "replays": 1472,
+              "heldout_days": 92
+            },
+            "run_local_audit_file_sha256": "138d44f2fbcb14edc14eda3f0e909c9a5273c4463c2278e44f0623b6d6fcf875"
+          }
+        },
+        "run_local_study_sha256": {
+          "source": "b306a3a3b4318002974d9be5be215024ed43f89fd982cd217510d858616c1da0",
+          "joint": "932834832e869ec8ea84c8a92178c9ec6ec6a4c9cdf1f74d474ce925844a9a72",
+          "causal": "05689cf930adb7372f20aff36476d266bd99a9dd230a2c1631dabb0462eceb99",
+          "reserve": "ae9ad5d7886c616996756d3fcbaa17fed7d724db916cf2def7aca727b9be2365",
+          "award": "fcb37c945ecc71442e35980467da181c52956e4cedd980026242c3ce18804292",
+          "sensitivity": "037c6b069ae9841719d6d9dae6359b8cbf73aec0a71941737e1cef4a043d3ee0",
+          "contract": "0e70efcb1dcddea67f43cc31a411c7c6584ef7a7e390d0dbee6c2d45487a3ae0"
+        },
+        "causal_failures_classified": 58,
+        "reserve_cyclic_days_per_policy": 86,
+        "strict_cyclic_pairs": 0,
+        "equal_carryover_pairs": 92,
+        "carryover_mean_operating_difference_eur": 0,
+        "all_global_milp_optimality_independently_proven": false,
+        "bitwise_cross_platform_reproducibility_claimed": false,
+        "real_site_and_market_qualification": false
+      }
+    },
+    {
+      "job_id": 135184161738,
+      "artifact_url": "https://github.com/Open-Energy-Methods/biogasflex/actions/runs/44412510533/artifacts/14477313283",
+      "tests": 540,
+      "certificate": {
+        "status": "PASS_V0928_ARCHIVE_AND_ISOLATED_WHEEL",
+        "git_sha": "e8b9191bd5c221d31446ebbf402767d02adb6742",
+        "version": "0.9.28",
+        "python": "3.13.17",
+        "platform": "Windows-2025Server-10.0.26100-SP0",
+        "source_manifest_entries": 625,
+        "source_zip_sha256": "1df7356f205efebd2c1d05b245f50db3932cead3bf9f4232f00dc885bf914519",
+        "wheel_members": 35,
+        "python_package_files": 30,
+        "wheel_record_verified": true,
+        "wheel_sha256": "96747b804589eaa873533aa8242c6e120a8b9396dcdcd7ffebd6a30fd707af7e",
+        "isolated_wheel_cli_baseline_contract_and_lp_milp": true,
+        "installed": {
+          "version": "0.9.28",
+          "distribution": "0.9.28",
+          "scipy": "1.18.1"
+        },
+        "field_qualification": false
+      }
+    },
+    {
+      "job_id": 135184161846,
+      "artifact_url": "https://github.com/Open-Energy-Methods/biogasflex/actions/runs/44412510533/artifacts/14477184788",
+      "tests": 540,
+      "certificate": {
+        "status": "PASS_V0928_ARCHIVE_AND_ISOLATED_WHEEL",
+        "git_sha": "e8b9191bd5c221d31446ebbf402767d02adb6742",
+        "version": "0.9.28",
+        "python": "3.11.18",
+        "platform": "Linux-7.0.0-1019-azure-x86_64-with-glibc2.43",
+        "source_manifest_entries": 625,
+        "source_zip_sha256": "1df7356f205efebd2c1d05b245f50db3932cead3bf9f4232f00dc885bf914519",
+        "wheel_members": 35,
+        "python_package_files": 30,
+        "wheel_record_verified": true,
+        "wheel_sha256": "0c919364598b58a90449a28f139de2b5cc8bb8fb9286fb139fbaf32499b47053",
+        "isolated_wheel_cli_baseline_contract_and_lp_milp": true,
+        "installed": {
+          "version": "0.9.28",
+          "distribution": "0.9.28",
+          "scipy": "1.17.1"
+        },
+        "field_qualification": false
+      }
+    },
+    {
+      "job_id": 135184161878,
+      "artifact_url": "https://github.com/Open-Energy-Methods/biogasflex/actions/runs/44412510533/artifacts/14478226056",
+      "tests": 540,
+      "certificate": {
+        "status": "PASS_V0928_ARCHIVE_AND_ISOLATED_WHEEL",
+        "git_sha": "e8b9191bd5c221d31446ebbf402767d02adb6742",
+        "version": "0.9.28",
+        "python": "3.11.9",
+        "platform": "macOS-26.7.2-arm64-arm-64bit",
+        "source_manifest_entries": 625,
+        "source_zip_sha256": "1df7356f205efebd2c1d05b245f50db3932cead3bf9f4232f00dc885bf914519",
+        "wheel_members": 35,
+        "python_package_files": 30,
+        "wheel_record_verified": true,
+        "wheel_sha256": "7a1cdbcc2d84dd74c146a9e6a21dc363fe755b6181e0800e3dce69f0c2b38574",
+        "isolated_wheel_cli_baseline_contract_and_lp_milp": true,
+        "installed": {
+          "version": "0.9.28",
+          "distribution": "0.9.28",
+          "scipy": "1.17.1"
+        },
+        "field_qualification": false
+      }
+    },
+    {
+      "job_id": 135184161895,
+      "artifact_url": "https://github.com/Open-Energy-Methods/biogasflex/actions/runs/44412510533/artifacts/14478520932",
+      "tests": 540,
+      "certificate": {
+        "status": "PASS_V0928_ARCHIVE_AND_ISOLATED_WHEEL",
+        "git_sha": "e8b9191bd5c221d31446ebbf402767d02adb6742",
+        "version": "0.9.28",
+        "python": "3.13.17",
+        "platform": "macOS-26.7.2-arm64-arm-64bit-Mach-O",
+        "source_manifest_entries": 625,
+        "source_zip_sha256": "1df7356f205efebd2c1d05b245f50db3932cead3bf9f4232f00dc885bf914519",
+        "wheel_members": 35,
+        "python_package_files": 30,
+        "wheel_record_verified": true,
+        "wheel_sha256": "907663744f2c9172aa7f9073932d76cc5a88b3868bff41cfcc669af13522e7a8",
+        "isolated_wheel_cli_baseline_contract_and_lp_milp": true,
+        "installed": {
+          "version": "0.9.28",
+          "distribution": "0.9.28",
+          "scipy": "1.18.1"
+        },
+        "field_qualification": false
+      }
+    },
+    {
+      "job_id": 135184162006,
+      "artifact_url": "https://github.com/Open-Energy-Methods/biogasflex/actions/runs/44412510533/artifacts/14478160925",
+      "tests": 540,
+      "certificate": {
+        "status": "PASS_V0928_ARCHIVE_AND_ISOLATED_WHEEL",
+        "git_sha": "e8b9191bd5c221d31446ebbf402767d02adb6742",
+        "version": "0.9.28",
+        "python": "3.13.18",
+        "platform": "Linux-7.0.0-1016-aws-x86_64-with-glibc2.43",
+        "source_manifest_entries": 625,
+        "source_zip_sha256": "1df7356f205efebd2c1d05b245f50db3932cead3bf9f4232f00dc885bf914519",
+        "wheel_members": 35,
+        "python_package_files": 30,
+        "wheel_record_verified": true,
+        "wheel_sha256": "010a7152912e5ac6b034a292cf16deb7aabf5d7ba4c840ff06cf5d2d920f8748",
+        "isolated_wheel_cli_baseline_contract_and_lp_milp": true,
+        "installed": {
+          "version": "0.9.28",
+          "distribution": "0.9.28",
+          "scipy": "1.18.1"
+        },
+        "field_qualification": false
+      }
+    },
+    {
+      "job_id": 135184162057,
+      "artifact_url": "https://github.com/Open-Energy-Methods/biogasflex/actions/runs/44412510533/artifacts/14479220228",
+      "tests": 540,
+      "certificate": {
+        "status": "PASS_V0928_ARCHIVE_AND_ISOLATED_WHEEL",
+        "git_sha": "e8b9191bd5c221d31446ebbf402767d02adb6742",
+        "version": "0.9.28",
+        "python": "3.11.9",
+        "platform": "Windows-10-10.0.26100-SP0",
+        "source_manifest_entries": 625,
+        "source_zip_sha256": "1df7356f205efebd2c1d05b245f50db3932cead3bf9f4232f00dc885bf914519",
+        "wheel_members": 35,
+        "python_package_files": 30,
+        "wheel_record_verified": true,
+        "wheel_sha256": "76b1519047697eb9a7048fc2e6c5ec27bd2ac3c6d1ecab1ff9281428d663f6f1",
+        "isolated_wheel_cli_baseline_contract_and_lp_milp": true,
+        "installed": {
+          "version": "0.9.28",
+          "distribution": "0.9.28",
+          "scipy": "1.17.1"
+        },
+        "field_qualification": false
+      }
+    }
+  ]
+}
