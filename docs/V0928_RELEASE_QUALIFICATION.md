@@ -29,3 +29,7 @@ Only aggregate source certificate and run-local hashes uploaded by this A7 job; 
 ## Integration and release no-go
 
 Test the candidate against current main, preserve the main checksum hotfix, avoid force-pushing or discarding draft branch history. An aggregate integration PR should be merged only once CI is green, no unresolved conflicts, and required review is satisfied. No tag, DOI, v1.0 claim or field readiness at A7. Final A8 also requires issue #3 independent methodological review, scope statement and main-branch post-merge verification. No target gas composition, pressure/volume, real net export, calibrated site heat/gas, engine transient maps, authentic market award or forecast-vintage evidence is produced by release engineering.
+
+## Executed integrated qualification and corrective action
+
+On candidate ca1314ff688879a9a67e9e2c35864c14dd9022ee, the complete A1–A6 original-source semantic chain and all seven historical research workflows passed. The integrated platform regression ran 540 tests per environment; three stale assertions expecting v0.9.21 failed. The three version assertions are updated to the actual v0.9.28 package version, outside the inherited scientific byte freeze. No physical model changes. New qualification rerun required; the isolated wheel gate was not reached by those six jobs. Archive of the successful source job: data/evidence/v0928_executed_frozen_source_chain_certificate.json. Final human review and approval packet: docs/V1_0_FINAL_REVIEW_PACKET.md. The latter does not constitute independent review.
