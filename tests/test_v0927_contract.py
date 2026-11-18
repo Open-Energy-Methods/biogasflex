@@ -62,8 +62,9 @@ class ContractGateTests(unittest.TestCase):
         self.assertFalse(g2["accepted"])
         self.assertTrue(gate(b,cap=1.4,gas=(1.,1.),heat=(.15,.15))["accepted"])
     def test_nonconstant_ramp_jump(self):
-        a=[.09]*23+[.12]
+        a=[.09]*23+[.15] # 0.24 MW jump exceeds 0.20 MW limit
         self.assertIn("consecutive_on_ramp",gate(a)["rejection_reasons"])
+        self.assertNotIn("consecutive_on_ramp",gate([.09]*23+[.12])["rejection_reasons"])
     def test_zero_or_nonfinite_awards(self):
         self.assertFalse(gate([0.]*24)["accepted"])
         for v in (float("nan"),float("inf"),-.1):
