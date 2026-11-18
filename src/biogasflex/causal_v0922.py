@@ -51,7 +51,8 @@ def _validate_inputs(nominal: dict, actual: dict, states: list[int]) -> None:
 def _solve_remaining(hour: int, prior_stock: float, prior_power: float,
                      prior_on: int, states: list[int], nominal: dict,
                      measured_gas: float, measured_heat: float, *,
-                     next_hour_gas_floor: float | None = None) -> dict:
+                     next_hour_gas_floor: float | None = None,
+                     awarded_export_mwh: list[float] | None = None) -> dict:
     """Forecast-only LP, with only the *current* source-hour gas/heat revealed.
 
     All future hours use the frozen nominal profile; no target future
@@ -62,6 +63,10 @@ def _solve_remaining(hour: int, prior_stock: float, prior_power: float,
         require(math.isfinite(next_hour_gas_floor) and
                 0.0 <= next_hour_gas_floor <= 2.,
                 "Invalid hypothetical next-hour gas-production lower bound")
+    if awarded_export_mwh is not None:
+        require(len(awarded_export_mwh) == j.N and
+                all(math.isfinite(v) and v >= 0 for v in awarded_export_mwh),
+                "Award vector must contain 24 finite nonnegative 15-minute MWh intervals")
     guard_next_hour = next_hour_gas_floor is not None and hour < j.HOURS - 1
     first = hour * 4
     count = j.N - first
@@ -108,6 +113,13 @@ def _solve_remaining(hour: int, prior_stock: float, prior_power: float,
         rhs.append(0.)
         equations.append(vector({useful+k: 1., aux+k: 1.}))
         rhs.append(h)
+        if awarded_export_mwh is not None:
+            # Accepted electrical export is an EXACT external service
+            # equality, not a price-based preference or soft penalty.
+            # No imports, curtailment, award forgiveness or settlement
+            # shortage are silently introduced by the optimizer.
+            equations.append(vector({u+k: j.ETA_E*j.DT}))
+            rhs.append(awarded_export_mwh[t])
 
         previous = prior_on if k == 0 else states[t-1]
         if on == previous == 1:
@@ -147,6 +159,13 @@ def _solve_remaining(hour: int, prior_stock: float, prior_power: float,
                 balance[stock+3] = -1.
             equations.append(vector(balance))
             rhs.append(next_hour_gas_floor*j.DT)
+            if awarded_export_mwh is not None:
+                # The protected worst-gas witness MUST deliver the same
+                # already-frozen export award in the next source hour.
+                # It may not manufacture reserve by secretly lowering
+                # contract delivery while conserving fuel.
+                equations.append(vector({wu+q: j.ETA_E*j.DT}))
+                rhs.append(awarded_export_mwh[absolute_t])
             prev_state = states[absolute_t-1]
             if state == prev_state == 1:
                 for sign in (-1., 1.):
@@ -187,13 +206,16 @@ def _solve_remaining(hour: int, prior_stock: float, prior_power: float,
                 if guard_next_hour else None,
             "forecast_terminal_stock_mwh_lhv": float(x[stock+count-1]),
             "forecast_soft_terminal_deviation_mwh_lhv":
-                float(x[dplus]+x[dminus])}
+                float(x[dplus]+x[dminus]),
+            "hard_export_award_equalities_enforced":
+                awarded_export_mwh is not None}
 
 
 def replay_causal(nominal: dict, actual: dict, states: list[int],
                   *, starts: list[int] | None = None,
                   stops: list[int] | None = None,
-                  next_hour_gas_floor: float | None = None) -> dict:
+                  next_hour_gas_floor: float | None = None,
+                  awarded_export_mwh: list[float] | None = None) -> dict:
     """Run hourly sense/replan/execute, with fixed ex-ante CHP commitment.
 
     The realized path is used only (a) for the CURRENT hourly observation
@@ -201,6 +223,10 @@ def replay_causal(nominal: dict, actual: dict, states: list[int],
     full realized path nor the realized source-day electricity prices.
     """
     _validate_inputs(nominal, actual, states)
+    if awarded_export_mwh is not None:
+        require(len(awarded_export_mwh) == j.N and
+                all(math.isfinite(v) and v >= 0 for v in awarded_export_mwh),
+                "Award vector must contain 24 finite nonnegative 15-minute MWh intervals")
     require((starts is None) == (stops is None), "Incomplete switch-cost record")
     if starts is None:
         starts, stops = [], []
@@ -229,7 +255,8 @@ def replay_causal(nominal: dict, actual: dict, states: list[int],
         heat = actual["synthetic_site_heat_demand_mw_th"][t0]
         decision = _solve_remaining(hour, stock, previous_power, previous_on,
                                     states, nominal, g, heat,
-                                    next_hour_gas_floor=next_hour_gas_floor)
+                                    next_hour_gas_floor=next_hour_gas_floor,
+                                    awarded_export_mwh=awarded_export_mwh)
         observations.append({
             "hour_index": hour,
             "revealed_source_hour_utc": 8 + hour,
@@ -238,6 +265,8 @@ def replay_causal(nominal: dict, actual: dict, states: list[int],
             "future_gas_heat_from_frozen_nominal_only": True,
             "realized_price_never_used_for_control": True,
             "forecast_lp_feasible": decision["feasible"],
+            "hard_awarded_export_equalities_enforced":
+                awarded_export_mwh is not None,
             "next_hour_gas_floor_viability_witness_active":
                 next_hour_gas_floor is not None and hour < j.HOURS-1,
             "predeclared_next_hour_synthetic_gas_floor_mw_lhv":
@@ -258,6 +287,13 @@ def replay_causal(nominal: dict, actual: dict, states: list[int],
                 "actual_terminal_stock_requirement_enforced": False,
                 "next_hour_gas_reserve_viability_guard_enabled":
                     next_hour_gas_floor is not None,
+                "hard_award_service_feasible": False
+                    if awarded_export_mwh is not None else None,
+                "contracted_export_mwh_total_for_entire_horizon":
+                    math.fsum(awarded_export_mwh)
+                    if awarded_export_mwh is not None else None,
+                "contracted_export_service_failure_is_explicit":
+                    awarded_export_mwh is not None,
             }
         for slot, scheduled in enumerate(decision["steps"]):
             t = t0 + slot
@@ -276,6 +312,12 @@ def replay_causal(nominal: dict, actual: dict, states: list[int],
                 "realized_price_eur_mwh_EX_POST_ONLY": actual["price_eur_mwh"][t],
                 "forecast_price_eur_mwh_used": nominal["price_eur_mwh"][t],
             }
+            if awarded_export_mwh is not None:
+                row["contract_awarded_export_mwh"] = awarded_export_mwh[t]
+                row["physical_chp_export_meter_mwh"] = j.ETA_E*j.DT*u
+                require(abs(row["physical_chp_export_meter_mwh"]-
+                            row["contract_awarded_export_mwh"]) <= 5e-7,
+                        "Hard CHP export award equality violated")
             records.append(row)
             previous_power = u * j.ETA_E
             previous_on = states[t]
@@ -302,6 +344,16 @@ def replay_causal(nominal: dict, actual: dict, states: list[int],
         "gas_heat_observation_assumed_at_start_of_each_source_hour": True,
         "next_hour_gas_reserve_viability_guard_enabled":
             next_hour_gas_floor is not None,
+        **({
+            "hard_award_service_feasible": True,
+            "contracted_export_mwh_total_for_entire_horizon":
+                math.fsum(awarded_export_mwh),
+            "executed_physical_chp_meter_export_mwh_total":
+                math.fsum(row["physical_chp_export_meter_mwh"] for row in records),
+            "contract_export_shortfall_mwh": 0.0,
+            "contract_import_or_forgiveness_modeled": False,
+            "contracted_award_is_hypothetical_not_market_settlement": True,
+        } if awarded_export_mwh is not None else {}),
     }
 
 
