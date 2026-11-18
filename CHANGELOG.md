@@ -1,3 +1,10 @@
+## v0.9.28 — qualification candidate (2026-11-18)
+
+- Consolidates v0.9.22–v0.9.27 on a candidate branch, not an announced release. Freeze existing numerical assumptions; no new physical calibration.
+- Correct the v0.9.27 ramp regression input: 0.24 MW violates 0.20 MW limit; 0.12 MW does not. Preserve historical independently audited outcomes.
+- Independently cross-check canonical reserve/award ledgers against legacy audit views, qualify wheel and source archive, instrument offline and complete source-backed regression workflows and record source attribution.
+- A8 remains blocked until all required CI, branch integration and independent methodological review are complete.
+
 ## v0.9.21 — 2026-11-16 — Verified SE3 forecast errors and conditional correlated-uncertainty CHP
 
 - **Independently verified real archived SE3 source** from OPSD
