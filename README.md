@@ -2,6 +2,8 @@
 
 **Qualification pending; not v1.0 or field qualified.** This branch consolidates A1–A7 methodology and release checks. The historical sections below describe their original milestones, not the current package version. See [release qualification](docs/V0928_RELEASE_QUALIFICATION.md), [scientific gates](docs/V1_0_SCIENTIFIC_RELEASE_GATES.md) and [data attribution](DATA_ATTRIBUTION.md). The frozen source is regional electricity evidence; gas and heat remain hypothetical. No actual market awards, real net export, engine calibration, industrial safety or bankable profitability established.
 
+**LiU/BSRC research case study (doctoral application):** [BiogasFlex — flexible biogas use, storage and regional-resilience research directions](docs/LIU_BSRC_RESEARCH_CASE_STUDY.md). This applicant-authored case study links verified results to three proposed doctoral research extensions; it is neither an institutional collaboration nor a claim of completed biogas-production or regional policy modelling.
+
 Install the code wheel with pip; the source archive additionally contains research inputs, scripts, tests and documentation. Legacy CLI study paths are checkout-relative unless explicit input paths are provided. New study entry points are `python -m biogasflex.causal_v0922`, `viability_v0923`, `award_v0924`, `sensitivity_v0925`, and `contract_v0927` (each accepts `--help`). The latter is fixed-contract acceptance, not optimized commercial bidding. The independently audited source study finds zero strict cyclic economic pairs and 92 separate equal-carryover pairs with zero operating-contribution difference.
 
 ---
