@@ -1,0 +1,131 @@
+name: v0.9.23 synthetic gas reserve viability and independent audit
+
+on:
+  push:
+    branches: [research/v0923-gas-reserve-viability]
+  pull_request:
+    paths:
+      - 'src/biogasflex/causal_v0922.py'
+      - 'src/biogasflex/viability_v0923.py'
+      - 'scripts/audit_v0923_reserve_independent.py'
+      - 'tests/test_v0923_gas_reserve.py'
+      - 'docs/V0923_GAS_RESERVE_CAUSAL_PROTOCOL.md'
+      - 'docs/V1_0_SCIENTIFIC_RELEASE_GATES.md'
+      - '.github/workflows/v0923-gas-reserve.yml'
+      - 'SHA256SUMS.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+concurrency:
+  group: biogasflex-v0923-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline-multiplatform-regression:
+    name: Guarded causal physics, tamper and manifest / ${{ matrix.os }} / Py ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ['3.11','3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install BiogasFlex current research software without new package version
+        run: python -m pip install -e .
+      - name: Run inherited causal model and new nonanticipative gas reserve tests
+        run: python -m unittest tests.test_v0922_causal tests.test_v0922_feasibility_diagnostics tests.test_v0923_gas_reserve -v
+      - name: Validate complete file hashes
+        run: python scripts/verify_v09_manifest.py
+      - name: Verify SHA manifest exactly covers tracked Git files
+        run: python scripts/verify_v091_git_coverage.py
+
+  frozen-publisher-source-smoke:
+    name: Original publisher SHA + first two heldout dates and independent witness
+    needs: offline-multiplatform-regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -e .
+      - name: Verify frozen independent OPSD original source
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m biogasflex source-evidence-v0921 \
+            --csv "$RUNNER_TEMP/opsd_se3_frozen_original.csv" \
+            --download \
+            --output "$RUNNER_TEMP/source_verified.json"
+      - name: Smoke exactly two earliest eligible dates, not a population estimate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m biogasflex.viability_v0923 \
+            --source "$RUNNER_TEMP/source_verified.json" \
+            --max-days 2 \
+            --output "$RUNNER_TEMP/reserve_smoke.json"
+      - name: Independently audit both modes, witness constraints and cash
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/audit_v0923_reserve_independent.py \
+            --source "$RUNNER_TEMP/source_verified.json" \
+            --study "$RUNNER_TEMP/reserve_smoke.json" \
+            --output "$RUNNER_TEMP/reserve_smoke_audit.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v0923-two-day-independent-gas-reserve-audit
+          path: ${{ runner.temp }}/reserve_smoke_audit.json
+          retention-days: 14
+
+  frozen-publisher-full-92day:
+    name: All 92 Oct-Dec 2019 days + full independent physical, witness and economic audit
+    needs: offline-multiplatform-regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -e .
+      - name: Download, hash and independently verify original 2019 OPSD regional series
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m biogasflex source-evidence-v0921 \
+            --csv "$RUNNER_TEMP/opsd_se3_frozen_original.csv" \
+            --download \
+            --output "$RUNNER_TEMP/source_verified.json"
+      - name: Compare original and protected causal dispatch for every eligible source day
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m biogasflex.viability_v0923 \
+            --source "$RUNNER_TEMP/source_verified.json" \
+            --output "$RUNNER_TEMP/reserve_full.json" \
+            > "$RUNNER_TEMP/reserve_full_summary.json"
+          cat "$RUNNER_TEMP/reserve_full_summary.json"
+      - name: Audit original vs protected current-to-next-hour linked stock and electrical ramp
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/audit_v0923_reserve_independent.py \
+            --source "$RUNNER_TEMP/source_verified.json" \
+            --study "$RUNNER_TEMP/reserve_full.json" \
+            --output "$RUNNER_TEMP/reserve_full_audit.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v0923-complete-92day-independent-reserve-audit
+          path: |
+            ${{ runner.temp }}/reserve_full_audit.json
+            ${{ runner.temp }}/reserve_full_summary.json
+          retention-days: 14

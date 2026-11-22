@@ -1,0 +1,147 @@
+{
+  "schema": "biogasflex.v0924.executed_hypothetical_award_service.v1",
+  "status": "SOURCE_PUBLISHER_SHA_VERIFIED_SYNTHETIC_AWARD_PHYSICAL_SERVICE_NOT_ACTUAL_MARKET_OR_FIELD_QUALIFIED",
+  "reproduction": {
+    "ci_run": "https://github.com/Open-Energy-Methods/biogasflex/actions/runs/44209007420",
+    "jobs_passed": 8,
+    "cross_platform_os": [
+      "ubuntu-latest",
+      "windows-latest",
+      "macos-latest"
+    ],
+    "python_versions": [
+      "3.11",
+      "3.13"
+    ],
+    "inherited_workflows_v0921_v0922_v0923": "PASS",
+    "independent_full_source_physical_ledger": "PASS",
+    "independent_award_export_meter_and_witness": "PASS",
+    "deterministic_failure_classifier": "PASS",
+    "export_meter_prefix_quarters_verified": 15584,
+    "gas_reserve_awarded_witness_quarters_verified": 6592,
+    "failed_policy_replays_classified_without_cashflow": 518
+  },
+  "source": {
+    "frozen_original_release": "OPSD 2020-10-06 hourly Sweden SE3 2019",
+    "original_publisher_sha256": "6a7f2bc571314cbf9c321cc03437691cd4be95c3a6f075e60ff99e8035c704c8",
+    "source_granularity_minutes": 60,
+    "four_quarter_controls_per_hour_are_mathematical_not_measurements": true,
+    "recorded_chp_accepted_award_present": false,
+    "real_grid_export_meter_present": false,
+    "observed_chp_gas_or_site_heat_present": false,
+    "as_of_gate_price_forecast_issue_vintage_authenticated": false
+  },
+  "protocol": {
+    "source_heldout_days": 92,
+    "period_start_utc": "2019-10-01",
+    "period_end_utc": "2019-12-31",
+    "fixed_first_stage_nominal_joint_commitments_identical_days": 92,
+    "pre_reveal_award_mwh_15min": [
+      0.09,
+      0.1,
+      0.15
+    ],
+    "hard_export_equality": "eta_e*fuel_burn_MW_LHV*0.25h=awarded_export_MWh",
+    "eta_e": 0.4,
+    "gas_reserve_floor_mw_lhv": 0.78,
+    "market_import_award_shortfall_and_settlement_slack_enabled": false,
+    "terminal_inventory_matched_tolerance_mwh_lhv": 0.00005
+  },
+  "results": {
+    "profiles": {
+      "0.090_mwh_per_15min": {
+        "award_only": {
+          "feasible": 61,
+          "infeasible": 31,
+          "feasible_terminal_stock_unmatched": 61,
+          "feasible_cyclic_stock_matched": 0,
+          "failures_by_physical_vs_nominal_future": {
+            "observed_current_hour": 4,
+            "next_hour_gas_guard": 0,
+            "nominal_future_forecast": 27
+          }
+        },
+        "award_and_reserve": {
+          "feasible": 61,
+          "infeasible": 31,
+          "feasible_terminal_stock_unmatched": 61,
+          "feasible_cyclic_stock_matched": 0,
+          "failures_by_physical_vs_nominal_future": {
+            "observed_current_hour": 4,
+            "next_hour_gas_guard": 0,
+            "nominal_future_forecast": 27
+          }
+        }
+      },
+      "0.100_mwh_per_15min": {
+        "award_only": {
+          "feasible": 88,
+          "infeasible": 4,
+          "feasible_terminal_stock_unmatched": 88,
+          "feasible_cyclic_stock_matched": 0,
+          "failures_by_physical_vs_nominal_future": {
+            "observed_current_hour": 4,
+            "next_hour_gas_guard": 0,
+            "nominal_future_forecast": 0
+          }
+        },
+        "award_and_reserve": {
+          "feasible": 83,
+          "infeasible": 9,
+          "feasible_terminal_stock_unmatched": 83,
+          "feasible_cyclic_stock_matched": 0,
+          "failures_by_physical_vs_nominal_future": {
+            "observed_current_hour": 3,
+            "next_hour_gas_guard": 6,
+            "nominal_future_forecast": 0
+          }
+        }
+      },
+      "0.150_mwh_per_15min": {
+        "award_only": {
+          "feasible": 0,
+          "infeasible": 92,
+          "feasible_terminal_stock_unmatched": 0,
+          "feasible_cyclic_stock_matched": 0,
+          "failures_by_physical_vs_nominal_future": {
+            "observed_current_hour": 92,
+            "next_hour_gas_guard": 0,
+            "nominal_future_forecast": 0
+          }
+        },
+        "award_and_reserve": {
+          "feasible": 0,
+          "infeasible": 92,
+          "feasible_terminal_stock_unmatched": 0,
+          "feasible_cyclic_stock_matched": 0,
+          "failures_by_physical_vs_nominal_future": {
+            "observed_current_hour": 92,
+            "next_hour_gas_guard": 0,
+            "nominal_future_forecast": 0
+          }
+        }
+      }
+    },
+    "nominal_and_joint_policy_per_day_identical": true,
+    "any_profile_with_cyclic_stock_matched_contract_service": false,
+    "matched_service_economic_benefit_estimable": false,
+    "failed_award_assigned_zero_revenue": false,
+    "real_market_settlement_estimated": false
+  },
+  "scope": {
+    "independent_mathematical_audit_pass": true,
+    "physically_calibrated_site_model": false,
+    "original_issued_bid_time_forecast_available": false,
+    "real_firm_export_award_authenticated": false,
+    "causal_reserve_proves_universal_future_plant_safety": false,
+    "research_software_v1_release_gates_all_complete": false,
+    "field_qualified_v1": false
+  },
+  "links": {
+    "protocol": "docs/V0924_CAUSAL_HARD_AWARD_PROTOCOL.md",
+    "report": "reports/V0924_EXECUTED_92DAY_HYPOTHETICAL_AWARDS.md",
+    "independent_meter_auditor": "scripts/audit_v0924_award_independent.py",
+    "independent_failure_classifier": "scripts/diagnose_v0924_award_failures.py",
+    "master_tracker": "https://github.com/Open-Energy-Methods/biogasflex/issues/30"
+  }
+}

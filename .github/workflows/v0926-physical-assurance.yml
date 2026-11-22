@@ -1,0 +1,68 @@
+name: v0.9.26 independent SI physical and parameter assurance
+on:
+  push:
+    branches: [research/v0926-physical-assurance]
+  pull_request:
+    paths:
+      - 'scripts/audit_v0926_physical_si.py'
+      - 'tests/test_v0926_physical_si.py'
+      - 'data/evidence/v0926_physical_parameter_register.json'
+      - 'docs/V0926_PHYSICAL_ASSURANCE_PROTOCOL.md'
+      - '.github/workflows/v0926-physical-assurance.yml'
+      - 'SHA256SUMS.txt'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: biogasflex-v0926-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+jobs:
+  physical-unit-regression:
+    name: Independent SI physics and manifest / ${{ matrix.os }} / Py ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ['3.11','3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install -e .
+      - run: python -m unittest tests.test_v0922_causal tests.test_v0923_gas_reserve tests.test_v0924_award_causal tests.test_v0925_sensitivity tests.test_v0926_physical_si -v
+      - run: python scripts/verify_v09_manifest.py
+      - run: python scripts/verify_v091_git_coverage.py
+  complete-independent-si-audit:
+    name: All 92 frozen source days, physical SI ledger and provenance certificate
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -e .
+      - name: Verify original publisher SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m biogasflex source-evidence-v0921 --csv "$RUNNER_TEMP/opsd.csv" --download --output "$RUNNER_TEMP/source.json"
+      - name: Reproduce unchanged reserve and award studies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m biogasflex.viability_v0923 --source "$RUNNER_TEMP/source.json" --output "$RUNNER_TEMP/reserve.json" > "$RUNNER_TEMP/reserve.log"
+          python -m biogasflex.award_v0924 --source "$RUNNER_TEMP/source.json" --output "$RUNNER_TEMP/award.json" > "$RUNNER_TEMP/award.log"
+      - name: Independently reconstruct all executed SI energy ledgers
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/audit_v0926_physical_si.py --source "$RUNNER_TEMP/source.json" --reserve "$RUNNER_TEMP/reserve.json" --award "$RUNNER_TEMP/award.json" --output "$RUNNER_TEMP/v0926_si_audit.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v0926-independent-physical-si-energy-certificate
+          path: ${{ runner.temp }}/v0926_si_audit.json
+          retention-days: 30
